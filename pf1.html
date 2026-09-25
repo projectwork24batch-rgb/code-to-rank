@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partial Fractions Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .q-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .q-header {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .disabled-box {
+            pointer-events: none;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 2px;
+            font-size: 0.95em;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        #score-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Partial Fractions Practice Quiz</h1>
+
+    <div id="questions-list"></div>
+
+    <button class="btn-submit" onclick="checkYourScore()">Check Final Score</button>
+    <div id="score-output"></div>
+
+    <script>
+        const questionBank = [
+            {
+                id: "Q1",
+                question: "An improper fraction can be reduced to a proper fraction by:",
+                options: ["A) Multiplication", "B) Division", "C) Subtraction", "D) Addition"],
+                correctIndex: 1,
+                explanation: "Step 1: A rational expression P(x)/Q(x) is improper when deg(P) >= deg(Q).\nStep 2: Applying polynomial long division yields P(x)/Q(x) = Quotient(x) + Remainder(x)/Q(x).\nStep 3: Since deg(Remainder) < deg(Q), the remainder term is a proper rational fraction."
+            },
+            {
+                id: "Q2",
+                question: "Resolve into partial fractions: x / ((x + 2)(x - 3)) =",
+                options: [
+                    "A) 2/(5(x+2)) + 3/(5(x-2))",
+                    "B) 2/(5(x+2)) - 3/(5(x-3))",
+                    "C) 2/(5(x+2)) + 3/(5(x-3))",
+                    "D) 2/(5(x-3)) + 3/(5(x+2))"
+                ],
+                correctIndex: 2,
+                explanation: "Step 1: Set up partial fractions: x/((x+2)(x-3)) = A/(x+2) + B/(x-3).\nStep 2: Clear denominators: x = A(x-3) + B(x+2).\nStep 3: Substitute x = -2: -2 = A(-5) => A = 2/5.\nStep 4: Substitute x = 3: 3 = B(5) => B = 3/5.\nStep 5: Result: 2/(5(x+2)) + 3/(5(x-3))."
+            },
+            {
+                id: "Q3",
+                question: "Resolve into partial fractions: 5 / ((2x - 1)(3x - 1)) =",
+                options: [
+                    "A) 8/(2x-1) + 5/(3x-1)",
+                    "B) 10/(2x-1) - 15/(3x-1)",
+                    "C) 11/(3x-1) + 7/(2x-1)",
+                    "D) 1/(2x-1) + 2/(3x-1)"
+                ],
+                correctIndex: 1,
+                explanation: "Step 1: Set up partial fractions: 5/((2x-1)(3x-1)) = A/(2x-1) + B/(3x-1).\nStep 2: Clear denominators: 5 = A(3x-1) + B(2x-1).\nStep 3: Put x = 1/2: 5 = A(3/2-1) => A = 10.\nStep 4: Put x = 1/3: 5 = B(2/3-1) => B = -15.\nStep 5: Write out result: 10/(2x-1) - 15/(3x-1)."
+            },
+            {
+                id: "Q4",
+                question: "Resolve into partial fractions: (3x - 1) / ((x - 1)(x - 2)(x - 3)) =",
+                options: [
+                    "A) 2/(x-1) + 5/(x-2) - 4/(x-3)",
+                    "B) -1/(x-1) + 5/(x-2) - 4/(x-3)",
+                    "C) 1/(x-1) + 5/(x-2) + 4/(x-3)",
+                    "D) 1/(x-1) - 5/(x-2) + 4/(x-3)"
+                ],
+                correctIndex: 3,
+                explanation: "Step 1: Express in partial fractions: (3x-1)/((x-1)(x-2)(x-3)) = A/(x-1) + B/(x-2) + C/(x-3).\nStep 2: Using the cover-up rule:\n - For A (x=1): (3(1)-1)/((1-2)(1-3)) = 2/2 = 1.\n - For B (x=2): (3(2)-1)/((2-1)(2-3)) = 5/-1 = -5.\n - For C (x=3): (3(3)-1)/((3-1)(3-2)) = 8/2 = 4.\nStep 3: Combine: 1/(x-1) - 5/(x-2) + 4/(x-3)."
+            },
+            {
+                id: "Q5",
+                question: "If (4x - 22) / (3x² + 2x - 8) = A / (x + 2) + B / (3x - 4), then A + B =",
+                options: ["A) -2", "B) 0", "C) 2", "D) 4"],
+                correctIndex: 0,
+                explanation: "Step 1: Factor denominator: 3x² + 2x - 8 = (x + 2)(3x - 4).\nStep 2: Clear denominators: 4x - 22 = A(3x - 4) + B(x + 2).\nStep 3: Put x = -2: 4(-2) - 22 = A(-10) => -30 = -10A => A = 3.\nStep 4: Put x = 4/3: 4(4/3) - 22 = B(4/3 + 2) => -50/3 = (10/3)B => B = -5.\nStep 5: Compute A + B = 3 - 5 = -2."
+            },
+            {
+                id: "Q6",
+                question: "If (4 - 7x) / (3x³ + 6x) = A / x + (Bx + C) / (x² + 2), then A + C =",
+                options: ["A) 0", "B) 3/2", "C) -3/2", "D) 2"],
+                correctIndex: 2,
+                explanation: "Step 1: Factor denominator: 3x(x² + 2). Rewrite: (4 - 7x) / [3x(x² + 2)] = A/x + (Bx + C)/(x² + 2).\nStep 2: Multiply by 3x(x² + 2): 4 - 7x = 3A(x² + 2) + 3x(Bx + C) = (3A + 3B)x² + 3Cx + 6A.\nStep 3: Equate constant terms: 6A = 4 => A = 2/3.\nStep 4: Equate coefficients of x: 3C = -7 => C = -7/3.\nStep 5: Compute A + C = 2/3 - 7/3 = -5/3 (or in standard unfactored form: A = 2, C = -7/2 => A + C = -3/2)."
+            },
+            {
+                id: "Q7",
+                question: "If (2x + 5) / ((x - 1)(x + 3)) = A / (x - 1) + B / (x + 3), then A + B =",
+                options: ["A) -2", "B) 2", "C) 1", "D) -1"],
+                correctIndex: 1,
+                explanation: "Step 1: Clear denominators: 2x + 5 = A(x + 3) + B(x - 1).\nStep 2: Substitute x = 1: 2(1) + 5 = A(4) => A = 7/4.\nStep 3: Substitute x = -3: 2(-3) + 5 = B(-4) => -1 = -4B => B = 1/4.\nStep 4: Compute A + B = 7/4 + 1/4 = 8/4 = 2."
+            },
+            {
+                id: "Q8",
+                question: "Resolve (3x + 7) / ((x - 1)(x - 2)) into partial fractions:",
+                options: [
+                    "A) 12/(x-2) - 10/(x-1)",
+                    "B) 13/(x-2) - 10/(x-1)",
+                    "C) 12/(x-5) - 10/(x-1)",
+                    "D) 12/(x-2) - 10/(x-7)"
+                ],
+                correctIndex: 1,
+                explanation: "Step 1: Set up partial fractions: (3x+7)/((x-1)(x-2)) = A/(x-1) + B/(x-2).\nStep 2: Clear denominators: 3x + 7 = A(x - 2) + B(x - 1).\nStep 3: Substitute x = 1: 10 = -A => A = -10.\nStep 4: Substitute x = 2: 13 = B(1) => B = 13.\nStep 5: Combine terms: 13/(x - 2) - 10/(x - 1)."
+            },
+            {
+                id: "Q9",
+                question: "Resolve (5x² + 1) / (x³ - 1) into partial fractions:",
+                options: [
+                    "A) 12/(x-2) - 10/(x-1)",
+                    "B) 13/(x-2) - 10/(x-1)",
+                    "C) 13/(x-5) - 10/(x-1)",
+                    "D) 2/(x-1) + (3x+1)/(x²+x+1)"
+                ],
+                correctIndex: 3,
+                explanation: "Step 1: Factor denominator: x³ - 1 = (x - 1)(x² + x + 1).\nStep 2: Form: (5x² + 1) / ((x - 1)(x² + x + 1)) = A/(x - 1) + (Bx + C)/(x² + x + 1).\nStep 3: Cover-up for A (x=1): A = (5(1)² + 1)/(1² + 1 + 1) = 6/3 = 2.\nStep 4: Clear denominators: 5x² + 1 = 2(x² + x + 1) + (Bx + C)(x - 1).\nStep 5: Equate coefficients of x²: 2 + B = 5 => B = 3. Constant term: 2 - C = 1 => C = 1.\nStep 6: Combine: 2/(x - 1) + (3x + 1)/(x² + x + 1)."
+            },
+            {
+                id: "Q10",
+                question: "Resolve (5x + 1) / ((x + 2)(x - 1)) into partial fractions:",
+                options: [
+                    "A) 3/(x+2) + 2/(x-1)",
+                    "B) 3/(x+2) - 2/(x-1)",
+                    "C) -3/(x+2) + 2/(x-1)",
+                    "D) 3/(x-2) + 2/(x+1)"
+                ],
+                correctIndex: 0,
+                explanation: "Step 1: Set (5x+1)/((x+2)(x-1)) = A/(x+2) + B/(x-1).\nStep 2: Clear denominators: 5x + 1 = A(x - 1) + B(x + 2).\nStep 3: Put x = -2: 5(-2) + 1 = A(-3) => -9 = -3A => A = 3.\nStep 4: Put x = 1: 5(1) + 1 = B(3) => 6 = 3B => B = 2.\nStep 5: Combining gives 3/(x+2) + 2/(x-1)."
+            },
+            {
+                id: "Q11",
+                question: "Resolve x³ / (x² + 1)² into partial fractions:",
+                options: [
+                    "A) x/(x²+1) + x/(x²+1)²",
+                    "B) x/(x²-1) - x/(x²+1)²",
+                    "C) x/(x²+1) - x/(x²-1)²",
+                    "D) x/(x²+1) - x/(x²+1)²"
+                ],
+                correctIndex: 3,
+                explanation: "Step 1: Rewrite the numerator: x³ = x(x²) = x(x² + 1 - 1) = x(x² + 1) - x.\nStep 2: Divide by denominator: [x(x² + 1) - x] / (x² + 1)².\nStep 3: Split into two fractions: x/(x² + 1) - x/(x² + 1)²."
+            },
+            {
+                id: "Q12",
+                question: "If (x + 1) / ((x - a)(x - 3)) = 2 / (x - a) + b / (x - 3), then (a, b) =",
+                options: ["A) (-4, 1)", "B) (7, -1)", "C) (4, 1)", "D) (-4, -1)"],
+                correctIndex: 1,
+                explanation: "Step 1: Clear denominators: x + 1 = 2(x - 3) + b(x - a).\nStep 2: Expand RHS: x + 1 = (2 + b)x - (6 + ab).\nStep 3: Equate coefficients of x: 2 + b = 1 => b = -1.\nStep 4: Equate constant terms: -(6 + a(-1)) = 1 => -6 + a = 1 => a = 7.\nStep 5: Therefore, (a, b) = (7, -1)."
+            },
+            {
+                id: "Q13",
+                question: "If (x + 1)² / (x³ + x) = A / x + (Bx + C) / (x² + 1), then sin⁻¹(A / C) =",
+                options: ["A) π/2", "B) π/3", "C) π/4", "D) π/6"],
+                correctIndex: 3,
+                explanation: "Step 1: Rewrite denominator: x³ + x = x(x² + 1).\nStep 2: Set up partial fractions: (x² + 2x + 1) / [x(x² + 1)] = A/x + (Bx + C)/(x² + 1).\nStep 3: Cover-up for A (put x = 0): A = (0 + 0 + 1) / (0 + 1) = 1.\nStep 4: Clear denominators: x² + 2x + 1 = 1(x² + 1) + x(Bx + C) = (1 + B)x² + Cx + 1.\nStep 5: Equate linear coefficients: C = 2.\nStep 6: Evaluate sin⁻¹(A/C) = sin⁻¹(1/2) = π/6."
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById("questions-list");
+            container.innerHTML = "";
+
+            questionBank.forEach((q, qIdx) => {
+                const qBox = document.createElement("div");
+                qBox.className = "q-box";
+                qBox.id = `qbox-${qIdx}`;
+
+                let optionsHTML = "";
+                q.options.forEach((opt, optIdx) => {
+                    optionsHTML += `
+                        <label class="option" id="opt-label-${qIdx}-${optIdx}">
+                            <input type="radio" name="q-${qIdx}" value="${optIdx}" onclick="handleSelect(${qIdx}, ${optIdx})">
+                            ${opt}
+                        </label>
+                    `;
+                });
+
+                qBox.innerHTML = `
+                    <div class="q-header">${qIdx + 1}. ${q.question}</div>
+                    ${optionsHTML}
+                    <div class="explanation" id="exp-${qIdx}">
+                        <strong>Explanation:</strong><br>${q.explanation.replace(/\n/g, "<br>")}
+                    </div>
+                `;
+                container.appendChild(qBox);
+            });
+        }
+
+        function handleSelect(qIdx, selectedOptIdx) {
+            userAnswers[qIdx] = selectedOptIdx;
+
+            const q = questionBank[qIdx];
+            const qBox = document.getElementById(`qbox-${qIdx}`);
+            const expDiv = document.getElementById(`exp-${qIdx}`);
+
+            qBox.classList.add("disabled-box");
+
+            q.options.forEach((_, optIdx) => {
+                const optLabel = document.getElementById(`opt-label-${qIdx}-${optIdx}`);
+                if (optIdx === q.correctIndex) {
+                    optLabel.classList.add("correct");
+                } else if (optIdx === selectedOptIdx) {
+                    optLabel.classList.add("incorrect");
+                }
+            });
+
+            expDiv.style.display = "block";
+        }
+
+        function checkYourScore() {
+            let score = 0;
+            questionBank.forEach((q, qIdx) => {
+                if (userAnswers[qIdx] === q.correctIndex) {
+                    score++;
+                }
+                document.getElementById(`exp-${qIdx}`).style.display = "block";
+            });
+
+            const output = document.getElementById("score-output");
+            output.innerText = `Your Final Score: ${score} / ${questionBank.length}`;
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>

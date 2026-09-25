@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Architecture & Microprocessors Quiz</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 30px; 
+            background-color: #f4f4f9; 
+            color: #333; 
+        }
+        .quiz-container { 
+            max-width: 800px; 
+            margin: auto; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .q-box { 
+            background: #fafafa; 
+            border: 1px solid #ddd; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            border-radius: 6px; 
+        }
+        .q-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .option { 
+            display: block; 
+            margin: 10px 0; 
+            font-size: 16px; 
+            cursor: pointer; 
+            padding: 12px; 
+            border: 1px solid #eee; 
+            border-radius: 4px; 
+            background: #fff; 
+            transition: background 0.2s; 
+        }
+        .option:hover { 
+            background: #f0f0f0; 
+        }
+        .option input { 
+            margin-right: 12px; 
+            transform: scale(1.1); 
+        }
+        .option.correct { 
+            background-color: #d4edda !important; 
+            border-color: #c3e6cb !important; 
+            color: #155724; 
+            font-weight: bold; 
+        }
+        .option.incorrect { 
+            background-color: #f8d7da !important; 
+            border-color: #f5c6cb !important; 
+            color: #721c24; 
+        }
+        .disabled-box { 
+            pointer-events: none; 
+        }
+        .explanation { 
+            display: none; 
+            margin-top: 15px; 
+            padding: 12px; 
+            background-color: #e9ecef; 
+            border-left: 4px solid #007BFF; 
+            font-size: 14px; 
+            color: #495057; 
+            border-radius: 0 4px 4px 0; 
+        }
+        .btn { 
+            display: block; 
+            width: 100%; 
+            background: #007BFF; 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            font-size: 18px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            margin-top: 20px; 
+        }
+        .btn:hover { 
+            background: #0056b3; 
+        }
+        #score-output { 
+            font-size: 22px; 
+            font-weight: bold; 
+            margin-top: 25px; 
+            color: #28a745; 
+            text-align: center; 
+        }
+        .back-nav { 
+            display: inline-block; 
+            margin-bottom: 20px; 
+            color: #007BFF; 
+            text-decoration: none; 
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <a href="web.html" class="back-nav">← Back to Menu</a>
+    <h1>Computer Architecture Practice Quiz</h1>
+    
+    <div id="questions-list"></div>
+    
+    <button class="btn" onclick="checkYourScore()">Finish & Calculate Score</button>
+    <div id="score-output"></div>
+</div>
+
+<script>
+    const questionBank = [
+      {
+        id: "Q1",
+        question: "Which number representation is commonly used to represent negative integers in computers?",
+        options: ["A) Sign-magnitude", "B) 1's complement", "C) 2's complement", "D) BCD"],
+        correctIndex: 2,
+        explanation: "2's complement is the most commonly used method for representing negative integers in computers. It makes binary arithmetic simpler because addition and subtraction can be performed using the same hardware."
+      },
+      {
+        id: "Q5",
+        question: "In two's complement representation, which statement is true?",
+        options: [
+          "A) The MSB (Most Significant Bit) is always 0",
+          "B) The MSB determines the sign of the number",
+          "C) Addition does not require special handling",
+          "D) Two's complement is not used in modern computers"
+        ],
+        correctIndex: 1,
+        explanation: "In two's complement representation, the Most Significant Bit (MSB) indicates the sign: 0 for positive and 1 for negative numbers."
+      },
+      {
+        id: "Q6",
+        question: "The Carry Flag (CF) is set when:",
+        options: [
+          "A) The result is negative",
+          "B) An arithmetic operation results in a zero value",
+          "C) A division operation produces a remainder",
+          "D) An arithmetic operation results in a carry out of the most significant bit"
+        ],
+        correctIndex: 3,
+        explanation: "The Carry Flag is set when an arithmetic operation produces a carry beyond the highest-order bit."
+      },
+      {
+        id: "Q9",
+        question: "What is the result of the binary addition: 1101 + 1010?",
+        options: ["A) 10111", "B) 10011", "C) 11110", "D) 11000"],
+        correctIndex: 0,
+        explanation: "Adding 1101 (13) and 1010 (10) gives 10111 (23) through standard binary carry rules."
+      },
+      {
+        id: "Q16",
+        question: "In 2's complement representation, the most significant bit (MSB) indicates:",
+        options: ["A) Magnitude", "B) Carry", "C) Overflow", "D) Sign of the number"],
+        correctIndex: 3,
+        explanation: "In 2's complement, the most significant bit functions as a sign bit where '0' represents a positive value and '1' represents a negative value."
+      },
+      {
+        id: "Q17",
+        question: "Which binary arithmetic operation is easiest to implement using shift operations?",
+        options: ["A) Addition", "B) Subtraction", "C) Multiplication", "D) Division"],
+        correctIndex: 2,
+        explanation: "Shifting binary bits to the left allows the processor to easily perform multiplication by powers of two."
+      },
+      {
+        id: "Q55",
+        question: "An overflow will be detected if the carry into the sign bit position and the carry out of the sign bit position are:",
+        options: ["A) equal", "B) not equal", "C) both zeros", "D) both ones"],
+        correctIndex: 1,
+        explanation: "An arithmetic overflow is detected in signed binary operations if the carry into the sign bit and the carry out of the sign bit position are not equal."
+      },
+      {
+        id: "Q64",
+        question: "In computers, subtraction is generally carried out by:",
+        options: ["A) 9's complement", "B) 10's complement", "C) 1's complement", "D) 2's complement"],
+        correctIndex: 3,
+        explanation: "In computers, subtraction operations are generally carried out using 2's complement arithmetic."
+      },
+      {
+        id: "Q68",
+        question: "When we perform subtraction on -7 and 1 the answer in 2's complement form is:",
+        options: ["A) 1010", "B) 1110", "C) 0110", "D) 1000"],
+        correctIndex: 3,
+        explanation: "Subtracting 1 from -7 yields 1000 as the final 4-bit answer in 2's complement form (-7 - 1 = -8)."
+      },
+      {
+        id: "Q74",
+        question: "A 4-to-16 line decoder can be constructed with _____ 2-to-4 line decoders with enable.",
+        options: ["A) 4", "B) 2", "C) 5", "D) 8"],
+        correctIndex: 2,
+        explanation: "A 4-to-16 line decoder can be constructed using a total of 5 separate 2-to-4 line decoders with enable pins."
+      },
+      {
+        id: "Q4",
+        question: "Which of the following is NOT a type of addressing mode in microprocessors?",
+        options: ["A) Immediate", "B) Direct", "C) Indirect", "D) Sequential"],
+        correctIndex: 3,
+        explanation: "Immediate, direct, and indirect are common addressing modes. Sequential describes the execution order rather than an addressing mode."
+      },
+      {
+        id: "Q8",
+        question: "Which addressing mode specifies the operand within the instruction itself?",
+        options: ["A) Direct", "B) Immediate", "C) Indirect", "D) Register"],
+        correctIndex: 1,
+        explanation: "Immediate addressing mode places the actual operand (data value) directly inside the instruction itself."
+      },
+      {
+        id: "Q10",
+        question: "Which component of the CPU coordinates all activities inside it?",
+        options: ["A) ALU", "B) Control Unit", "C) Register File", "D) Cache"],
+        correctIndex: 1,
+        explanation: "The Control Unit directs data flow and manages instruction execution sequences within the CPU."
+      },
+      {
+        id: "Q15",
+        question: "Which register holds the address of the next instruction to be executed?",
+        options: ["A) Instruction Register (IR)", "B) Memory Address Register (MAR)", "C) Program Counter (PC)", "D) Stack Pointer (SP)"],
+        correctIndex: 2,
+        explanation: "The Program Counter (PC) automatically tracks and holds the memory address of the next instruction to be fetched."
+      },
+      {
+        id: "Q21",
+        question: "Which is used to store critical pieces of data during subroutines and interrupts?",
+        options: ["A) Stack", "B) Queue", "C) Accumulator", "D) Data register"],
+        correctIndex: 0,
+        explanation: "The Stack is used to temporarily store critical data like return addresses during subroutines and interrupts."
+      },
+      {
+        id: "Q24",
+        question: "A machine in which the least significant byte (LSB) is stored in the lowest location is:",
+        options: ["A) Big endian", "B) Little endian", "C) Bi endian", "D) Both Big endian and Little endian"],
+        correctIndex: 1,
+        explanation: "Little endian architecture stores the least significant byte (LSB) at the lowest memory address."
+      },
+      {
+        id: "Q25",
+        question: "The CMP instruction that compares the source and destination operands performs:",
+        options: ["A) Addition", "B) Subtraction", "C) Multiplication", "D) Division"],
+        correctIndex: 1,
+        explanation: "The CMP instruction compares operands by performing a subtraction that updates flags without altering operand values."
+      },
+      {
+        id: "Q26",
+        question: "A stack pointer is:",
+        options: [
+          "A) a 16-bit register in the microprocessor that indicates the beginning of the stack memory.",
+          "B) a register that decodes and executes 16-bit arithmetic expression.",
+          "C) The first memory location where a subroutine address is stored.",
+          "D) a register in which flag bits are stored"
+        ],
+        correctIndex: 0,
+        explanation: "A stack pointer is a 16-bit register in the microprocessor that indicates the beginning of the stack memory."
+      },
+      {
+        id: "Q27",
+        question: "Which of the following stores the operand during execution and result of the operation after execution?",
+        options: ["A) Flag register", "B) Stack register", "C) Accumulator", "D) General purpose register"],
+        correctIndex: 2,
+        explanation: "The Accumulator stores an operand during execution and holds the final result of the operation after execution."
+      },
+      {
+        id: "Q28",
+        question: "Identify the false statement among the following:",
+        options: [
+          "A) The program counter holds the memory address of the instruction in execution",
+          "B) An instruction in the instruction register consists of the opcode and the operand",
+          "C) The value of the program counter is incremented by 1 once its value has been read to the memory address register",
+          "D) Only opcode is transferred to the control unit"
+        ],
+        correctIndex: 0,
+        explanation: "The program counter holds the address of the next instruction to be fetched, not the instruction currently executing."
+      },
+      {
+        id: "Q30",
+        question: "What is the maximum number of addresses needed in an instruction?",
+        options: ["A) 0", "B) 1", "C) 2", "D) 3"],
+        correctIndex: 3,
+        explanation: "The maximum number of explicit addresses needed in a standard instruction format is 3 (Source 1, Source 2, Destination)."
+      },
+      {
+        id: "Q31",
+        question: "Which instruction is used to load the address of operand into the provided register?",
+        options: ["A) LEA", "B) LDS", "C) LES", "D) LAHF"],
+        correctIndex: 0,
+        explanation: "The LEA (Load Effective Address) instruction loads the offset address of a memory operand into a specified register."
+      },
+      {
+        id: "Q33",
+        question: "Which instructions affect the program counter?",
+        options: ["A) Call and Return", "B) Call and Jump", "C) Push and Pop", "D) Return and Jump"],
+        correctIndex: 1,
+        explanation: "Call and Jump instructions modify the program counter directly to transfer program execution control."
+      },
+      {
+        id: "Q34",
+        question: "What is the order decided by a processor or the CPU of a controller to execute instruction?",
+        options: ["A) decode, fetch, execute", "B) execute, fetch, decode", "C) fetch, decode, execute", "D) fetch, execute, decode"],
+        correctIndex: 2,
+        explanation: "The standard instruction execution cycle follows fetch, decode, execute."
+      },
+      {
+        id: "Q35",
+        question: "The instructions like MOV or ADD are called as:",
+        options: ["A) OP-Code", "B) Operators", "C) Commands", "D) Operand"],
+        correctIndex: 0,
+        explanation: "Instructions like MOV or ADD are called OP-Code (Operation Code) because they specify the operation to be performed."
+      },
+      {
+        id: "Q37",
+        question: "In the following indexed addressing mode instruction MOV 5(R1), LOC, the Effective Address is:",
+        options: ["A) EA = 5 + R1", "B) EA = R1", "C) EA = [R1]", "D) EA = 5 + [R1]"],
+        correctIndex: 3,
+        explanation: "The effective address for indexed addressing instruction MOV 5(R1), LOC is EA = 5 + [R1]."
+      },
+      {
+        id: "Q39",
+        question: "In the case of Zero-address instruction method, the operands are stored in:",
+        options: ["A) Registers", "B) Stack", "C) Accumulators", "D) Cache"],
+        correctIndex: 1,
+        explanation: "In a zero-address instruction format, the operands are implicitly stored on top of a Stack."
+      },
+      {
+        id: "Q40",
+        question: "Which one of the following can produce the final product of machine processing in a form usable by humans?",
+        options: ["A) Storage", "B) Control", "C) Input device", "D) Output device"],
+        correctIndex: 3,
+        explanation: "An Output device translates digital processing results into human-readable format."
+      },
+      {
+        id: "Q42",
+        question: "The addressing mode which makes use of indirect pointers is:",
+        options: ["A) Indirect addressing mode", "B) Index addressing mode", "C) Relative addressing mode", "D) Offset addressing mode"],
+        correctIndex: 0,
+        explanation: "Indirect addressing mode uses memory pointers to reference data locations."
+      },
+      {
+        id: "Q45",
+        question: "Which group of instructions do not affect the flags?",
+        options: ["A) Arithmetic operations", "B) Logic operations", "C) Branch operations", "D) Data transfer operations"],
+        correctIndex: 3,
+        explanation: "Data transfer operations (like MOV, PUSH, POP) copy data without modifying processor status flags."
+      },
+      {
+        id: "Q47",
+        question: "The instruction 'JUMP' belongs to:",
+        options: ["A) sequential control flow instructions", "B) data transfer instructions", "C) branch instructions", "D) control transfer & branch instructions"],
+        correctIndex: 3,
+        explanation: "JUMP instructions transfer control flow out of normal sequential execution."
+      },
+      {
+        id: "Q50",
+        question: "During comparison operation, the result of comparing or subtracting is stored in:",
+        options: ["A) Memory", "B) Registers", "C) Stack", "D) no where"],
+        correctIndex: 3,
+        explanation: "The subtraction result of a CMP operation is discarded after status flags are updated."
+      },
+      {
+        id: "Q63",
+        question: "Computers use addressing mode techniques for:",
+        options: [
+          "A) giving programming versatility to the user",
+          "B) reducing the number of bits in the instruction field",
+          "C) specifying rules for modifying address fields",
+          "D) All of the above (a, b, and c)"
+        ],
+        correctIndex: 3,
+        explanation: "Addressing modes offer programming flexibility, reduce instruction size, and specify address translation."
+      },
+      {
+        id: "Q67",
+        question: "If the register has both shifts and parallel load capabilities, that is referred to as:",
+        options: ["A) Universal shift register", "B) Unidirectional shift register", "C) Bidirectional shift register", "D) Parallel shift register"],
+        correctIndex: 0,
+        explanation: "A register capable of both shift operations and parallel loading is a Universal Shift Register."
+      },
+      {
+        id: "Q70",
+        question: "Both CISC and RISC architectures have been developed to reduce the:",
+        options: ["A) Cost", "B) Time delay", "C) Turnaround time", "D) Semantic gap"],
+        correctIndex: 3,
+        explanation: "CISC and RISC design philosophies aim to narrow the semantic gap between high-level code and hardware execution."
+      },
+      {
+        id: "Q72",
+        question: "Executing an instruction involves the following phases:",
+        options: [
+          "A) Instruction Decoding and Instruction Storage",
+          "B) Instruction Storage and Instruction Execution",
+          "C) Instruction Fetch and Instruction Execution",
+          "D) Instruction Fetch and Instruction Processing"
+        ],
+        correctIndex: 2,
+        explanation: "Executing instructions fundamentally consists of fetching the instruction and executing it."
+      },
+      {
+        id: "Q75",
+        question: "The ALU makes use of _____ to store intermediate results.",
+        options: ["A) Accumulators", "B) Registers", "C) Heap", "D) Stack"],
+        correctIndex: 0,
+        explanation: "The ALU uses accumulator registers to hold intermediate arithmetic/logic results."
+      },
+      {
+        id: "Q83",
+        question: "Zero address instruction format is used for:",
+        options: ["A) RISC architecture", "B) CISC architecture", "C) Stack-organized architecture", "D) Von-Neumann architecture"],
+        correctIndex: 2,
+        explanation: "Zero-address instructions rely implicitly on a pushdown stack architecture."
+      },
+      {
+        id: "Q88",
+        question: "The addressing mode used in an instruction of the form ADD X, Y is:",
+        options: ["A) Immediate", "B) Indirect", "C) Direct", "D) Index"],
+        correctIndex: 2,
+        explanation: "In ADD X, Y, explicit symbolic variable names represent direct memory addresses."
+      },
+      {
+        id: "Q2",
+        question: "The main advantage of cache memory is that it:",
+        options: ["A) Increases storage capacity", "B) Reduces access time", "C) Stores permanent data", "D) Supports I/O operations"],
+        correctIndex: 1,
+        explanation: "Cache memory stores active data close to the CPU to reduce retrieval latencies."
+      },
+      {
+        id: "Q3",
+        question: "Which of the following is a type of ROM that can be programmed only once?",
+        options: ["A) PROM", "B) EPROM", "C) EEPROM", "D) Flash Memory"],
+        correctIndex: 0,
+        explanation: "PROM (Programmable Read-Only Memory) can be written to once using high voltage and cannot be erased later."
+      },
+      {
+        id: "Q12",
+        question: "Which of the following is a volatile memory?",
+        options: ["A) RAM", "B) ROM", "C) Hard Disk", "D) Flash Drive"],
+        correctIndex: 0,
+        explanation: "RAM requires continuous electric current to maintain stored bits and loses data when powered down."
+      },
+      {
+        id: "Q14",
+        question: "Which memory holds frequently accessed data for fast retrieval?",
+        options: ["A) Cache", "B) ROM", "C) RAM", "D) Hard Drive"],
+        correctIndex: 0,
+        explanation: "Cache memory holds active runtime instructions and data close to processor logic."
+      },
+      {
+        id: "Q22",
+        question: "The part of the computer system that supervises the flow of information between Auxiliary Memory and Main Memory is called:",
+        options: ["A) Processor Management System", "B) Data Management System", "C) Address Management System", "D) Memory Management System"],
+        correctIndex: 3,
+        explanation: "The Memory Management System manages transfers between secondary storage and physical RAM."
+      },
+      {
+        id: "Q29",
+        question: "Which of the following mappings is NOT used for the mapping process in cache memory?",
+        options: ["A) Associative mapping", "B) Direct mapping", "C) Set-Associative mapping", "D) Segmented-page mapping"],
+        correctIndex: 3,
+        explanation: "Segmented-page mapping is a virtual memory management concept rather than a cache organization method."
+      },
+      {
+        id: "Q38",
+        question: "The memory used to store copies of data/instructions stored in larger memories inside the CPU is called:",
+        options: ["A) Level 1 cache", "B) Level 2 cache", "C) Registers", "D) TLB"],
+        correctIndex: 0,
+        explanation: "L1 Cache is built directly into the processor die to cache immediate instructions and data."
+      },
+      {
+        id: "Q41",
+        question: "What is the highest speed memory between the main memory and the CPU called?",
+        options: ["A) Register memory", "B) Cache memory", "C) Storage memory", "D) Virtual memory"],
+        correctIndex: 1,
+        explanation: "Cache memory serves as a high-speed buffer located between RAM and execution registers."
+      },
+      {
+        id: "Q48",
+        question: "The fetching of the program from secondary memory to place it in physical memory during execution is called:",
+        options: ["A) Mapping", "B) Swapping in", "C) Swapping out", "D) Pipelining"],
+        correctIndex: 1,
+        explanation: "Moving programs or pages from secondary storage to RAM is known as swapping in."
+      },
+      {
+        id: "Q65",
+        question: "Which among the following offers shorter read and write cycles?",
+        options: ["A) Fast RAM", "B) Commercial RAM", "C) Static RAM", "D) Dynamic RAM"],
+        correctIndex: 2,
+        explanation: "Static RAM uses flip-flops and does not require constant refresh cycles, enabling faster access times."
+      },
+      {
+        id: "Q66",
+        question: "The capacity of a memory unit is usually stated as the total number of _____ it can store.",
+        options: ["A) Words", "B) Bytes", "C) Addresses", "D) Bits"],
+        correctIndex: 1,
+        explanation: "System memory storage capacity is standardly measured in Bytes (KB, MB, GB)."
+      },
+      {
+        id: "Q82",
+        question: "The method for updating the main memory as soon as a word is removed from the Cache is called:",
+        options: ["A) Write-back", "B) Write-through", "C) Protected write", "D) Cache-write"],
+        correctIndex: 0,
+        explanation: "In a write-back policy, RAM is updated only when dirty cache lines are evicted."
+      },
+      {
+        id: "Q84",
+        question: "Cache memory works on the principle of:",
+        options: ["A) Locality of data", "B) Locality of reference", "C) Locality of memory", "D) Locality of reference & memory"],
+        correctIndex: 1,
+        explanation: "Cache operations exploit spatial and temporal locality of reference."
+      },
+      {
+        id: "Q85",
+        question: "A microprocessor retrieves instructions from:",
+        options: ["A) Control memory", "B) Cache memory", "C) Main memory", "D) Virtual memory"],
+        correctIndex: 2,
+        explanation: "The processor fetches executable code directly from primary Main Memory."
+      },
+      {
+        id: "Q86",
+        question: "Memory unit accessed by content is called:",
+        options: ["A) Read only memory", "B) Programmable Memory", "C) Virtual Memory", "D) Associative Memory"],
+        correctIndex: 3,
+        explanation: "Content-Addressable Memory (CAM) or Associative Memory retrieves records via bit pattern search rather than numerical address."
+      },
+      {
+        id: "Q7",
+        question: "How many address lines are available in the 8086 microprocessor?",
+        options: ["A) 16", "B) 20", "C) 24", "D) 32"],
+        correctIndex: 1,
+        explanation: "The 8086 features 20 address lines capable of addressing 1 MB of memory space."
+      },
+      {
+        id: "Q11",
+        question: "The size of the general-purpose registers in the 8086 microprocessor is:",
+        options: ["A) 8 bits", "B) 16 bits", "C) 32 bits", "D) 64 bits"],
+        correctIndex: 1,
+        explanation: "The 8086 general-purpose registers (AX, BX, CX, DX) are 16-bit registers."
+      },
+      {
+        id: "Q18",
+        question: "Which of the following is a status flag in 8086?",
+        options: ["A) Direction flag", "B) Interrupt flag", "C) Trap flag", "D) Overflow flag"],
+        correctIndex: 3,
+        explanation: "The Overflow Flag is a status flag; Direction, Interrupt, and Trap are control flags."
+      },
+      {
+        id: "Q20",
+        question: "The size of each segment in 8086 is:",
+        options: ["A) 64 KB", "B) 24 KB", "C) 50 KB", "D) 16 KB"],
+        correctIndex: 0,
+        explanation: "Logical segments in 8086 architecture are capped at 64 KB (2^16 bytes)."
+      },
+      {
+        id: "Q23",
+        question: "In 8086, the overflow flag is set when:",
+        options: [
+          "A) The sum is more than 16 bit",
+          "B) Signed numbers go out of their range after an arithmetic operation",
+          "C) Carry & Sign flag are set",
+          "D) Zero flag is set"
+        ],
+        correctIndex: 1,
+        explanation: "OF triggers whenever signed computation exceeds maximum positive/negative capacities."
+      },
+      {
+        id: "Q32",
+        question: "The 8086 fetches instructions one after another from which memory segment?",
+        options: ["A) INSTRUCTION POINTER", "B) STACK SEGMENT", "C) ADDRESS SEGMENT", "D) CODE SEGMENT"],
+        correctIndex: 3,
+        explanation: "Sequential instructions are fetched relative to the Code Segment (CS) base address."
+      },
+      {
+        id: "Q46",
+        question: "The first processor with an inbuilt floating point unit is:",
+        options: ["A) 80386", "B) 80486", "C) 8086", "D) 80286"],
+        correctIndex: 1,
+        explanation: "The Intel 80486 DX integrated an x87 floating-point math coprocessor onto the main CPU die."
+      },
+      {
+        id: "Q49",
+        question: "The BIU contains a FIFO register of size 6 bytes called:",
+        options: ["A) Queue", "B) Stack", "C) Segment", "D) Register"],
+        correctIndex: 0,
+        explanation: "The 8086 Bus Interface Unit uses a 6-byte instruction Queue for prefetching code."
+      },
+      {
+        id: "Q51",
+        question: "The addressing mode that is used in unconditional branch instructions is:",
+        options: [
+          "A) Intra segment direct addressing mode",
+          "B) Intra segment indirect addressing mode",
+          "C) Intra segment direct and indirect addressing mode",
+          "D) Inter segment direct addressing mode"
+        ],
+        correctIndex: 2,
+        explanation: "Unconditional jumps within the current code segment use intra-segment direct and indirect forms."
+      },
+      {
+        id: "Q52",
+        question: "Which of the following instructions is NOT valid?",
+        options: ["A) MOV AX, BX", "B) MOV AX, 5000H", "C) MOV DS, 5000H", "D) PUSH AX"],
+        correctIndex: 2,
+        explanation: "Segment registers (like DS) cannot be loaded with immediate values directly."
+      },
+      {
+        id: "Q53",
+        question: "If segment address = 1005H and offset address = 5555H, then the physical address is:",
+        options: ["A) 155AH", "B) 4550H", "C) 155A5H", "D) 56555H"],
+        correctIndex: 2,
+        explanation: "Physical Address = (Segment * 10H) + Offset = 10050H + 5555H = 155A5H."
+      },
+      {
+        id: "Q54",
+        question: "The purpose of the microprocessor is to control:",
+        options: ["A) Processing", "B) Memory", "C) Switches", "D) Tasks"],
+        correctIndex: 0,
+        explanation: "The CPU serves primarily to execute instructions and govern system data processing."
+      },
+      {
+        id: "Q56",
+        question: "Intel 80386 contains circuitry of how many transistors?",
+        options: ["A) 2,75,000", "B) 1,75,000", "C) 3,75,000", "D) 75,000"],
+        correctIndex: 0,
+        explanation: "The 32-bit Intel 80386 processor integrated approximately 275,000 transistors."
+      },
+      {
+        id: "Q57",
+        question: "The flag of 8086 that is NOT affected by the instruction INC is:",
+        options: ["A) AF", "B) SF", "C) CF", "D) ZF"],
+        correctIndex: 2,
+        explanation: "The INC instruction updates AF, SF, ZF, PF, and OF, but preserves the Carry Flag (CF)."
+      },
+      {
+        id: "Q58",
+        question: "Which instruction copies the contents of AH to the lower byte of the flag register of 8086?",
+        options: ["A) LAHF", "B) SAHF", "C) PUSHF", "D) POPF"],
+        correctIndex: 1,
+        explanation: "SAHF (Store AH into Flags) transfers AH register bits into the lower byte of the flag register."
+      },
+      {
+        id: "Q59",
+        question: "Which register of 8086 can be used for I/O operations and string manipulation?",
+        options: ["A) Count", "B) Data", "C) Accumulator", "D) Base"],
+        correctIndex: 2,
+        explanation: "The Accumulator (AX/AL) is required for IN/OUT instructions and string operations."
+      },
+      {
+        id: "Q60",
+        question: "In minimum mode interface, the memory segment status code S4S3 = 00 identifies:",
+        options: ["A) Extra Segment", "B) Stack Segment", "C) Code/None Segment", "D) Data Segment"],
+        correctIndex: 0,
+        explanation: "Status code S4S3 = 00 designates access to the Extra Segment (ES)."
+      },
+      {
+        id: "Q61",
+        question: "The intervals of no bus activity that occur between bus cycles are known as:",
+        options: ["A) Idle state", "B) Busy state", "C) Wait state", "D) Ready state"],
+        correctIndex: 0,
+        explanation: "Idle states occur when the processor performs no system bus activity between cycles."
+      },
+      {
+        id: "Q62",
+        question: "Which pin of 8086 is used for Data Enable?",
+        options: ["A) ALE", "B) DEN bar", "C) DT/R bar", "D) Lock"],
+        correctIndex: 1,
+        explanation: "DEN_bar (Data Enable) activates bus transceivers during memory or I/O read/write operations."
+      },
+      {
+        id: "Q73",
+        question: "Which register of 8086 can be used for memory addressing during I/O port data transfers?",
+        options: ["A) AX", "B) BX", "C) CX", "D) DX"],
+        correctIndex: 3,
+        explanation: "The DX register contains 16-bit I/O port addresses for variable IN and OUT instructions."
+      },
+      {
+        id: "Q76",
+        question: "Which register pair is used to indicate memory in 8085?",
+        options: ["A) B and C", "B) H and L", "C) D and E", "D) W and Z"],
+        correctIndex: 1,
+        explanation: "The H and L register pair acts as the indirect memory pointer (M) in 8085 assembly."
+      },
+      {
+        id: "Q78",
+        question: "The 80286 is able to address physical memory of up to:",
+        options: ["A) 8 MB", "B) 16 MB", "C) 24 MB", "D) 64 MB"],
+        correctIndex: 1,
+        explanation: "With 24 physical address lines, the 80286 directly addresses up to 16 MB of RAM."
+      },
+      {
+        id: "Q79",
+        question: "The 80286 is upward object code compatible with 8086/8088 when operated in:",
+        options: ["A) Normal mode", "B) Real address mode only", "C) Virtual address mode only", "D) Real and virtual address mode"],
+        correctIndex: 3,
+        explanation: "The 80286 preserves backward object code compatibility in both Real and Protected/Virtual modes."
+      },
+      {
+        id: "Q80",
+        question: "In 8086, the instruction MOV AX, [BX] is an example of:",
+        options: ["A) Direct addressing mode", "B) Register addressing mode", "C) Register indirect addressing mode", "D) Register relative addressing mode"],
+        correctIndex: 2,
+        explanation: "MOV AX, [BX] uses base register BX as a memory pointer (Register Indirect Addressing Mode)."
+      }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById("questions-list");
+        container.innerHTML = "";
+
+        questionBank.forEach((q, qIndex) => {
+            const qBox = document.createElement("div");
+            qBox.className = "q-box";
+            qBox.id = `qbox-${qIndex}`;
+
+            let html = `<div class="q-title">${qIndex + 1}. [${q.id}] ${q.question}</div>`;
+
+            q.options.forEach((opt, optIndex) => {
+                html += `
+                    <label class="option" id="opt-${qIndex}-${optIndex}">
+                        <input type="radio" name="question-${qIndex}" value="${optIndex}" onclick="selectAnswer(${qIndex}, ${optIndex})">
+                        ${opt}
+                    </label>
+                `;
+            });
+
+            html += `<div class="explanation" id="exp-${qIndex}"><strong>Explanation:</strong> ${q.explanation}</div>`;
+            qBox.innerHTML = html;
+            container.appendChild(qBox);
+        });
+    }
+
+    function selectAnswer(qIndex, selectedOpt) {
+        const qData = questionBank[qIndex];
+        const qBox = document.getElementById(`qbox-${qIndex}`);
+        const expBox = document.getElementById(`exp-${qIndex}`);
+
+        // Disable all options for this question once answered
+        qBox.classList.add("disabled-box");
+
+        // Highlight correct/incorrect answers
+        qData.options.forEach((_, optIndex) => {
+            const optLabel = document.getElementById(`opt-${qIndex}-${optIndex}`);
+            if (optIndex === qData.correctIndex) {
+                optLabel.classList.add("correct");
+            } else if (optIndex === selectedOpt) {
+                optLabel.classList.add("incorrect");
+            }
+        });
+
+        // Show explanation
+        expBox.style.display = "block";
+    }
+
+    function checkYourScore() {
+        let score = 0;
+        let answeredCount = 0;
+
+        questionBank.forEach((q, qIndex) => {
+            const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+            if (selected) {
+                answeredCount++;
+                if (parseInt(selected.value) === q.correctIndex) {
+                    score++;
+                }
+            }
+        });
+
+        const output = document.getElementById("score-output");
+        output.innerText = `You scored ${score} out of ${questionBank.length}! (${answeredCount} questions answered)`;
+    }
+
+    // Initialize Quiz on load
+    renderQuiz();
+</script>
+
+</body>
+</html>

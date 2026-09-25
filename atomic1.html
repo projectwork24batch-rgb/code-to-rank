@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atomic Structure ECET Practice Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .score-badge {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background-color: #f1f5f9;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 0.75rem;
+      accent-color: var(--primary);
+    }
+
+    .option-label.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-label.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background-color: #eff6ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      color: #1e3a8a;
+    }
+
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-container {
+      text-align: center;
+      margin: 2rem 0 4rem;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .submit-btn:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Atomic Structure ECET Practice Quiz</h1>
+      <div class="score-badge" id="score-display">Score: 0 / 20</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="quiz-container"></div>
+    <div class="action-container">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Final Quiz</button>
+    </div>
+  </main>
+
+  <script>
+    const atomicStructureQuestions = [
+      {
+        "id": 1,
+        "question": "Pauli's Exclusion principle states that two electrons in same orbital have",
+        "options": {
+          "A": "same spin",
+          "B": "different spins",
+          "C": "opposite spins",
+          "D": "vertical spins"
+        },
+        "correctAnswer": "C",
+        "explanation": "Pauli's Exclusion Principle dictates that no two electrons in an atom can have the same set of four quantum numbers. Therefore, two electrons sharing the same orbital must have opposite spins (+1/2 and -1/2)."
+      },
+      {
+        "id": 2,
+        "question": "Orbits in which electrons move according to Bohr are",
+        "options": {
+          "A": "elliptical",
+          "B": "cylindrical",
+          "C": "circular",
+          "D": "oval"
+        },
+        "correctAnswer": "C",
+        "explanation": "Bohr's atomic model postulates that electrons revolve around the nucleus in fixed, stationary circular orbits."
+      },
+      {
+        "id": 3,
+        "question": "Phosphorus has an atomic number of 15. A stable phosphorus atom has an electronic configuration of",
+        "options": {
+          "A": "1s² 2s² 2p⁶ 3s² 3p³",
+          "B": "1s² 2s² 2p⁶ 3s² 3p¹",
+          "C": "1s² 2s² 2p³ 3s² 3p¹ 4s²",
+          "D": "1s² 1p⁶ 1d⁷"
+        },
+        "correctAnswer": "A",
+        "explanation": "With an atomic number of 15, phosphorus has 15 electrons. Filling the subshells in order gives 1s²(2) + 2s²(2) + 2p⁶(6) + 3s²(2) + 3p³(3) = 15 electrons."
+      },
+      {
+        "id": 4,
+        "question": "The splitting of spectral lines in strong magnetic field is called",
+        "options": {
+          "A": "Stark effect",
+          "B": "Pauli Exclusion Principle",
+          "C": "Zeeman effect",
+          "D": "Aufbau Principle"
+        },
+        "correctAnswer": "C",
+        "explanation": "The Zeeman effect refers to the splitting of spectral lines of atoms when exposed to a magnetic field. Splitting in an electric field is called the Stark effect."
+      },
+      {
+        "id": 5,
+        "question": "Bohr's model can explain",
+        "options": {
+          "A": "The spectrum of hydrogen atom only",
+          "B": "The spectrum of hydrogen molecule",
+          "C": "The solar spectrum",
+          "D": "Spectrum of an atom or ion containing one electron only"
+        },
+        "correctAnswer": "D",
+        "explanation": "Bohr's model is limited to single-electron species (such as H, He⁺, Li²⁺) because it does not account for electron-electron repulsive forces in multi-electron systems."
+      },
+      {
+        "id": 6,
+        "question": "The maximum number of electrons that a d-orbital can accommodate is",
+        "options": {
+          "A": "2",
+          "B": "6",
+          "C": "10",
+          "D": "14"
+        },
+        "correctAnswer": "C",
+        "explanation": "The d-subshell consists of 5 degenerate d-orbitals. Since each individual orbital holds a maximum of 2 electrons, the entire d-subshell holds 5 × 2 = 10 electrons."
+      },
+      {
+        "id": 7,
+        "question": "Magnesium Atomic number is 12. Which of the following is the electronic configuration?",
+        "options": {
+          "A": "1s² 2s² 2p⁶ 3s²",
+          "B": "1s² 2s² 2p⁶ 3s¹",
+          "C": "1s² 2s² 2p⁵ 3s³",
+          "D": "1s² 2s² 2p⁴ 3s² 3d²"
+        },
+        "correctAnswer": "A",
+        "explanation": "Magnesium has 12 electrons. Following the Aufbau principle, electrons fill the subshells as 1s² 2s² 2p⁶ 3s²."
+      },
+      {
+        "id": 8,
+        "question": "The nucleus contains",
+        "options": {
+          "A": "Proton",
+          "B": "Protons and Neutrons",
+          "C": "Positron",
+          "D": "Positron and photon"
+        },
+        "correctAnswer": "B",
+        "explanation": "The atomic nucleus is located at the center of an atom and consists of nucleons, which are positively charged protons and uncharged neutrons."
+      },
+      {
+        "id": 9,
+        "question": "The shape of p-Orbital is",
+        "options": {
+          "A": "Dumbbell",
+          "B": "Double Dumbbell",
+          "C": "Oval",
+          "D": "Spherical"
+        },
+        "correctAnswer": "A",
+        "explanation": "s-orbitals are spherical, p-orbitals have a dumbbell shape, and d-orbitals generally have a double dumbbell shape."
+      },
+      {
+        "id": 10,
+        "question": "The maximum number of electrons that an f-orbital can accommodate is",
+        "options": {
+          "A": "2",
+          "B": "6",
+          "C": "10",
+          "D": "14"
+        },
+        "correctAnswer": "D",
+        "explanation": "An f-subshell contains 7 sub-orbitals. Each can hold 2 electrons, allowing a maximum total of 7 × 2 = 14 electrons in the subshell."
+      },
+      {
+        "id": 11,
+        "question": "Which of the following is not a fundamental particle?",
+        "options": {
+          "A": "Electron",
+          "B": "Proton",
+          "C": "Alpha particle",
+          "D": "Neutron"
+        },
+        "correctAnswer": "C",
+        "explanation": "Electrons, protons, and neutrons are primary subatomic/fundamental constituents of an atom. An alpha particle is a composite particle consisting of two protons and two neutrons (a He²⁺ nucleus)."
+      },
+      {
+        "id": 12,
+        "question": "A given orbital labelled by the quantum number l = 1. That can't be",
+        "options": {
+          "A": "s-orbital",
+          "B": "p-orbital",
+          "C": "d-orbital",
+          "D": "f-orbital"
+        },
+        "correctAnswer": "A",
+        "explanation": "The azimuthal quantum number l designates subshells: l = 0 represents s, l = 1 represents p, l = 2 represents d, and l = 3 represents f. Hence, l = 1 corresponds to a p-orbital and cannot be an s-orbital."
+      },
+      {
+        "id": 13,
+        "question": "The maximum number of electrons that may be present in one 4f-orbital is",
+        "options": {
+          "A": "2",
+          "B": "6",
+          "C": "10",
+          "D": "14"
+        },
+        "correctAnswer": "A",
+        "explanation": "Regardless of the shell or subshell type (s, p, d, or f), any single orbital can accommodate a maximum of only 2 electrons according to Pauli's Exclusion Principle."
+      },
+      {
+        "id": 14,
+        "question": "Which of the following quantum numbers determines the shape of an orbital?",
+        "options": {
+          "A": "Principal quantum number",
+          "B": "Azimuthal quantum number",
+          "C": "Magnetic quantum number",
+          "D": "Spin quantum number"
+        },
+        "correctAnswer": "B",
+        "explanation": "The Principal quantum number (n) determines size and energy, the Azimuthal quantum number (l) determines orbital shape, the Magnetic quantum number (m) determines orientation, and the Spin quantum number (s) determines electron spin."
+      },
+      {
+        "id": 15,
+        "question": "The maximum number of electrons that can be accommodated in a subshell with l = 2 is",
+        "options": {
+          "A": "2",
+          "B": "6",
+          "C": "10",
+          "D": "14"
+        },
+        "correctAnswer": "C",
+        "explanation": "The formula for the total electron capacity of a subshell is 2(2l + 1). For l = 2 (d-subshell), the maximum capacity is 2(2(2) + 1) = 2(5) = 10 electrons."
+      },
+      {
+        "id": 16,
+        "question": "According to Bohr's theory, hydrogen atom spectra consists of:",
+        "options": {
+          "A": "Continuous spectra",
+          "B": "Line spectra",
+          "C": "Band spectra",
+          "D": "None of these"
+        },
+        "correctAnswer": "B",
+        "explanation": "Electrons emit radiation of specific frequencies only when transitioning between discrete energy levels, producing distinct emission lines (a line spectrum)."
+      },
+      {
+        "id": 17,
+        "question": "The quantum number which describes the shape of an atomic orbital is:",
+        "options": {
+          "A": "Azimuthal Quantum Number",
+          "B": "Principal Quantum Number",
+          "C": "Spin Quantum Number",
+          "D": "Magnetic Quantum Number"
+        },
+        "correctAnswer": "A",
+        "explanation": "The Azimuthal (or orbital angular momentum) quantum number (l) defines the three-dimensional geometry/shape of the atomic orbital."
+      },
+      {
+        "id": 18,
+        "question": "Identify the element in which the ratio of s-electrons to p-electrons is 3:5:",
+        "options": {
+          "A": "P",
+          "B": "Al",
+          "C": "S",
+          "D": "K"
+        },
+        "correctAnswer": "C",
+        "explanation": "Sulfur (S, Z=16) has the configuration 1s² 2s² 2p⁶ 3s² 3p⁴. Total s-electrons = 2 + 2 + 2 = 6. Total p-electrons = 6 + 4 = 10. The ratio of s to p electrons is 6:10, which simplifies to 3:5."
+      },
+      {
+        "id": 19,
+        "question": "Identify the orbital which has dumbbell shape",
+        "options": {
+          "A": "s-orbital",
+          "B": "p-orbital",
+          "C": "d-orbital",
+          "D": "f-orbital"
+        },
+        "correctAnswer": "B",
+        "explanation": "A p-orbital consists of two lobes situated on opposite sides of the nucleus, giving it a characteristic dumbbell shape."
+      },
+      {
+        "id": 20,
+        "question": "The pair of orbitals with electron density along the axes is",
+        "options": {
+          "A": "d_x2-y2 and d_z2",
+          "B": "d_xy and d_yz",
+          "C": "d_xz and d_yz",
+          "D": "d_xy and d_xz"
+        },
+        "correctAnswer": "A",
+        "explanation": "The d_x²-y² orbital has its lobes aligned directly along the x and y axes, while the d_z² orbital has its primary electron density along the z-axis. The remaining d-orbitals (d_xy, d_yz, d_xz) have lobes located between the axes."
+      }
+    ];
+
+    const userAnswers = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      
+      atomicStructureQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "quiz-card";
+        card.id = `q-card-${q.id}`;
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = `${index + 1}. ${q.question}`;
+        card.appendChild(title);
+
+        const optionsGrid = document.createElement("div");
+        optionsGrid.className = "options-grid";
+
+        Object.entries(q.options).forEach(([key, text]) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.id = `label-${q.id}-${key}`;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question-${q.id}`;
+          radio.value = key;
+          radio.onclick = () => handleSelectOption(q.id, key);
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(`${key}) ${text}`));
+          optionsGrid.appendChild(label);
+        });
+
+        card.appendChild(optionsGrid);
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.id = `exp-${q.id}`;
+        explanation.innerHTML = `<div class="explanation-title">Explanation:</div>${q.explanation}`;
+        card.appendChild(explanation);
+
+        quizContainer.appendChild(card);
+      });
+
+      updateScoreDisplay();
+    }
+
+    function handleSelectOption(questionId, selectedKey) {
+      if (userAnswers[questionId] !== undefined) return;
+
+      const question = atomicStructureQuestions.find(q => q.id === questionId);
+      userAnswers[questionId] = selectedKey;
+
+      Object.keys(question.options).forEach(key => {
+        const label = document.getElementById(`label-${questionId}-${key}`);
+        const radio = label.querySelector("input");
+        radio.disabled = true;
+
+        if (key === question.correctAnswer) {
+          label.classList.add("correct");
+        } else if (key === selectedKey) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      const exp = document.getElementById(`exp-${questionId}`);
+      exp.style.display = "block";
+
+      updateScoreDisplay();
+    }
+
+    function calculateScore() {
+      let score = 0;
+      atomicStructureQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.correctAnswer) {
+          score++;
+        }
+      });
+      return score;
+    }
+
+    function updateScoreDisplay() {
+      const score = calculateScore();
+      document.getElementById("score-display").textContent = `Score: ${score} / ${atomicStructureQuestions.length}`;
+    }
+
+    function submitQuiz() {
+      const score = calculateScore();
+      const total = atomicStructureQuestions.length;
+      
+      alert(`Quiz Submitted!\nYour Final Score is: ${score} out of ${total}`);
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Quiz Completed";
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

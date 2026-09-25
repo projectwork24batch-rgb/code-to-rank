@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Engineering Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Software Engineering Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "Design Phase usually follows",
+        options: ["Top-Down", "Bottom-Up Random", "End-End"],
+        answer: "Top-Down",
+        explanation: "Software design typically follows a top-down approach where the system is broken down from high-level architectural modules into smaller, detailed components."
+      },
+      {
+        id: 2,
+        question: "What is the major drawback of the Spiral Model?",
+        options: [
+          "Higher amount of risk analysis",
+          "Strong approval and documentation control",
+          "Doesn't work well for smaller projects",
+          "Additional functionalities are added later on"
+        ],
+        answer: "Doesn't work well for smaller projects",
+        explanation: "The Spiral Model involves continuous risk assessment, extensive documentation, and multiple iterations, making it overly complex and expensive for small, low-risk projects."
+      },
+      {
+        id: 3,
+        question: "In Software Engineering, \"Are we building the product right?\" statement refers to",
+        options: ["Validation", "Verification", "Confirmation", "Justification"],
+        answer: "Verification",
+        explanation: "Verification checks whether the software adheres to specifications and standards (\"building the product right\"), whereas Validation checks whether the software meets customer needs (\"building the right product\")."
+      },
+      {
+        id: 4,
+        question: "Software Design objective should be",
+        options: [
+          "Maximize module Cohesion and Minimize the module Coupling",
+          "Minimize module Cohesion and Maximize the module Coupling",
+          "Maximize module Cohesion and Maximize the module Coupling"
+        ],
+        answer: "Maximize module Cohesion and Minimize the module Coupling",
+        explanation: "High cohesion ensures that elements within a module are closely related and focused on a single task, while low coupling minimizes dependencies between different modules, making the system modular and easy to maintain."
+      },
+      {
+        id: 5,
+        question: "Alpha and Beta testing refers to",
+        options: ["White Box Testing", "Black Box Testing", "System Testing", "Acceptance Testing"],
+        answer: "Acceptance Testing",
+        explanation: "Alpha testing (conducted internally by developers/internal users) and Beta testing (conducted externally by end-users) are both forms of User Acceptance Testing (UAT) performed to ensure the system meets business requirements before final release."
+      },
+      {
+        id: 6,
+        question: "Modules A and B Operate on the same input and Output then the Cohesion is",
+        options: ["Linear Cohesion", "Communicational Cohesion", "Temporal Cohesion", "Random Cohesion"],
+        answer: "Communicational Cohesion",
+        explanation: "Communicational cohesion occurs when elements or functions within a module execute on the same input data or produce the same output data."
+      },
+      {
+        id: 7,
+        question: "Regression Testing is mainly associated to",
+        options: ["Functional Testing", "Development Testing", "Dataflow Testing", "Maintenance Testing"],
+        answer: "Functional Testing",
+        explanation: "Regression testing re-evaluates existing code after modifications to ensure that functional features continue to work as expected without introducing new bugs."
+      },
+      {
+        id: 8,
+        question: "Basis Path Testing is related to",
+        options: ["System Testing", "White Box Testing", "Black Box Testing", "Unit Testing"],
+        answer: "White Box Testing",
+        explanation: "Basis path testing is a white-box testing technique that uses a control flow graph to derive independent execution paths through internal source code structures."
+      },
+      {
+        id: 9,
+        question: "The attributes of good software among the following: (a) Development (b) Functionality (c) Maintainability (d) Correctness",
+        options: ["a, b, c only", "b, c, d only", "a, b, d only", "a, c, d only"],
+        answer: "b, c, d only",
+        explanation: "Functionality, maintainability, and correctness directly describe product quality attributes, whereas \"development\" is a lifecycle phase/process rather than a software quality metric."
+      },
+      {
+        id: 10,
+        question: "What does SDLC stands for?",
+        options: ["System Design Life Cycle", "Software Design Life Cycle", "Software Development Life Cycle", "System Development Life cycle"],
+        answer: "Software Development Life Cycle",
+        explanation: "SDLC represents the systematic process followed by software organizations to design, develop, and test high-quality software."
+      },
+      {
+        id: 11,
+        question: "_______ is a software development life cycle model that is chosen if the development team has less experience on similar projects.",
+        options: ["Iterative Enhancement Model", "RAD", "Spiral", "Waterfall"],
+        answer: "Spiral",
+        explanation: "The Spiral Model emphasizes risk analysis and risk management. When a development team lacks experience with similar projects, project risks are high, making the iterative risk-evaluation approach of the Spiral model ideal."
+      },
+      {
+        id: 12,
+        question: "Which one of the following is not a software process quality?",
+        options: ["Visibility", "Timeliness", "Productivity", "Portability"],
+        answer: "Portability",
+        explanation: "Portability is a product quality attribute (how easily software can move between environments), whereas Visibility, Timeliness, and Productivity are process quality attributes that measure the software engineering process itself."
+      },
+      {
+        id: 13,
+        question: "Which of the following document contains the user system requirements?",
+        options: ["SRD", "DDD", "SDD", "SRS"],
+        answer: "SRS",
+        explanation: "SRS (Software Requirements Specification) is the comprehensive document that captures both functional and non-functional requirements, outlining what the software system must do for the user."
+      },
+      {
+        id: 14,
+        question: "Which of the following testing is also known as white-box testing?",
+        options: ["structural testing", "Error guessing technique", "Design based testing", "Integration testing"],
+        answer: "structural testing",
+        explanation: "White-box testing focuses on the internal structure, code architecture, and logic pathways of the application, which is why it is formally referred to as structural testing (or glass-box testing)."
+      },
+      {
+        id: 15,
+        question: "Cyclomatic complexity is",
+        options: ["White-box testing", "Black box testing", "Grey box testing", "Unit Testing"],
+        answer: "White-box testing",
+        explanation: "Cyclomatic complexity is a software metric used to measure the quantitative complexity of a program's source code flow graph, directly aiding in designing test cases for white-box testing to ensure complete path coverage."
+      },
+      {
+        id: 16,
+        question: "The spiral model was originally proposed by",
+        options: ["Barry Boehm", "Pressman", "Royce", "Jalote"],
+        answer: "Barry Boehm",
+        explanation: "Barry Boehm introduced the Spiral Model in his 1986 paper to combine iterative development with systematic, risk-driven analysis."
+      },
+      {
+        id: 17,
+        question: "In which phase of SDLC is the feasibility study conducted?",
+        options: ["Planning", "Implementation", "Testing", "Maintenance"],
+        answer: "Planning",
+        explanation: "The feasibility study occurs during the initial Planning / Requirement Analysis phase to evaluate financial, operational, and technical viability before resource allocation."
+      },
+      {
+        id: 18,
+        question: "What is the primary purpose of a Software Requirements Specification (SRS) document?",
+        options: [
+          "To define the coding standards",
+          "To outline the software design",
+          "To describe the functional and non-functional requirements",
+          "To test the software"
+        ],
+        answer: "To describe the functional and non-functional requirements",
+        explanation: "The SRS document serves as a contract establishing expected software behaviors (functional) and quality constraints like performance and security (non-functional)."
+      },
+      {
+        id: 19,
+        question: "The second phase of a waterfall model is",
+        options: ["Requirement gathering", "Design", "Implementation", "Verification"],
+        answer: "Design",
+        explanation: "The classical Waterfall model follows a strict linear sequence: Requirement Analysis (1st) > Design (2nd) > Implementation/Coding (3rd) > Testing/Verification (4th) > Maintenance (5th)."
+      },
+      {
+        id: 20,
+        question: "In Agile development, which methodology uses sprints?",
+        options: ["Kanban", "Scrum", "Waterfall", "Spiral"],
+        answer: "Scrum",
+        explanation: "Scrum breaks the development cycle into short, fixed-length timeboxes called sprints (typically 1 to 4 weeks long) to deliver usable increments of software."
+      },
+      {
+        id: 21,
+        question: "Which testing level focuses on individual components or modules of the software?",
+        options: ["Unit Testing", "System Testing", "Integration Testing", "Validation Testing"],
+        answer: "Unit Testing",
+        explanation: "Unit testing is the lowest level of testing, aimed at verifying isolated source code components, functions, or procedures before they are combined during integration testing."
+      },
+      {
+        id: 22,
+        question: "Which of the following is an advantage of the Incremental Model?",
+        options: [
+          "Complete product is delivered at once",
+          "Allows early detection of errors",
+          "Does not support customer feedback",
+          "Requires no planning"
+        ],
+        answer: "Allows early detection of errors",
+        explanation: "Building and testing software in smaller chunks allows teams to catch and fix bugs early in development before they impact the final system."
+      },
+      {
+        id: 23,
+        question: "Which of the following best describes debugging?",
+        options: [
+          "The process of writing code",
+          "Running a program without any issues",
+          "Adding new features to a program",
+          "Identifying and fixing errors in a program"
+        ],
+        answer: "Identifying and fixing errors in a program",
+        explanation: "Debugging specifically involves identifying, analyzing, and resolving bugs, defects, or logic errors within a program's source code."
+      },
+      {
+        id: 24,
+        question: "Which type of requirement deals with performance, reliability, and security?",
+        options: ["Functional Requirements", "System Requirements", "Non-Functional Requirements", "Business requirements"],
+        answer: "Non-Functional Requirements",
+        explanation: "Performance, reliability, and security specify operational constraints and quality standards of a system, placing them strictly under Non-Functional Requirements."
+      },
+      {
+        id: 25,
+        question: "In Capability Maturity Model, which one of the following is not a maturity level?",
+        options: ["Initial", "Measurable", "Repeatable", "Optimized"],
+        answer: "Measurable",
+        explanation: "The 5 CMM Levels are: Initial (Level 1), Repeatable (Level 2), Defined (Level 3), Managed (Level 4), Optimizing (Level 5). Measurable is not a standard maturity level."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is clicked
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately upon selection
+      explanationEl.style.display = "block";
+
+      // Track score state for this question
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

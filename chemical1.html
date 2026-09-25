@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemical Bonding ECET Practice Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .score-badge {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background-color: #f1f5f9;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 0.75rem;
+      accent-color: var(--primary);
+    }
+
+    .option-label.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-label.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background-color: #eff6ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      color: #1e3a8a;
+    }
+
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-container {
+      text-align: center;
+      margin: 2rem 0 4rem;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .submit-btn:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Chemical Bonding ECET Practice Quiz</h1>
+      <div class="score-badge" id="score-display">Score: 0 / 15</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="quiz-container"></div>
+    <div class="action-container">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Final Quiz</button>
+    </div>
+  </main>
+
+  <script>
+    const chemicalBondingQuestions = [
+      {
+        "id": 1,
+        "question": "NaCl is classified as having what kind of bonds in the solid phase?",
+        "options": {
+          "A": "Covalent",
+          "B": "Ionic",
+          "C": "Polar",
+          "D": "vander Waals"
+        },
+        "correctAnswer": "B",
+        "explanation": "NaCl consists of positively charged sodium ions (Na+) and negatively charged chloride ions (Cl-) held together by strong electrostatic attraction, forming an ionic bond in the solid crystal lattice[cite: 16]."
+      },
+      {
+        "id": 2,
+        "question": "The Bond formed due to sharing of electrons is",
+        "options": {
+          "A": "Ionic bond",
+          "B": "Metallic bond",
+          "C": "Polar bond",
+          "D": "Covalent bond"
+        },
+        "correctAnswer": "D",
+        "explanation": "A covalent bond is formed when two atoms share one or more pairs of electrons to achieve a stable octet configuration[cite: 16]."
+      },
+      {
+        "id": 3,
+        "question": "N2 molecule contains",
+        "options": {
+          "A": "Covalent bond",
+          "B": "Ionic bond",
+          "C": "Hydrogen bond",
+          "D": "Metallic bond"
+        },
+        "correctAnswer": "A",
+        "explanation": "The nitrogen molecule (N2) consists of two nitrogen atoms sharing three pairs of valence electrons to form a strong triple covalent bond[cite: 16]."
+      },
+      {
+        "id": 4,
+        "question": "NaCl bond is formed by donating electrons between",
+        "options": {
+          "A": "Sodium and Chlorine",
+          "B": "Sodium and Oxygen",
+          "C": "Chlorine and Hydrogen",
+          "D": "Sodium and Hydrogen"
+        },
+        "correctAnswer": "A",
+        "explanation": "Sodium (Na) donates its single valence electron to Chlorine (Cl), forming Na+ and Cl- ions that attract each other to create an ionic bond[cite: 16]."
+      },
+      {
+        "id": 5,
+        "question": "O2 molecule contains",
+        "options": {
+          "A": "Covalent bond",
+          "B": "Ionic bond",
+          "C": "Hydrogen bond",
+          "D": "Metallic bond"
+        },
+        "correctAnswer": "A",
+        "explanation": "Two oxygen atoms combine by sharing two pairs of electrons between them, forming a double covalent bond[cite: 16]."
+      },
+      {
+        "id": 6,
+        "question": "Which of the following is favourable condition for the formation of ionic bond?",
+        "options": {
+          "A": "Small cation with small charge",
+          "B": "Small anion with large charge",
+          "C": "Large difference in the electronegativity",
+          "D": "Small cation with large charge"
+        },
+        "correctAnswer": "C",
+        "explanation": "A large electronegativity difference between combining atoms ensures complete transfer of electrons from the electropositive metal to the electronegative non-metal, favoring ionic bond formation[cite: 16]."
+      },
+      {
+        "id": 7,
+        "question": "The covalency of nitrogen in HNO3 is",
+        "options": {
+          "A": "2",
+          "B": "3",
+          "C": "4",
+          "D": "5"
+        },
+        "correctAnswer": "C",
+        "explanation": "In nitric acid (HNO3), nitrogen forms one double bond with oxygen, one single bond with an -OH group, and one coordinate covalent bond with the third oxygen atom, utilizing 4 electron pairs (covalency of 4)[cite: 16]."
+      },
+      {
+        "id": 8,
+        "question": "Which of the following molecules possesses a triple covalent bond?",
+        "options": {
+          "A": "O2",
+          "B": "N2",
+          "C": "Cl2",
+          "D": "H2"
+        },
+        "correctAnswer": "B",
+        "explanation": "Each nitrogen atom has 5 valence electrons and requires 3 more to complete its octet, leading to the sharing of 3 electron pairs (a triple bond) in an N2 molecule[cite: 16]."
+      },
+      {
+        "id": 9,
+        "question": "Electrovalent (ionic) bond is easily formed between elements having",
+        "options": {
+          "A": "Low ionization energy and high electron affinity",
+          "B": "High ionization energy and low electron affinity",
+          "C": "Low ionization energy and low electron affinity",
+          "D": "High ionization energy and high electron affinity"
+        },
+        "correctAnswer": "A",
+        "explanation": "Low ionization energy allows the metal to lose electrons easily to form a cation, while high electron affinity allows the non-metal to readily accept electrons to form an anion[cite: 16]."
+      },
+      {
+        "id": 10,
+        "question": "The electronic configuration of an element M is [Ne] 3s¹ and that of X is 1s² 2s² 2p⁵. The type of bond present between M and X is:",
+        "options": {
+          "A": "Covalent Bond",
+          "B": "Electrovalent Bond",
+          "C": "Co-ordinate Covalent Bond",
+          "D": "Hydrogen Bond"
+        },
+        "correctAnswer": "B",
+        "explanation": "Element M is an alkali metal (Na) that loses 1 electron, and X is a halogen (F) that accepts 1 electron, resulting in electron transfer and the formation of an electrovalent (ionic) bond[cite: 16]."
+      },
+      {
+        "id": 11,
+        "question": "The pair of molecules in which the central atom has octet of electrons is:",
+        "options": {
+          "A": "BeCl₂, BF₃",
+          "B": "H₂O, BeCl₂",
+          "C": "H₂O, NH₃",
+          "D": "NH₃, BF₃"
+        },
+        "correctAnswer": "C",
+        "explanation": "In both H₂O (8 electrons around O) and NH₃ (8 electrons around N), the central atoms possess a complete octet of valence electrons. BeCl₂ (4 electrons) and BF₃ (6 electrons) are electron-deficient[cite: 16]."
+      },
+      {
+        "id": 12,
+        "question": "In which of the following molecules, bond angle is 120°?",
+        "options": {
+          "A": "BF₃",
+          "B": "NH₃",
+          "C": "H₂O",
+          "D": "CH₄"
+        },
+        "correctAnswer": "A",
+        "explanation": "BF₃ has sp² hybridization with a trigonal planar geometry, resulting in ideal bond angles of 120°[cite: 16]."
+      },
+      {
+        "id": 13,
+        "question": "The shape of NH₃ molecule is",
+        "options": {
+          "A": "Pyramidal",
+          "B": "Tetrahedral",
+          "C": "Trigonal planar",
+          "D": "Linear"
+        },
+        "correctAnswer": "A",
+        "explanation": "NH₃ has sp³ hybridization with 3 bond pairs and 1 lone pair on the central nitrogen atom, giving it a trigonal pyramidal shape due to lone pair-bond pair repulsion[cite: 16]."
+      },
+      {
+        "id": 14,
+        "question": "The number of bond pairs in CO₂ molecule is",
+        "options": {
+          "A": "4",
+          "B": "2",
+          "C": "3",
+          "D": "1"
+        },
+        "correctAnswer": "A",
+        "explanation": "Carbon dioxide (O=C=O) forms two double bonds between the central carbon atom and two oxygen atoms, totaling 4 shared electron pairs (4 bond pairs)[cite: 16]."
+      },
+      {
+        "id": 15,
+        "question": "Which one of the following statements regarding ionic compounds is correct?",
+        "options": {
+          "A": "High melting point",
+          "B": "Conduct electricity in solid state",
+          "C": "Soluble in non-polar solvents",
+          "D": "Generally volatile"
+        },
+        "correctAnswer": "A",
+        "explanation": "Ionic compounds possess strong electrostatic forces of attraction between oppositely charged ions in a 3D lattice, requiring significant thermal energy to break apart, leading to high melting points[cite: 16]."
+      }
+    ];
+
+    const userAnswers = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      
+      chemicalBondingQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "quiz-card";
+        card.id = `q-card-${q.id}`;
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = `${index + 1}. ${q.question}`;
+        card.appendChild(title);
+
+        const optionsGrid = document.createElement("div");
+        optionsGrid.className = "options-grid";
+
+        Object.entries(q.options).forEach(([key, text]) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.id = `label-${q.id}-${key}`;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question-${q.id}`;
+          radio.value = key;
+          radio.onclick = () => handleSelectOption(q.id, key);
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(`${key}) ${text}`));
+          optionsGrid.appendChild(label);
+        });
+
+        card.appendChild(optionsGrid);
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.id = `exp-${q.id}`;
+        explanation.innerHTML = `<div class="explanation-title">Explanation:</div>${q.explanation}`;
+        card.appendChild(explanation);
+
+        quizContainer.appendChild(card);
+      });
+
+      updateScoreDisplay();
+    }
+
+    function handleSelectOption(questionId, selectedKey) {
+      if (userAnswers[questionId] !== undefined) return;
+
+      const question = chemicalBondingQuestions.find(q => q.id === questionId);
+      userAnswers[questionId] = selectedKey;
+
+      Object.keys(question.options).forEach(key => {
+        const label = document.getElementById(`label-${questionId}-${key}`);
+        const radio = label.querySelector("input");
+        radio.disabled = true;
+
+        if (key === question.correctAnswer) {
+          label.classList.add("correct");
+        } else if (key === selectedKey) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      const exp = document.getElementById(`exp-${questionId}`);
+      exp.style.display = "block";
+
+      updateScoreDisplay();
+    }
+
+    function calculateScore() {
+      let score = 0;
+      chemicalBondingQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.correctAnswer) {
+          score++;
+        }
+      });
+      return score;
+    }
+
+    function updateScoreDisplay() {
+      const score = calculateScore();
+      document.getElementById("score-display").textContent = `Score: ${score} / ${chemicalBondingQuestions.length}`;
+    }
+
+    function submitQuiz() {
+      const score = calculateScore();
+      const total = chemicalBondingQuestions.length;
+      
+      alert(`Quiz Submitted!\nYour Final Score is: ${score} out of ${total}`);
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Quiz Completed";
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

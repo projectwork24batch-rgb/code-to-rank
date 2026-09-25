@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polymers & Plastics Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Polymers & Plastics Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "Which one of the following statement is not true?",
+        options: [
+          "Natural rubber has the trans-configuration at every double bond",
+          "Buna-S is a copolymer of butadiene and styrene",
+          "Natural rubber is a 1,4-polymer of isoprene",
+          "In vulcanization, the formation of sulphur bridges between different chains makes rubber harder and stronger"
+        ],
+        answer: "Natural rubber has the trans-configuration at every double bond",
+        explanation: "Natural rubber is cis-1,4-polyisoprene and possesses the cis-configuration at every double bond, whereas gutta-percha is the trans-isomer."
+      },
+      {
+        id: 2,
+        question: "The monomers of Buna-S rubber are",
+        options: [
+          "Styrene and butadiene",
+          "Styrene and 2-propene",
+          "Isoprene and butadiene",
+          "Styrene and sulphur"
+        ],
+        answer: "Styrene and butadiene",
+        explanation: "Buna-S is a synthetic rubber produced by the copolymerization of 1,3-butadiene and styrene in the presence of a peroxide catalyst."
+      },
+      {
+        id: 3,
+        question: "The plastics which soften when heat is applied with or without pressure, but require cooling to set them to shape are called as",
+        options: [
+          "Thermosofting materials",
+          "Thermosetting materials",
+          "Thermoplastic materials",
+          "Thermostatting materials"
+        ],
+        answer: "Thermoplastic materials",
+        explanation: "Thermoplastic materials consist of linear or slightly branched polymers that repeatedly soften upon heating and harden upon cooling without undergoing permanent chemical change."
+      },
+      {
+        id: 4,
+        question: "Which of the following is not a thermoplastic?",
+        options: [
+          "Bakelite",
+          "Polystyrene",
+          "Polythene",
+          "Nylon"
+        ],
+        answer: "Bakelite",
+        explanation: "Bakelite is a thermosetting polymer that forms extensive cross-links upon heating and cannot be remolded or softened again."
+      },
+      {
+        id: 5,
+        question: "Isoprene is a monomer of",
+        options: [
+          "Starch",
+          "Cellulose",
+          "Natural rubber",
+          "Lignin"
+        ],
+        answer: "Natural rubber",
+        explanation: "Natural rubber is a natural polymer made up of repeating units of 2-methyl-1,3-butadiene, commonly known as isoprene."
+      },
+      {
+        id: 6,
+        question: "Buna-S is a copolymer of",
+        options: [
+          "Butadiene and Styrene",
+          "Butadiene and Acrylonitrile",
+          "Butadiene and Isoprene",
+          "Formaldehyde and Styrene"
+        ],
+        answer: "Butadiene and Styrene",
+        explanation: "Buna-S stands for Bu (butadiene), Na (sodium catalyst), and S (styrene), indicating it is a copolymer composed of butadiene and styrene monomers."
+      },
+      {
+        id: 7,
+        question: "Which of the following is a thermosetting plastic?",
+        options: [
+          "Bakelite",
+          "Polystyrene",
+          "Polythene",
+          "Nylon"
+        ],
+        answer: "Bakelite",
+        explanation: "Bakelite (phenol-formaldehyde resin) is a heavily cross-linked thermosetting polymer that permanently sets into shape during molding."
+      },
+      {
+        id: 8,
+        question: "Tetra Fluoro Ethane (Tetrafluoroethylene) is a monomer of",
+        options: [
+          "Teflon",
+          "Nylon",
+          "Styrene",
+          "Rubber"
+        ],
+        answer: "Teflon",
+        explanation: "Teflon (Polytetrafluoroethylene or PTFE) is synthesized via the free-radical polymerization of tetrafluoroethylene monomers."
+      },
+      {
+        id: 9,
+        question: "Buna-N is a copolymer of",
+        options: [
+          "Butadiene and Styrene",
+          "Butadiene and Acrylonitrile",
+          "Butadiene and Isoprene",
+          "Formaldehyde and Styrene"
+        ],
+        answer: "Butadiene and Acrylonitrile",
+        explanation: "Buna-N is a synthetic rubber produced by the copolymerization of 1,3-butadiene and acrylonitrile (represented by 'N')."
+      },
+      {
+        id: 10,
+        question: "Which of the following is an example of co-polymer?",
+        options: [
+          "PVC",
+          "Teflon",
+          "Polythene",
+          "Buna-S rubber"
+        ],
+        answer: "Buna-S rubber",
+        explanation: "A copolymer is synthesized from more than one species of monomer. Buna-S uses two different monomers (butadiene and styrene), whereas PVC, Teflon, and Polythene are homopolymers."
+      },
+      {
+        id: 11,
+        question: "Which of the following polymer contains nitrogen?",
+        options: [
+          "PVC",
+          "Bakelite",
+          "Nylon",
+          "Teflon"
+        ],
+        answer: "Nylon",
+        explanation: "Nylons are polyamides that contain characteristic amide linkages (-CO-NH-) in their polymer backbone, incorporating nitrogen atoms."
+      },
+      {
+        id: 12,
+        question: "Isoprene is a monomer of",
+        options: [
+          "Teflon",
+          "Nylon",
+          "Natural rubber",
+          "PVC"
+        ],
+        answer: "Natural rubber",
+        explanation: "Isoprene (2-methyl-1,3-butadiene) polymerizes to form polyisoprene, which constitutes natural rubber."
+      },
+      {
+        id: 13,
+        question: "Which of the following is an addition polymer?",
+        options: [
+          "Nylon-6,6",
+          "Terylene",
+          "Polythene",
+          "Bakelite"
+        ],
+        answer: "Polythene",
+        explanation: "Polythene is an addition polymer formed by the direct repeated addition of ethene monomers without the elimination of any small byproduct molecules."
+      },
+      {
+        id: 14,
+        question: "Vulcanization of natural rubber involves heating it with",
+        options: [
+          "Sulfur",
+          "Carbon black",
+          "Phosphorus",
+          "Silicon"
+        ],
+        answer: "Sulfur",
+        explanation: "Vulcanization involves heating raw rubber with sulfur to introduce disulfide cross-links between polymer chains, improving elasticity and strength."
+      },
+      {
+        id: 15,
+        question: "Neoprene is an example of:",
+        options: [
+          "Elastomer",
+          "Thermoplastic Polymer",
+          "Thermosetting Polymer",
+          "Co-Polymer"
+        ],
+        answer: "Elastomer",
+        explanation: "Neoprene (polychloroprene) is a synthetic rubber characterized by high elasticity and weak intermolecular forces, classifying it as an elastomer."
+      },
+      {
+        id: 16,
+        question: "Which of the following is NOT a natural polymer?",
+        options: [
+          "Wool",
+          "Cellulose",
+          "Starch",
+          "Rayon"
+        ],
+        answer: "Rayon",
+        explanation: "Rayon is a semi-synthetic polymer produced by chemically treating natural cellulose, whereas wool, cellulose, and starch are directly found in nature."
+      },
+      {
+        id: 17,
+        question: "The element that is added to raw rubber during vulcanization is:",
+        options: [
+          "S",
+          "Se",
+          "B",
+          "N"
+        ],
+        answer: "S",
+        explanation: "Sulfur (S) is the primary chemical element added to raw rubber to form cross-linking bridges during the vulcanization process."
+      },
+      {
+        id: 18,
+        question: "The monomer used in the preparation of Buna-S is",
+        options: [
+          "1,3-Butadiene and Styrene",
+          "1,3-Butadiene and Acrylonitrile",
+          "Vinyl chloride",
+          "Chloroprene"
+        ],
+        answer: "1,3-Butadiene and Styrene",
+        explanation: "Buna-S synthetic rubber is specifically manufactured using 1,3-butadiene and styrene as constituent monomers."
+      },
+      {
+        id: 19,
+        question: "Which of the following is a thermosetting polymer?",
+        options: [
+          "Bakelite",
+          "Polythene",
+          "PVC",
+          "Nylon 6,6"
+        ],
+        answer: "Bakelite",
+        explanation: "Bakelite forms permanent 3D cross-linked covalent networks upon heating, making it a classic thermosetting polymer."
+      },
+      {
+        id: 20,
+        question: "Which of the following is an addition polymer?",
+        options: [
+          "Polyethylene",
+          "Nylon 6,6",
+          "Terylene",
+          "Bakelite"
+        ],
+        answer: "Polyethylene",
+        explanation: "Polyethylene is produced via addition polymerization of ethylene molecules without losing any atoms or forming byproducts."
+      },
+      {
+        id: 21,
+        question: "The monomer used in manufacturing PVC is",
+        options: [
+          "Vinyl chloride",
+          "Ethylene",
+          "Styrene",
+          "Propylene"
+        ],
+        answer: "Vinyl chloride",
+        explanation: "PVC stands for Polyvinyl Chloride, which is produced by polymerizing vinyl chloride monomers."
+      },
+      {
+        id: 22,
+        question: "Which polymer is biodegradable?",
+        options: [
+          "Cellulose",
+          "PVC",
+          "Polythene",
+          "Teflon"
+        ],
+        answer: "Cellulose",
+        explanation: "Cellulose is a naturally occurring biopolymer made of glucose units that can be decomposed by biological processes and microorganisms, unlike synthetic plastics like PVC, Polythene, and Teflon."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

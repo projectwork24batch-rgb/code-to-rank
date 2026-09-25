@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Programming Practice Exam Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
+        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .q-box { background: #fafafa; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 6px; }
+        
+        .option { display: block; margin: 10px 0; font-size: 16px; cursor: pointer; padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; transition: background 0.2s; }
+        .option:hover { background: #f0f0f0; }
+        .option input { margin-right: 12px; transform: scale(1.1); }
+
+        .option.correct { background-color: #d4edda !important; border-color: #c3e6cb !important; color: #155724; font-weight: bold; }
+        .option.incorrect { background-color: #f8d7da !important; border-color: #f5c6cb !important; color: #721c24; }
+        
+        .disabled-box { pointer-events: none; }
+        .explanation { display: none; margin-top: 15px; padding: 12px; background-color: #e9ecef; border-left: 4px solid #007BFF; font-size: 14px; color: #495057; border-radius: 0 4px 4px 0; }
+
+        .btn { display: block; width: 100%; background: #007BFF; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #0056b3; }
+        #score-output { font-size: 22px; font-weight: bold; margin-top: 25px; color: #28a745; text-align: center; }
+        .back-nav { display: inline-block; margin-bottom: 20px; color: #007BFF; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <a href="core.html" class="back-nav">← Back to Menu</a>
+    <h1>Android Programming Practice Quiz</h1>
+    
+    <div id="questions-list"></div>
+    
+    <button class="btn" onclick="checkYourScore()">Finish & Calculate Score</button>
+    <div id="score-output"></div>
+</div>
+
+<script>
+    const coreQuestions = [
+      {
+        id: 1,
+        question: "Android is primarily a:",
+        options: ["A) Programming language", "B) Mobile operating system", "C) Database", "D) Web browser"],
+        correctIndex: 1,
+        explanation: "Android is a mobile operating system developed primarily for smartphones, tablets, TVs, and other devices."
+      },
+      {
+        id: 2,
+        question: "Which programming languages are commonly used for Android application development?",
+        options: ["A) Java and Kotlin", "B) HTML only", "C) SQL only", "D) C only"],
+        correctIndex: 0,
+        explanation: "Java and Kotlin are commonly used to develop Android applications."
+      },
+      {
+        id: 3,
+        question: "Which tool is commonly used to develop Android applications?",
+        options: ["A) Android Studio", "B) MS Paint", "C) Notepad only", "D) Calculator"],
+        correctIndex: 0,
+        explanation: "Android Studio is the official integrated development environment (IDE) for Android development."
+      },
+      {
+        id: 4,
+        question: "What is the purpose of the Android Manifest file?",
+        options: ["A) To store images", "B) To declare application components and permissions", "C) To store SQL queries only", "D) To create animations"],
+        correctIndex: 1,
+        explanation: "AndroidManifest.xml contains important information about the application, including components, permissions, and other configuration details."
+      },
+      {
+        id: 5,
+        question: "Which file is commonly used to define the user interface of an Android activity?",
+        options: ["A) XML layout file", "B) Manifest file", "C) Gradle file", "D) Database file"],
+        correctIndex: 0,
+        explanation: "XML layout files define the arrangement and properties of UI elements such as buttons, text fields, and images."
+      },
+      {
+        id: 6,
+        question: "Which of the following is an Android application component?",
+        options: ["A) Activity", "B) Service", "C) Broadcast Receiver", "D) All of the above"],
+        correctIndex: 3,
+        explanation: "The four major Android application components are Activity, Service, Broadcast Receiver, and Content Provider."
+      },
+      {
+        id: 7,
+        question: "Which component represents a single screen with a user interface?",
+        options: ["A) Service", "B) Activity", "C) Content Provider", "D) Broadcast Receiver"],
+        correctIndex: 1,
+        explanation: "An Activity generally represents one screen of an Android application where the user interacts with the application."
+      },
+      {
+        id: 8,
+        question: "Which component runs operations in the background?",
+        options: ["A) Activity", "B) Service", "C) Button", "D) TextView"],
+        correctIndex: 1,
+        explanation: "A Service performs operations in the background without necessarily providing a user interface."
+      },
+      {
+        id: 9,
+        question: "Which component receives system or application broadcast messages?",
+        options: ["A) Activity", "B) Service", "C) Broadcast Receiver", "D) Content Provider"],
+        correctIndex: 2,
+        explanation: "Broadcast Receivers respond to broadcast messages such as battery changes, boot completion, or custom broadcasts."
+      },
+      {
+        id: 10,
+        question: "Which component is used to share data between applications?",
+        options: ["A) Activity", "B) Content Provider", "C) Button", "D) Service"],
+        correctIndex: 1,
+        explanation: "A Content Provider provides a standard interface for managing and sharing application data with other applications."
+      },
+      {
+        id: 11,
+        question: "Which method is called when an Activity is first created?",
+        options: ["A) onStart()", "B) onCreate()", "C) onPause()", "D) onStop()"],
+        correctIndex: 1,
+        explanation: "onCreate() is called when the Activity is initially created. It is commonly used to initialize the UI and other resources."
+      },
+      {
+        id: 12,
+        question: "Which callback is called when an Activity becomes visible?",
+        options: ["A) onStart()", "B) onDestroy()", "C) onPause()", "D) onCreate()"],
+        correctIndex: 0,
+        explanation: "onStart() is called when the Activity becomes visible to the user."
+      },
+      {
+        id: 13,
+        question: "Which callback indicates that the Activity is ready for user interaction?",
+        options: ["A) onPause()", "B) onResume()", "C) onStop()", "D) onDestroy()"],
+        correctIndex: 1,
+        explanation: "onResume() is called when the Activity comes to the foreground and the user can interact with it."
+      },
+      {
+        id: 14,
+        question: "Which method is called when an Activity is partially obscured?",
+        options: ["A) onPause()", "B) onStart()", "C) onCreate()", "D) onDestroy()"],
+        correctIndex: 0,
+        explanation: "onPause() is called when the Activity loses focus or is partially covered by another Activity."
+      },
+      {
+        id: 15,
+        question: "Which method is called when an Activity is no longer visible?",
+        options: ["A) onResume()", "B) onStart()", "C) onStop()", "D) onCreate()"],
+        correctIndex: 2,
+        explanation: "onStop() is called when the Activity is no longer visible to the user."
+      },
+      {
+        id: 16,
+        question: "Which method is called before an Activity is destroyed?",
+        options: ["A) onStart()", "B) onDestroy()", "C) onResume()", "D) onPause()"],
+        correctIndex: 1,
+        explanation: "onDestroy() is called before the Activity is destroyed."
+      },
+      {
+        id: 17,
+        question: "Which is the correct basic Activity life-cycle sequence?",
+        options: ["A) onCreate → onStart → onResume", "B) onResume → onCreate → onStop", "C) onStop → onCreate → onStart", "D) onPause → onCreate → onResume"],
+        correctIndex: 0,
+        explanation: "When an Activity starts, the normal sequence is onCreate → onStart → onResume."
+      },
+      {
+        id: 18,
+        question: "What is an Intent in Android?",
+        options: ["A) Database", "B) Messaging object used to request an action", "C) UI layout", "D) Programming language"],
+        correctIndex: 1,
+        explanation: "An Intent is used to communicate between Android components and request an action."
+      },
+      {
+        id: 19,
+        question: "Which Intent is used to explicitly start a specific Activity?",
+        options: ["A) Explicit Intent", "B) Implicit Intent", "C) Broadcast Intent only", "D) Database Intent"],
+        correctIndex: 0,
+        explanation: "An Explicit Intent specifies the exact component that should handle the Intent."
+      },
+      {
+        id: 20,
+        question: "Which Intent does not necessarily specify a particular component?",
+        options: ["A) Explicit Intent", "B) Implicit Intent", "C) Activity Intent", "D) Service Intent"],
+        correctIndex: 1,
+        explanation: "An Implicit Intent specifies an action rather than a specific component. Android determines which component can handle that action."
+      },
+      {
+        id: 21,
+        question: "Which method is commonly used to start another Activity?",
+        options: ["A) startActivity()", "B) openActivity()", "C) runActivity()", "D) createActivity()"],
+        correctIndex: 0,
+        explanation: "startActivity() is used to launch another Activity using an Intent."
+      },
+      {
+        id: 22,
+        question: "Which class is used to create an Intent?",
+        options: ["A) Intent", "B) ActivityIntent", "C) AndroidIntent", "D) StartIntent"],
+        correctIndex: 0,
+        explanation: "Android provides the Intent class for creating Intent objects."
+      },
+      {
+        id: 23,
+        question: "Which layout arranges its child views in a single horizontal or vertical direction?",
+        options: ["A) LinearLayout", "B) FrameLayout", "C) TableLayout", "D) ConstraintLayout"],
+        correctIndex: 0,
+        explanation: "LinearLayout arranges views in a single direction: horizontal or vertical."
+      },
+      {
+        id: 24,
+        question: "Which layout allows positioning views using constraints?",
+        options: ["A) LinearLayout", "B) ConstraintLayout", "C) TableLayout", "D) FrameLayout"],
+        correctIndex: 1,
+        explanation: "ConstraintLayout positions UI elements using relationships or constraints between views and the parent."
+      },
+      {
+        id: 25,
+        question: "Which UI control is used to display text?",
+        options: ["A) Button", "B) TextView", "C) EditText", "D) CheckBox"],
+        correctIndex: 1,
+        explanation: "TextView displays text to the user."
+      },
+      {
+        id: 26,
+        question: "Which control allows the user to enter text?",
+        options: ["A) TextView", "B) ImageView", "C) EditText", "D) Button"],
+        correctIndex: 2,
+        explanation: "EditText provides an editable text field where the user can enter information."
+      },
+      {
+        id: 27,
+        question: "Which control is commonly used to perform an action when clicked?",
+        options: ["A) Button", "B) TextView", "C) ImageView", "D) ProgressBar"],
+        correctIndex: 0,
+        explanation: "A Button allows the user to perform an action by clicking it."
+      },
+      {
+        id: 28,
+        question: "Which control allows the user to select or deselect an option?",
+        options: ["A) TextView", "B) CheckBox", "C) ImageView", "D) EditText"],
+        correctIndex: 1,
+        explanation: "A CheckBox allows the user to select or clear an option."
+      },
+      {
+        id: 29,
+        question: "Which database is commonly available locally in Android applications?",
+        options: ["A) SQLite", "B) Oracle only", "C) MySQL only", "D) Excel"],
+        correctIndex: 0,
+        explanation: "SQLite is a lightweight relational database commonly used for local data storage in Android applications."
+      },
+      {
+        id: 30,
+        question: "Which class is commonly used to help create and manage an SQLite database?",
+        options: ["A) SQLiteOpenHelper", "B) Database ManagerOnly", "C) SQLiteActivity", "D) AndroidDatabase"],
+        correctIndex: 0,
+        explanation: "SQLiteOpenHelper helps create, open, and manage SQLite databases and provides methods such as onCreate() and onUpgrade()."
+      }
+    ];
+
+    const listContainer = document.getElementById('questions-list');
+    let fullContent = '';
+    
+    coreQuestions.forEach((q, qIndex) => {
+        let block = `<div class="q-box" id="qbox_${qIndex}" role="radiogroup">
+            <p><strong>Q${qIndex + 1}: ${q.question}</strong></p>`;
+        
+        q.options.forEach((opt, optIndex) => {
+            block += `
+                <label class="option" id="label_${qIndex}_${optIndex}">
+                    <input type="radio" name="q_number_${qIndex}" value="${optIndex}" onclick="revealAnswer(${qIndex}, ${optIndex}, ${q.correctIndex})"> ${opt}
+                </label>
+            `;
+        });
+        
+        if (q.explanation) {
+            block += `<div class="explanation" id="exp_${qIndex}"><strong>Explanation:</strong> ${q.explanation}</div>`;
+        }
+
+        block += `</div>`;
+        fullContent += block;
+    });
+
+    listContainer.innerHTML = fullContent;
+
+    function revealAnswer(qIndex, selectedIndex, correctIndex) {
+        const questionBox = document.getElementById(`qbox_${qIndex}`);
+        const expBox = document.getElementById(`exp_${qIndex}`);
+        
+        coreQuestions[qIndex].options.forEach((_, optIndex) => {
+            const label = document.getElementById(`label_${qIndex}_${optIndex}`);
+            if (optIndex === correctIndex) {
+                label.classList.add('correct');
+            } else if (optIndex === selectedIndex) {
+                label.classList.add('incorrect');
+            }
+        });
+
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+
+        questionBox.classList.add('disabled-box');
+    }
+
+    function checkYourScore() {
+        let rightAnswersCount = 0;
+        coreQuestions.forEach((q, index) => {
+            const chosen = document.querySelector(`input[name="q_number_${index}"]:checked`);
+            if (chosen && parseInt(chosen.value, 10) === q.correctIndex) {
+                rightAnswersCount++;
+            }
+        });
+        
+        document.getElementById('score-output').innerText = `Final Result: You scored ${rightAnswersCount} out of ${coreQuestions.length}!`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

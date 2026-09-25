@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operating Systems & Networking Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Operating Systems & Networking Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "Processes are executed in the sequence they arrive if the jobs follow which scheduling rule?",
+        options: [
+          "Earliest due date",
+          "Slack time remaining",
+          "First Come First Served",
+          "Critical ratio"
+        ],
+        answer: "First Come First Served",
+        explanation: "First-Come, First-Served (FCFS) is a non-preemptive CPU scheduling algorithm that automatically executes queued requests and processes in order of their arrival time."
+      },
+      {
+        id: 2,
+        question: "The 16 bit flag of 8086 microprocessor is responsible to indicate:",
+        options: [
+          "The condition of result of ALU operation",
+          "The condition of memory",
+          "The result of addition",
+          "The result of subtraction"
+        ],
+        answer: "The condition of result of ALU operation",
+        explanation: "The 16-bit flag register in the 8086 microprocessor contains status flags (like Zero, Carry, Sign, Parity) that reflect the outcome and status of the most recent ALU operation."
+      },
+      {
+        id: 3,
+        question: "A ________ on free space management has the advantage that it is relatively easy to find one or a contiguous group of free blocks.",
+        options: [
+          "Bit table",
+          "Chained Free Portion",
+          "Indexing",
+          "Free Block List"
+        ],
+        answer: "Bit table",
+        explanation: "A bit table (or bitmap) represents each block as a single bit (0 for allocated, 1 for free). Searching for a contiguous sequence of 1s in a bit table is fast and easy for finding contiguous free blocks."
+      },
+      {
+        id: 4,
+        question: "A System Program that combines the separately compiled modules of a program into a form suitable for execution is:",
+        options: [
+          "Assembler",
+          "Linking loader",
+          "cross compiler",
+          "load and go"
+        ],
+        answer: "Linking loader",
+        explanation: "A linking loader combines object modules compiled separately, resolves cross-references between them, and loads the combined executable image into memory for execution."
+      },
+      {
+        id: 5,
+        question: "A deadlock avoidance algorithm dynamically examines the ________ to ensure that a circular wait condition can never exist.",
+        options: [
+          "Resource allocation state",
+          "System storage state",
+          "Operating system",
+          "Resources"
+        ],
+        answer: "Resource allocation state",
+        explanation: "Deadlock avoidance algorithms (like Banker's algorithm) dynamically track the resource allocation state (available, allocated, and maximum demands) to prevent the system from entering an unsafe state that could cause a circular wait."
+      },
+      {
+        id: 6,
+        question: "Consider the following snapshot of a system (Banker's Algorithm). Using Banker's algorithm, the content of the matrix Need is:",
+        options: [
+          "[[0,0,0,0], [0,7,5,0], [1,0,0,2]]",
+          "[[0,0,0,0], [1,0,0,0], [1,0,0,2]]",
+          "[[0,0,0,0], [0,7,5,0], [1,3,5,4]]",
+          "[[0,0,0,0], [0,5,2,0], [1,0,0,2]]"
+        ],
+        answer: "[[0,0,0,0], [0,7,5,0], [1,0,0,2]]",
+        explanation: "The Need matrix is calculated as Need[i] = Max[i] - Allocation[i]. For P0: (0,0,1,2)-(0,0,1,2)=(0,0,0,0); P1: (1,7,5,0)-(1,0,0,0)=(0,7,5,0); P2: (2,3,5,6)-(1,3,5,4)=(1,0,0,2)."
+      },
+      {
+        id: 7,
+        question: "The processes that are residing in main memory and are ready and waiting to execute are kept on a list called:",
+        options: [
+          "Job queue",
+          "Ready queue",
+          "Execution queue",
+          "Process queue"
+        ],
+        answer: "Ready queue",
+        explanation: "The ready queue holds all processes residing in RAM that are fully prepared and waiting for CPU execution assignment by the scheduler."
+      },
+      {
+        id: 8,
+        question: "The time taken by the dispatcher to stop one process and start another running is known as the:",
+        options: [
+          "Dispatch latency",
+          "Waiting time",
+          "Turnaround time",
+          "Response time"
+        ],
+        answer: "Dispatch latency",
+        explanation: "Dispatch latency is the exact delay duration involved in stopping the execution of one thread/process, performing a context switch, and restoring another process to run."
+      },
+      {
+        id: 9,
+        question: "Degree of multiprogramming is controlled by ________ scheduler.",
+        options: [
+          "Long term",
+          "Short term",
+          "Medium term",
+          "Very short term"
+        ],
+        answer: "Long term",
+        explanation: "The long-term scheduler (or job scheduler) decides which programs are admitted into the ready queue in main memory, directly controlling the total number of active processes (degree of multiprogramming)."
+      },
+      {
+        id: 10,
+        question: "The list of processes waiting for a particular I/O device is called a ________ queue.",
+        options: [
+          "Device",
+          "I/O",
+          "Job",
+          "Ready"
+        ],
+        answer: "Device",
+        explanation: "Each hardware or peripheral device maintains its own device queue containing processes blocked and waiting to perform I/O operations on that specific device."
+      },
+      {
+        id: 11,
+        question: "The first address of a block of classless addresses if one of the addresses is 12.2.2.127/28 is:",
+        options: [
+          "12.2.2.0",
+          "12.2.2.96",
+          "12.2.2.112",
+          "12.2.2.28"
+        ],
+        answer: "12.2.2.112",
+        explanation: "With a /28 mask, block sizes are 16 addresses (2^(32-28)=16). The network increments occur in multiples of 16. For 127, the nearest lower multiple of 16 is 112 (16*7), making 12.2.2.112 the network (first) address."
+      },
+      {
+        id: 12,
+        question: "The size of the MAC Address and IPV4 addresses are ________ and ________ respectively.",
+        options: [
+          "64, 32",
+          "48, 64",
+          "64, 48",
+          "48, 32"
+        ],
+        answer: "48, 32",
+        explanation: "A MAC address is a 48-bit (6-byte) physical hardware address, whereas an IPv4 address is a 32-bit (4-byte) logical network address."
+      },
+      {
+        id: 13,
+        question: "________ Cable accepts and transports signals in the form of light.",
+        options: [
+          "Twisted pair",
+          "Coaxial",
+          "Optical fiber",
+          "Copper"
+        ],
+        answer: "Optical fiber",
+        explanation: "Optical fiber cables transmit data as light pulses using total internal reflection, unlike electrical conductors such as coaxial or copper cables."
+      },
+      {
+        id: 14,
+        question: "IP address which is reserved for loopback testing is:",
+        options: [
+          "192.0.0.1",
+          "127.0.0.1",
+          "255.255.255.255",
+          "10.255.255.255"
+        ],
+        answer: "127.0.0.1",
+        explanation: "The IPv4 address range 127.0.0.0/8 (commonly 127.0.0.1 or 'localhost') is globally reserved for internal loopback testing of local network services without sending traffic over physical interfaces."
+      },
+      {
+        id: 15,
+        question: "In ________ topology, every device has a dedicated point-to-point link to every other device.",
+        options: [
+          "Mesh",
+          "Star",
+          "Bus",
+          "Ring"
+        ],
+        answer: "Mesh",
+        explanation: "In a fully connected mesh topology, every node has a direct, dedicated physical link to every other node in the network, ensuring high redundancy and performance."
+      },
+      {
+        id: 16,
+        question: "Round robin scheduling falls under the category of:",
+        options: [
+          "Dead Lock",
+          "Demand Paging",
+          "Non-preemptive scheduling",
+          "Preemptive scheduling"
+        ],
+        answer: "Preemptive scheduling",
+        explanation: "Round Robin uses fixed time slices (quantums) to preempt running processes when their allotted time expires, moving them back to the ready queue."
+      },
+      {
+        id: 17,
+        question: "The time taken by a packet to travel from client to server and then back to the client is called:",
+        options: [
+          "STT",
+          "RTT",
+          "PTT",
+          "FTP"
+        ],
+        answer: "RTT",
+        explanation: "Round Trip Time (RTT) measures the total duration in milliseconds for a data signal to travel from the source to the destination host and receive an acknowledgment response back."
+      },
+      {
+        id: 18,
+        question: "In classful addressing, a large part of available addresses are:",
+        options: [
+          "Organized",
+          "Blocked",
+          "Wasted",
+          "Communicated"
+        ],
+        answer: "Wasted",
+        explanation: "Classful IP addressing allocated rigid block sizes (Class A, B, C) that frequently resulted in massive address waste, leading to the development of CIDR (Classless Inter-Domain Routing)."
+      },
+      {
+        id: 19,
+        question: "Automatic repeat request error management mechanism is provided by:",
+        options: [
+          "logical link control sublayer",
+          "media access control sublayer",
+          "network interface control sublayer",
+          "application access control sublayer"
+        ],
+        answer: "logical link control sublayer",
+        explanation: "The Logical Link Control (LLC) upper sublayer of the OSI Data Link Layer handles error management protocols like ARQ (Automatic Repeat Request), flow control, and framing."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

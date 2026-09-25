@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBMS ECET Practice Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .score-badge {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background-color: #f1f5f9;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 0.75rem;
+      accent-color: var(--primary);
+    }
+
+    /* Interactive state styles applied via JavaScript */
+    .option-label.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-label.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background-color: #eff6ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      color: #1e3a8a;
+    }
+
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-container {
+      text-align: center;
+      margin: 2rem 0 4rem;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .submit-btn:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>DBMS ECET Practice Quiz</h1>
+      <div class="score-badge" id="score-display">Score: 0 / 89</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="quiz-container"></div>
+    <div class="action-container">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Final Quiz</button>
+    </div>
+  </main>
+
+  <script>
+    const dbmsQuestions = [
+      {
+        "id": 1,
+        "question": "A relational database consists of a collection of",
+        "options": {
+          "A": "Tables",
+          "B": "Fields",
+          "C": "Records",
+          "D": "Keys"
+        },
+        "correctAnswer": "A",
+        "explanation": "A relational database stores data in tables. Tables contain rows (records) and columns (attributes)."
+      },
+      {
+        "id": 2,
+        "question": "For each attribute of a relation, there is a set of permitted values called",
+        "options": {
+          "A": "Relation",
+          "B": "Schema",
+          "C": "Domain",
+          "D": "Set"
+        },
+        "correctAnswer": "C",
+        "explanation": "A domain is the set of valid or permitted values for an attribute."
+      },
+      {
+        "id": 3,
+        "question": "The statement in SQL which allows you to change the definition of a table is:",
+        "options": {
+          "A": "ALTER",
+          "B": "UPDATE",
+          "C": "CREATE",
+          "D": "SELECT"
+        },
+        "correctAnswer": "A",
+        "explanation": "ALTER changes the structure of an existing table, such as adding or removing columns."
+      },
+      {
+        "id": 4,
+        "question": "Which of the following contains a complete record of all activity that affected the contents of a database during a certain period of time?",
+        "options": {
+          "A": "Query language",
+          "B": "Report writer",
+          "C": "Transaction log",
+          "D": "Data manipulation language"
+        },
+        "correctAnswer": "C",
+        "explanation": "A transaction log records database transactions and changes and is important for recovery."
+      },
+      {
+        "id": 5,
+        "question": "When three or more AND and OR conditions are combined, it is easier to use the SQL keyword(s).",
+        "options": {
+          "A": "LIKE only",
+          "B": "IN only",
+          "C": "NOT IN only",
+          "D": "Both IN and NOT IN"
+        },
+        "correctAnswer": "D",
+        "explanation": "IN and NOT IN make conditions involving multiple possible values easier to express."
+      },
+      {
+        "id": 6,
+        "question": "The wildcard in a WHERE clause is useful when:",
+        "options": {
+          "A": "An exact match is necessary in a SELECT statement",
+          "B": "An exact match is not possible in a SELECT statement",
+          "C": "An exact match is necessary in a CREATE statement",
+          "D": "An exact match is not possible in a CREATE statement"
+        },
+        "correctAnswer": "B",
+        "explanation": "Wildcards are used with LIKE to search for patterns instead of exact values."
+      },
+      {
+        "id": 7,
+        "question": "Given the basic ER and relational models, which of the following is INCORRECT?",
+        "options": {
+          "A": "An attribute of an entity can have more than one value",
+          "B": "An attribute of an entity can be composite",
+          "C": "In a row of a relational table, an attribute can have more than one value",
+          "D": "In a row of relational table, an attribute can have exactly one value or a NULL value"
+        },
+        "correctAnswer": "C",
+        "explanation": "In the relational model each cell should contain one atomic value; multiple values in one cell violate 1NF."
+      },
+      {
+        "id": 8,
+        "question": "Which of the following is TRUE?",
+        "options": {
+          "A": "Every relation in 3NF is also in BCNF",
+          "B": "Every relation in BCNF is also in 3NF",
+          "C": "A relation R is in 3NF if every non-prime attribute of R is fully functionally dependent on every key of R",
+          "D": "No relation can be in both BCNF and 3NF"
+        },
+        "correctAnswer": "B",
+        "explanation": "BCNF is stronger than 3NF, so every BCNF relation is also in 3NF."
+      },
+      {
+        "id": 9,
+        "question": "The lowest level operator to access data in query processing is:",
+        "options": {
+          "A": "File scan",
+          "B": "File manipulation",
+          "C": "File handling",
+          "D": "File organization"
+        },
+        "correctAnswer": "A",
+        "explanation": "A file scan accesses records from the physical data file."
+      },
+      {
+        "id": 10,
+        "question": "A selection of the form giving all the records not satisfying simple individual conditions is:",
+        "options": {
+          "A": "Conjunctive selection",
+          "B": "Disjunctive selection",
+          "C": "Negation",
+          "D": "Conjunctive selection by intersection of identifiers"
+        },
+        "correctAnswer": "C",
+        "explanation": "Negation selects records that do not satisfy a specified condition."
+      },
+      {
+        "id": 11,
+        "question": "Which of the following is false with respect to centralized control of the data?",
+        "options": {
+          "A": "Redundancy can be reduced",
+          "B": "Data can be shared",
+          "C": "Integrity can be maintained",
+          "D": "Standards cannot be enforced"
+        },
+        "correctAnswer": "D",
+        "explanation": "Centralized control makes it easier to enforce standards, maintain integrity, reduce redundancy and share data."
+      },
+      {
+        "id": 12,
+        "question": "constraints are constraints implied by the existence of foreign keys.",
+        "options": {
+          "A": "Key",
+          "B": "Referential",
+          "C": "Entity",
+          "D": "Other"
+        },
+        "correctAnswer": "B",
+        "explanation": "Referential integrity constraints ensure foreign-key values refer to valid values in the referenced table."
+      },
+      {
+        "id": 13,
+        "question": "In which data model is information about the description of the data (schema) contained within the data itself?",
+        "options": {
+          "A": "Object-based",
+          "B": "Network",
+          "C": "Semi-structured",
+          "D": "Physical"
+        },
+        "correctAnswer": "C",
+        "explanation": "Semi-structured data such as XML and JSON carries structural information along with the data."
+      },
+      {
+        "id": 14,
+        "question": "In mapping, each instance of entity type E1 is associated with at most one instance of entity type E2 and vice versa.",
+        "options": {
+          "A": "One-to-one",
+          "B": "One-to-many",
+          "C": "Many-to-one",
+          "D": "Many-to-many"
+        },
+        "correctAnswer": "A",
+        "explanation": "A one-to-one relationship associates at most one entity on each side."
+      },
+      {
+        "id": 15,
+        "question": "In which data model is information about the description of the data (schema) contained within the data itself?",
+        "options": {
+          "A": "Object-based",
+          "B": "Network",
+          "C": "Semi-structured",
+          "D": "Physical"
+        },
+        "correctAnswer": "C",
+        "explanation": "Semi-structured data stores data together with information describing its structure."
+      },
+      {
+        "id": 16,
+        "question": "The symbol used for existential quantifier is:",
+        "options": {
+          "A": "∀",
+          "B": "Σ",
+          "C": "ξ",
+          "D": "∃"
+        },
+        "correctAnswer": "D",
+        "explanation": "∃ means 'there exists' in predicate logic."
+      },
+      {
+        "id": 17,
+        "question": "The operator that selects values that match any value in a given list of values is:",
+        "options": {
+          "A": "BETWEEN",
+          "B": "LIKE",
+          "C": "IN",
+          "D": "DIFFERENCE"
+        },
+        "correctAnswer": "C",
+        "explanation": "IN checks whether a value matches one of the values in a specified list."
+      },
+      {
+        "id": 18,
+        "question": "If A → B holds, then AC → BC holds. This axiom is:",
+        "options": {
+          "A": "Transitivity rule",
+          "B": "Reflexivity rule",
+          "C": "Augmentation rule",
+          "D": "Union rule"
+        },
+        "correctAnswer": "C",
+        "explanation": "Armstrong's augmentation rule says if A → B, then AC → BC."
+      },
+      {
+        "id": 19,
+        "question": "Fifth Normal Form is based on the concept of:",
+        "options": {
+          "A": "Functional dependency",
+          "B": "Transitive dependency",
+          "C": "Multivalued dependency",
+          "D": "Join dependency"
+        },
+        "correctAnswer": "D",
+        "explanation": "5NF deals with join dependencies."
+      },
+      {
+        "id": 20,
+        "question": "Data type(s) supported by PL/SQL:",
+        "options": {
+          "A": "Scalar data type only",
+          "B": "Complex data type only",
+          "C": "Both Scalar & Complex data types",
+          "D": "Neither Scalar nor Complex data types"
+        },
+        "correctAnswer": "C",
+        "explanation": "PL/SQL supports scalar types such as NUMBER and DATE and composite types such as RECORD and collections."
+      },
+      {
+        "id": 21,
+        "question": "If A → B holds, then AC → BC holds. This axiom is:",
+        "options": {
+          "A": "Transitivity rule",
+          "B": "Reflexivity rule",
+          "C": "Augmentation rule",
+          "D": "Union rule"
+        },
+        "correctAnswer": "C",
+        "explanation": "Adding the same attribute(s) to both sides of an FD is augmentation."
+      },
+      {
+        "id": 22,
+        "question": "Life cycle of a typical cursor involves the following 5 steps in SQL Server.",
+        "options": {
+          "A": "Declare Cursor, Open, Fetch, Close and Deallocate",
+          "B": "Create Cursor, Open, Fetch, Close and Deallocate",
+          "C": "Declare Cursor, Create, Fetch, Close and Deallocate",
+          "D": "Declare Cursor, Open, Create, Fetch and Close"
+        },
+        "correctAnswer": "A",
+        "explanation": "A cursor is declared, opened, used to fetch rows, closed, and then deallocated."
+      },
+      {
+        "id": 23,
+        "question": "The term attribute refers to a ________ of a table.",
+        "options": {
+          "A": "Record",
+          "B": "Column",
+          "C": "Tuple",
+          "D": "Key"
+        },
+        "correctAnswer": "B",
+        "explanation": "An attribute is a column of a relational table."
+      },
+      {
+        "id": 24,
+        "question": "Functional Dependencies are the types of constraints that are based on:",
+        "options": {
+          "A": "Key",
+          "B": "Key revisited",
+          "C": "Superset key",
+          "D": "Foreign key"
+        },
+        "correctAnswer": "A",
+        "explanation": "Functional dependencies describe how attributes depend on keys or other attributes."
+      },
+      {
+        "id": 25,
+        "question": "Tables in second normal form (2NF):",
+        "options": {
+          "A": "Eliminate all hidden dependencies",
+          "B": "Eliminate the possibility of insertion anomalies",
+          "C": "Have a composite key",
+          "D": "Have all non-key fields that depend on the whole primary key"
+        },
+        "correctAnswer": "D",
+        "explanation": "2NF removes partial dependency; every non-key attribute must depend on the whole key."
+      },
+      {
+        "id": 26,
+        "question": "Triggers are supported in:",
+        "options": {
+          "A": "Delete",
+          "B": "Update",
+          "C": "Views",
+          "D": "Alter"
+        },
+        "correctAnswer": "A",
+        "explanation": "DELETE can be a trigger event. Many DBMSs also support INSERT and UPDATE triggers."
+      },
+      {
+        "id": 27,
+        "question": "Which of the following creates a virtual relation for storing the query?",
+        "options": {
+          "A": "Function",
+          "B": "View",
+          "C": "Procedure",
+          "D": "Triggers"
+        },
+        "correctAnswer": "B",
+        "explanation": "A view is a virtual table based on an SQL query."
+      },
+      {
+        "id": 28,
+        "question": "Data integrity constraints are used to:",
+        "options": {
+          "A": "Control who is allowed access to the data",
+          "B": "Ensure that duplicate records are not entered into the table",
+          "C": "Improve the quality of data entered for a specific property",
+          "D": "Prevent users from changing the values stored in the table"
+        },
+        "correctAnswer": "C",
+        "explanation": "Integrity constraints ensure data follows rules and remains valid and consistent."
+      },
+      {
+        "id": 29,
+        "question": "_____ is the logical design of the database and _____ is a snapshot of the data in the database at a given instant of time.",
+        "options": {
+          "A": "Instance, Schema",
+          "B": "Relation, Schema",
+          "C": "Relation, Domain",
+          "D": "Schema, Instance"
+        },
+        "correctAnswer": "D",
+        "explanation": "Schema is the database design; instance is the actual data at a particular time."
+      },
+      {
+        "id": 30,
+        "question": "We indicate role in E-R diagrams by labelling the lines that connect:",
+        "options": {
+          "A": "Diamond, diamond",
+          "B": "Rectangle, diamond",
+          "C": "Rectangle, rectangle",
+          "D": "Diamond, rectangle"
+        },
+        "correctAnswer": "C",
+        "explanation": "Entities are represented by rectangles; role names can label lines between participating entity occurrences."
+      },
+      {
+        "id": 31,
+        "question": "If we want to retain all duplicates, we must write _____ in place of UNION.",
+        "options": {
+          "A": "UNION ALL",
+          "B": "UNION SOME",
+          "C": "INTERSECT ALL",
+          "D": "INTERSECT SOME"
+        },
+        "correctAnswer": "A",
+        "explanation": "UNION removes duplicates, while UNION ALL keeps duplicate rows."
+      },
+      {
+        "id": 32,
+        "question": "Using which of the following can a user request information from a database?",
+        "options": {
+          "A": "Query",
+          "B": "Relation",
+          "C": "Structure",
+          "D": "Compiler"
+        },
+        "correctAnswer": "A",
+        "explanation": "A query is a request for information from a database."
+      },
+      {
+        "id": 33,
+        "question": "In an E-R diagram, attributes are represented by:",
+        "options": {
+          "A": "Rectangle",
+          "B": "Ellipse",
+          "C": "Square",
+          "D": "Triangle"
+        },
+        "correctAnswer": "B",
+        "explanation": "In ER diagrams, entities are rectangles, attributes are ellipses, and relationships are diamonds."
+      },
+      {
+        "id": 34,
+        "question": "Which operation is used if we are interested in only certain columns of a table?",
+        "options": {
+          "A": "Projection",
+          "B": "Selection",
+          "C": "Union",
+          "D": "Join"
+        },
+        "correctAnswer": "A",
+        "explanation": "Projection selects columns; selection selects rows."
+      },
+      {
+        "id": 35,
+        "question": "Which two files are used during the operation of the DBMS?",
+        "options": {
+          "A": "Query languages and utilities",
+          "B": "DML and query language",
+          "C": "Data dictionary and transaction log",
+          "D": "Data dictionary and query language"
+        },
+        "correctAnswer": "C",
+        "explanation": "The data dictionary stores metadata and the transaction log records database changes."
+      },
+      {
+        "id": 36,
+        "question": "Cartesian product in relational algebra is:",
+        "options": {
+          "A": "Unary operator",
+          "B": "Binary operator",
+          "C": "Ternary operator",
+          "D": "Not defined"
+        },
+        "correctAnswer": "B",
+        "explanation": "Cartesian product combines two relations, so it is a binary operator."
+      },
+      {
+        "id": 37,
+        "question": "Tables in second normal form (2NF):",
+        "options": {
+          "A": "Eliminate all hidden dependencies",
+          "B": "Eliminate the possibility of insertion anomalies",
+          "C": "Have a composite key",
+          "D": "Have all non-key fields depend on the whole primary key"
+        },
+        "correctAnswer": "D",
+        "explanation": "2NF requires every non-key attribute to depend on the entire primary key."
+      },
+      {
+        "id": 38,
+        "question": "Which normal form is based on multivalued dependencies?",
+        "options": {
+          "A": "First",
+          "B": "Second",
+          "C": "Third",
+          "D": "Fourth"
+        },
+        "correctAnswer": "D",
+        "explanation": "4NF is based on multivalued dependencies."
+      },
+      {
+        "id": 39,
+        "question": "A data dictionary is a repository that manages:",
+        "options": {
+          "A": "Memory",
+          "B": "Metadata",
+          "C": "Database schema",
+          "D": "Data Validator"
+        },
+        "correctAnswer": "B",
+        "explanation": "A data dictionary stores metadata, or data about database objects and their properties."
+      },
+      {
+        "id": 40,
+        "question": "In DBMS, values of one type can be converted to another domain using:",
+        "options": {
+          "A": "CAST",
+          "B": "Drop type",
+          "C": "Alter type",
+          "D": "Convert"
+        },
+        "correctAnswer": "A",
+        "explanation": "CAST explicitly converts a value to a specified data type."
+      },
+      {
+        "id": 41,
+        "question": "Which one provides the ability to query information from the database and to insert, delete and modify tuples?",
+        "options": {
+          "A": "DML (Data Manipulation Language)",
+          "B": "DDL (Data Definition Language)",
+          "C": "Query",
+          "D": "Relational Schema"
+        },
+        "correctAnswer": "A",
+        "explanation": "DML is used to insert, update and delete data and to retrieve data through queries."
+      },
+      {
+        "id": 42,
+        "question": "Consider R(A,B,C,D,E,F) with FDs {AC→DE, ADF→BC}. Which among the following is a trivial FD from F?",
+        "options": {
+          "A": "AC → DB",
+          "B": "AC → CB",
+          "C": "D → C",
+          "D": "ADF → B"
+        },
+        "correctAnswer": "B",
+        "explanation": "A trivial FD has a right side that is a subset of the left side."
+      },
+      {
+        "id": 43,
+        "question": "If (Name, Age) has to be the key for the given student table, what value should NOT be used in place of X?",
+        "options": {
+          "A": "8",
+          "B": "19",
+          "C": "20",
+          "D": "21"
+        },
+        "correctAnswer": "C",
+        "explanation": "There is already an entry with Age 20 for that name. Using X=20 would duplicate the (Name, Age) key."
+      },
+      {
+        "id": 44,
+        "question": "Which of the following conditions is satisfied in a 2NF table?",
+        "options": {
+          "A": "Eliminate all partial dependencies",
+          "B": "Eliminate the possibility of insertion anomalies",
+          "C": "Have a composite key",
+          "D": "Have all non-key fields depend on the whole primary key"
+        },
+        "correctAnswer": "D",
+        "explanation": "2NF means there is no partial dependency of a non-key attribute on part of a composite key."
+      },
+      {
+        "id": 45,
+        "question": "The process of properly defining tables to provide flexibility, minimized redundancy and data integrity is called:",
+        "options": {
+          "A": "Database Design",
+          "B": "Data Normalization",
+          "C": "Data Rationalization",
+          "D": "Data Standardization"
+        },
+        "correctAnswer": "B",
+        "explanation": "Normalization organizes tables to reduce redundancy and improve integrity."
+      },
+      {
+        "id": 46,
+        "question": "Which SQL query can be used to find the number of values in a column?",
+        "options": {
+          "A": "TOTAL",
+          "B": "SUM",
+          "C": "COUNT",
+          "D": "ADD"
+        },
+        "correctAnswer": "C",
+        "explanation": "COUNT() counts rows or non-NULL values in a specified column."
+      },
+      {
+        "id": 47,
+        "question": "A many-to-many relationship between two entities usually results in how many tables?",
+        "options": {
+          "A": "3",
+          "B": "2",
+          "C": "1",
+          "D": "4"
+        },
+        "correctAnswer": "A",
+        "explanation": "It normally requires two entity tables plus a junction/relationship table."
+      },
+      {
+        "id": 48,
+        "question": "What does Atomicity property signify?",
+        "options": {
+          "A": "A transaction always takes place",
+          "B": "The entire transaction takes place at once or doesn't happen at all",
+          "C": "Only insertion takes place in a table",
+          "D": "Once a transaction takes place, it's permanent"
+        },
+        "correctAnswer": "B",
+        "explanation": "Atomicity is the all-or-nothing property of a transaction."
+      },
+      {
+        "id": 49,
+        "question": "A relationship between two tables can be created using which of the following?",
+        "options": {
+          "A": "Primary Key",
+          "B": "Foreign Key",
+          "C": "Candidate Key",
+          "D": "Relation Key"
+        },
+        "correctAnswer": "B",
+        "explanation": "A foreign key in one table references a key in another table and establishes the relationship."
+      },
+      {
+        "id": 50,
+        "question": "Which of the following creates a virtual relation for storing the query?",
+        "options": {
+          "A": "Function",
+          "B": "View",
+          "C": "Procedure",
+          "D": "Join"
+        },
+        "correctAnswer": "B",
+        "explanation": "A view is a virtual relation based on a query."
+      },
+      {
+        "id": 51,
+        "question": "What is the output of SELECT SUBSTR('Hello World', 2, 3) FROM DUAL?",
+        "options": {
+          "A": "H",
+          "B": "ell",
+          "C": "ll",
+          "D": "Hello"
+        },
+        "correctAnswer": "B",
+        "explanation": "Starting at position 2 and taking 3 characters from Hello World gives 'ell'."
+      },
+      {
+        "id": 52,
+        "question": "_____ key is used to link two tables together.",
+        "options": {
+          "A": "Foreign",
+          "B": "Primary",
+          "C": "Secondary",
+          "D": "Join"
+        },
+        "correctAnswer": "A",
+        "explanation": "A foreign key links a child table to a referenced key in another table."
+      },
+      {
+        "id": 53,
+        "question": "_____ is used to organize tables in a manner that reduces redundancy.",
+        "options": {
+          "A": "Normalization",
+          "B": "Update Normalization",
+          "C": "Data Rationalization",
+          "D": "Data Standardization"
+        },
+        "correctAnswer": "A",
+        "explanation": "Normalization organizes data into related tables and reduces unnecessary duplication."
+      },
+      {
+        "id": 54,
+        "question": "Which query lists the number of students in each district?",
+        "options": {
+          "A": "SELECT COUNT(Student_ID), District FROM Students GROUP BY District",
+          "B": "SELECT COUNT(Student_ID), District FROM Students ORDER BY District",
+          "C": "SELECT Student_ID, District FROM Students GROUP BY District",
+          "D": "SELECT COUNT(Student_ID), District FROM Students"
+        },
+        "correctAnswer": "A",
+        "explanation": "GROUP BY District creates one group per district and COUNT counts students in each group."
+      },
+      {
+        "id": 55,
+        "question": "RDBMS stores data in _____ format.",
+        "options": {
+          "A": "File",
+          "B": "Table",
+          "C": "Matrix",
+          "D": "Tuples"
+        },
+        "correctAnswer": "B",
+        "explanation": "An RDBMS stores data in tables consisting of rows and columns."
+      },
+      {
+        "id": 56,
+        "question": "_____ key can contain unique and NOT NULL values in a relational database.",
+        "options": {
+          "A": "Primary",
+          "B": "Check",
+          "C": "Unique",
+          "D": "Integrity"
+        },
+        "correctAnswer": "A",
+        "explanation": "A primary key uniquely identifies each row and cannot contain NULL values."
+      },
+      {
+        "id": 57,
+        "question": "_____ Language changes the structure of the table through CREATE, ALTER and DROP operations.",
+        "options": {
+          "A": "Data Control",
+          "B": "Data Manipulation",
+          "C": "Data Definition",
+          "D": "Data Query"
+        },
+        "correctAnswer": "C",
+        "explanation": "DDL (Data Definition Language) defines and changes database structures."
+      },
+      {
+        "id": 58,
+        "question": "_____ is not a scalar data type in PL/SQL",
+        "options": {
+          "A": "VARCHAR2",
+          "B": "DATE",
+          "C": "RECORD",
+          "D": "NUMBER"
+        },
+        "correctAnswer": "C",
+        "explanation": "RECORD is a composite type, while VARCHAR2, DATE and NUMBER are scalar types."
+      },
+      {
+        "id": 59,
+        "question": "What is the maximum number of triggers you can apply on a single table?",
+        "options": {
+          "A": "5",
+          "B": "8",
+          "C": "10",
+          "D": "12"
+        },
+        "correctAnswer": "D",
+        "explanation": "12 triggers is the standard answer according to many database examination keys."
+      },
+      {
+        "id": 60,
+        "question": "_____ database stores data in documents.",
+        "options": {
+          "A": "PostgreSQL",
+          "B": "SQL",
+          "C": "NoSQL",
+          "D": "PL/SQL"
+        },
+        "correctAnswer": "C",
+        "explanation": "Document-oriented NoSQL databases store data as documents; MongoDB is a common example."
+      },
+      {
+        "id": 61,
+        "question": "_____ key can contain unique and NOT NULL values in relational database.",
+        "options": {
+          "A": "Primary",
+          "B": "Check",
+          "C": "Unique",
+          "D": "Integrity"
+        },
+        "correctAnswer": "A",
+        "explanation": "A primary key must be unique and cannot be NULL."
+      },
+      {
+        "id": 62,
+        "question": "_____ is used to remove a relation/table from SQL.",
+        "options": {
+          "A": "DROP",
+          "B": "Collapse",
+          "C": "DELETE",
+          "D": "Remove"
+        },
+        "correctAnswer": "A",
+        "explanation": "DROP TABLE removes the table definition and its data."
+      },
+      {
+        "id": 63,
+        "question": "The database environment has all of the following components except:",
+        "options": {
+          "A": "Users",
+          "B": "Separate files",
+          "C": "Database",
+          "D": "Database administration"
+        },
+        "correctAnswer": "B",
+        "explanation": "Users, the database and administration are database-environment components; separate files are not."
+      },
+      {
+        "id": 64,
+        "question": "Normalization of database is used to:",
+        "options": {
+          "A": "Eliminate redundancy",
+          "B": "Improve security",
+          "C": "Improve efficiency",
+          "D": "Minimize errors"
+        },
+        "correctAnswer": "A",
+        "explanation": "A primary purpose of normalization is to reduce unnecessary data redundancy."
+      },
+      {
+        "id": 65,
+        "question": "E-R modelling technique is a:",
+        "options": {
+          "A": "Bottom up approach",
+          "B": "Top down approach",
+          "C": "Left Right approach",
+          "D": "Right Left approach"
+        },
+        "correctAnswer": "B",
+        "explanation": "ER modeling begins with high-level entities and relationships and develops the detailed design."
+      },
+      {
+        "id": 66,
+        "question": "Which SQL keyword is used to sort the result?",
+        "options": {
+          "A": "ORDER BY",
+          "B": "SORT-ORDER",
+          "C": "SORT",
+          "D": "ORDER"
+        },
+        "correctAnswer": "A",
+        "explanation": "ORDER BY sorts query results in ascending or descending order."
+      },
+      {
+        "id": 67,
+        "question": "Which normal form is adequate for normal relational database design?",
+        "options": {
+          "A": "1NF",
+          "B": "5NF",
+          "C": "4NF",
+          "D": "3NF"
+        },
+        "correctAnswer": "D",
+        "explanation": "3NF is commonly considered adequate for many practical relational database designs."
+      },
+      {
+        "id": 68,
+        "question": "Which of the following is NOT a characteristic of a relational database model?",
+        "options": {
+          "A": "Tables",
+          "B": "Tree-like structure",
+          "C": "Complex logical relationships",
+          "D": "Records"
+        },
+        "correctAnswer": "B",
+        "explanation": "Relational databases use tables; a tree-like structure is characteristic of hierarchical databases."
+      },
+      {
+        "id": 69,
+        "question": "Data items grouped together for storage purposes are called a:",
+        "options": {
+          "A": "Record",
+          "B": "Title list",
+          "C": "List",
+          "D": "String"
+        },
+        "correctAnswer": "A",
+        "explanation": "A record is a collection of related data items stored together."
+      },
+      {
+        "id": 70,
+        "question": "The Entity Relationship model comes under:",
+        "options": {
+          "A": "Object-based logical model",
+          "B": "Record-based logical model",
+          "C": "Physical data model",
+          "D": "Grid-based logical model"
+        },
+        "correctAnswer": "A",
+        "explanation": "The ER model represents entities, attributes and relationships, so it is an object-based logical model."
+      },
+      {
+        "id": 71,
+        "question": "A command that lets you change one or more fields in a record is:",
+        "options": {
+          "A": "INSERT",
+          "B": "MODIFY",
+          "C": "LOOK UP",
+          "D": "CHANGE"
+        },
+        "correctAnswer": "B",
+        "explanation": "MODIFY is the answer specified in this database question set."
+      },
+      {
+        "id": 72,
+        "question": "A file manipulation command that extracts some of the records from a file is called:",
+        "options": {
+          "A": "SELECT",
+          "B": "PROJECT",
+          "C": "JOIN",
+          "D": "INDEX"
+        },
+        "correctAnswer": "A",
+        "explanation": "SELECT retrieves required records from a table, optionally using conditions."
+      },
+      {
+        "id": 73,
+        "question": "Which of the following ensures referential integrity in a relational database?",
+        "options": {
+          "A": "Primary Key",
+          "B": "Foreign Key",
+          "C": "Index",
+          "D": "View"
+        },
+        "correctAnswer": "B",
+        "explanation": "Foreign keys enforce valid references between related tables."
+      },
+      {
+        "id": 74,
+        "question": "Which normal form removes transitive dependencies?",
+        "options": {
+          "A": "1NF",
+          "B": "2NF",
+          "C": "3NF",
+          "D": "BCNF"
+        },
+        "correctAnswer": "C",
+        "explanation": "3NF removes transitive dependency among non-key attributes."
+      },
+      {
+        "id": 75,
+        "question": "What type of database model uses tables with rows and columns?",
+        "options": {
+          "A": "Hierarchical Model",
+          "B": "Relational Model",
+          "C": "Object Oriented Model",
+          "D": "Network Model"
+        },
+        "correctAnswer": "B",
+        "explanation": "The relational model represents data using tables with rows and columns."
+      },
+      {
+        "id": 76,
+        "question": "Which of the following is NOT a valid PL/SQL control statement?",
+        "options": {
+          "A": "IF-THEN-ELSE",
+          "B": "CASE",
+          "C": "LOOP",
+          "D": "SWITCH"
+        },
+        "correctAnswer": "D",
+        "explanation": "PL/SQL supports IF, CASE and loops but does not use a SWITCH statement."
+      },
+      {
+        "id": 77,
+        "question": "What is the purpose of the HAVING clause in SQL?",
+        "options": {
+          "A": "To filter groups based on a condition",
+          "B": "To filter rows based on a condition",
+          "C": "To sort the result set",
+          "D": "To join tables"
+        },
+        "correctAnswer": "A",
+        "explanation": "HAVING filters groups after GROUP BY, whereas WHERE filters individual rows."
+      },
+      {
+        "id": 78,
+        "question": "Which of the following SQL statements contains an error?",
+        "options": {
+          "A": "SELECT * FROM emp WHERE empid = 1003;",
+          "B": "SELECT empid FROM emp WHERE empid = 1002;",
+          "C": "SELECT empid FROM emp;",
+          "D": "SELECT ALL FROM emp WHERE empid = 1001;"
+        },
+        "correctAnswer": "D",
+        "explanation": "To select all columns, use SELECT * FROM emp. SELECT ALL is not valid for column selection."
+      },
+      {
+        "id": 79,
+        "question": "Which of the following is NOT a NoSQL database type?",
+        "options": {
+          "A": "Document-based",
+          "B": "Key-Value Store",
+          "C": "Graph-based",
+          "D": "Relational"
+        },
+        "correctAnswer": "D",
+        "explanation": "Document, key-value and graph are NoSQL models; relational is the traditional SQL model."
+      },
+      {
+        "id": 80,
+        "question": "Which of the following is a key characteristic of NoSQL databases?",
+        "options": {
+          "A": "Fixed schema",
+          "B": "Relational data model",
+          "C": "Scalability and flexibility",
+          "D": "Only supports structured data"
+        },
+        "correctAnswer": "C",
+        "explanation": "NoSQL databases commonly provide flexible schemas and horizontal scalability."
+      },
+      {
+        "id": 81,
+        "question": "_____ is not a DDL command.",
+        "options": {
+          "A": "ALTER",
+          "B": "UPDATE",
+          "C": "DROP",
+          "D": "TRUNCATE"
+        },
+        "correctAnswer": "B",
+        "explanation": "UPDATE is DML because it modifies data. CREATE, ALTER, DROP and TRUNCATE are DDL commands."
+      },
+      {
+        "id": 82,
+        "question": "What is the purpose of normalization in a relational database?",
+        "options": {
+          "A": "To increase data redundancy",
+          "B": "To decrease performance",
+          "C": "To store all data in a single table",
+          "D": "To eliminate data redundancy and improve integrity"
+        },
+        "correctAnswer": "D",
+        "explanation": "Normalization reduces duplication and helps maintain consistency and integrity."
+      },
+      {
+        "id": 83,
+        "question": "A foreign key is mainly used to:",
+        "options": {
+          "A": "Improve indexing",
+          "B": "Improve performance",
+          "C": "Enforce referential integrity",
+          "D": "Remove redundancy"
+        },
+        "correctAnswer": "C",
+        "explanation": "Foreign keys enforce referential integrity by requiring valid references to related table keys."
+      },
+      {
+        "id": 84,
+        "question": "Which SQL command adds a new column to an existing table?",
+        "options": {
+          "A": "UPDATE",
+          "B": "ALTER",
+          "C": "MODIFY",
+          "D": "INSERT"
+        },
+        "correctAnswer": "B",
+        "explanation": "ALTER TABLE changes an existing table's structure, including adding columns."
+      },
+      {
+        "id": 85,
+        "question": "Which SQL clause is used to filter grouped results?",
+        "options": {
+          "A": "WHERE",
+          "B": "GROUP BY",
+          "C": "HAVING",
+          "D": "ORDER BY"
+        },
+        "correctAnswer": "C",
+        "explanation": "HAVING filters groups produced by GROUP BY."
+      },
+      {
+        "id": 86,
+        "question": "SQL statement used to remove a table permanently:",
+        "options": {
+          "A": "TRUNCATE",
+          "B": "DELETE",
+          "C": "REMOVE",
+          "D": "DROP"
+        },
+        "correctAnswer": "D",
+        "explanation": "DROP TABLE removes the table structure and its data."
+      },
+      {
+        "id": 87,
+        "question": "MongoDB stores data in the form of:",
+        "options": {
+          "A": "Documents",
+          "B": "Tables",
+          "C": "Rows",
+          "D": "Columns"
+        },
+        "correctAnswer": "A",
+        "explanation": "MongoDB is a document-oriented NoSQL database and stores records as documents."
+      },
+      {
+        "id": 88,
+        "question": "Which of the following is a key feature of NoSQL databases?",
+        "options": {
+          "A": "Fixed schema",
+          "B": "Vertical scaling only",
+          "C": "Schema flexibility",
+          "D": "Mandatory joins"
+        },
+        "correctAnswer": "C",
+        "explanation": "NoSQL databases generally support flexible or dynamic schemas."
+      },
+      {
+        "id": 89,
+        "question": "Which PL/SQL structure allows repeated execution of a block of code?",
+        "options": {
+          "A": "IF",
+          "B": "LOOP",
+          "C": "SELECT",
+          "D": "REPEAT"
+        },
+        "correctAnswer": "B",
+        "explanation": "LOOP repeatedly executes a PL/SQL block until its termination condition is reached."
+      },
+      {
+        "id": 90,
+        "question": "Which of the following is an advantage of NoSQL over traditional RDBMS?",
+        "options": {
+          "A": "Strong schema enforcement",
+          "B": "Limited scalability",
+          "C": "Horizontal scalability",
+          "D": "Mandatory normalization"
+        },
+        "correctAnswer": "C",
+        "explanation": "Horizontal scalability means adding more servers/nodes to handle increased workload or data."
+      }
+    ];
+
+    const userAnswers = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      
+      dbmsQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "quiz-card";
+        card.id = `q-card-${q.id}`;
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = `${index + 1}. ${q.question}`;
+        card.appendChild(title);
+
+        const optionsGrid = document.createElement("div");
+        optionsGrid.className = "options-grid";
+
+        Object.entries(q.options).forEach(([key, text]) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.id = `label-${q.id}-${key}`;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question-${q.id}`;
+          radio.value = key;
+          radio.onclick = () => handleSelectOption(q.id, key);
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(`${key}) ${text}`));
+          optionsGrid.appendChild(label);
+        });
+
+        card.appendChild(optionsGrid);
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.id = `exp-${q.id}`;
+        explanation.innerHTML = `<div class="explanation-title">Explanation:</div>${q.explanation}`;
+        card.appendChild(explanation);
+
+        quizContainer.appendChild(card);
+      });
+
+      updateScoreDisplay();
+    }
+
+    function handleSelectOption(questionId, selectedKey) {
+      if (userAnswers[questionId] !== undefined) return; // Prevent changing after selection
+
+      const question = dbmsQuestions.find(q => q.id === questionId);
+      userAnswers[questionId] = selectedKey;
+
+      // Highlight options
+      Object.keys(question.options).forEach(key => {
+        const label = document.getElementById(`label-${questionId}-${key}`);
+        const radio = label.querySelector("input");
+        radio.disabled = true;
+
+        if (key === question.correctAnswer) {
+          label.classList.add("correct");
+        } else if (key === selectedKey) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      // Show explanation immediately
+      const exp = document.getElementById(`exp-${questionId}`);
+      exp.style.display = "block";
+
+      updateScoreDisplay();
+    }
+
+    function calculateScore() {
+      let score = 0;
+      dbmsQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.correctAnswer) {
+          score++;
+        }
+      });
+      return score;
+    }
+
+    function updateScoreDisplay() {
+      const score = calculateScore();
+      document.getElementById("score-display").textContent = `Score: ${score} / ${dbmsQuestions.length}`;
+    }
+
+    function submitQuiz() {
+      const score = calculateScore();
+      const total = dbmsQuestions.length;
+      
+      alert(`Quiz Submitted!\nYour Final Score is: ${score} out of ${total}`);
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Quiz Completed";
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

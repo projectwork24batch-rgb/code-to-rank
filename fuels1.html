@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuels Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Fuels Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "Which one of the following statement is not true about ideal fuel?",
+        options: [
+          "High calorific value",
+          "High moisture content",
+          "Low cost",
+          "Moderate ignition temperature"
+        ],
+        answer: "High moisture content",
+        explanation: "An ideal fuel should have low moisture content because moisture absorbs heat during combustion, which reduces the overall heating efficiency and calorific value of the fuel."
+      },
+      {
+        id: 2,
+        question: "Main constituent of natural gas is",
+        options: [
+          "Ethane",
+          "Methane",
+          "Butane",
+          "Carbon Monoxide"
+        ],
+        answer: "Methane",
+        explanation: "Methane (CH4) makes up the vast majority of natural gas, typically accounting for about 70% to 90% of its total composition."
+      },
+      {
+        id: 3,
+        question: "Main constituent of Producer gas is",
+        options: [
+          "CO + N2",
+          "CO + H2",
+          "CO + H2 + CO2",
+          "CO2 + H2"
+        ],
+        answer: "CO + N2",
+        explanation: "Producer gas is a fuel gas mixture manufactured by passing air over red-hot coke or coal, consisting primarily of carbon monoxide (CO) and nitrogen (N2)."
+      },
+      {
+        id: 4,
+        question: "The only liquid crude fuel is",
+        options: [
+          "Kerosene",
+          "Diesel",
+          "Petrol",
+          "Petroleum"
+        ],
+        answer: "Petroleum",
+        explanation: "Petroleum (crude oil) is the naturally occurring liquid crude fuel extracted directly from the Earth, whereas kerosene, diesel, and petrol are refined products."
+      },
+      {
+        id: 5,
+        question: "The major component of LPG (Liquefied Petroleum Gas) is",
+        options: [
+          "Methane",
+          "Butane",
+          "Ethane",
+          "Hydrogen"
+        ],
+        answer: "Butane",
+        explanation: "LPG primarily consists of hydrocarbon gases, with butane (and propane) being the primary component used for domestic heating and cooking."
+      },
+      {
+        id: 6,
+        question: "The major components of water gas are:",
+        options: [
+          "H2, CO",
+          "H2, CO2",
+          "CO, N2",
+          "CO2, N2"
+        ],
+        answer: "H2, CO",
+        explanation: "Water gas is a synthesis gas generated by passing steam over incandescent coke, resulting in a mixture of hydrogen (H2) and carbon monoxide (CO)."
+      },
+      {
+        id: 7,
+        question: "Which of the following is used as a primary fuel?",
+        options: [
+          "Coal",
+          "Coke",
+          "Water gas",
+          "Producer gas"
+        ],
+        answer: "Coal",
+        explanation: "Coal is a naturally occurring primary fuel found in nature, while coke, water gas, and producer gas are secondary fuels synthesized through industrial processing."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

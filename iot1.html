@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Exam Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
+        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .q-box { background: #fafafa; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 6px; }
+        
+        .option { display: block; margin: 10px 0; font-size: 16px; cursor: pointer; padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; transition: background 0.2s; }
+        .option:hover { background: #f0f0f0; }
+        .option input { margin-right: 12px; transform: scale(1.1); }
+
+        .option.correct { background-color: #d4edda !important; border-color: #c3e6cb !important; color: #155724; font-weight: bold; }
+        .option.incorrect { background-color: #f8d7da !important; border-color: #f5c6cb !important; color: #721c24; }
+        
+        .disabled-box { pointer-events: none; }
+        .explanation { display: none; margin-top: 15px; padding: 12px; background-color: #e9ecef; border-left: 4px solid #007BFF; font-size: 14px; color: #495057; border-radius: 0 4px 4px 0; }
+
+        .btn { display: block; width: 100%; background: #007BFF; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #0056b3; }
+        #score-output { font-size: 22px; font-weight: bold; margin-top: 25px; color: #28a745; text-align: center; }
+        .back-nav { display: inline-block; margin-bottom: 20px; color: #007BFF; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <a href="core.html" class="back-nav">← Back to Menu</a>
+    <h1>Practice Quiz Terminal</h1>
+    
+    <div id="questions-list"></div>
+    
+    <button class="btn" onclick="checkYourScore()">Finish & Calculate Score</button>
+    <div id="score-output"></div>
+</div>
+
+<script>
+    const coreQuestions = [
+      {
+        id: 1,
+        question: "loT stands for:",
+        options: ["A) Internet of Technology", "B) Internet of Things", "C) Integration of Things", "D) Internet of Telecommunication"],
+        correctIndex: 1,
+        explanation: "IoT means connecting physical devices to the internet so they can collect and exchange data."
+      },
+      {
+        id: 2,
+        question: "Which protocol uses the Publish/Subscribe model?",
+        options: ["A) HTTP", "B) FTP", "C) MQTT", "D) SMTP"],
+        correctIndex: 2,
+        explanation: "MQTT is a lightweight messaging protocol that uses the Publish/Subscribe communication model."
+      }
+    ];
+
+    const listContainer = document.getElementById('questions-list');
+    let fullContent = '';
+    
+    coreQuestions.forEach((q, qIndex) => {
+        let block = `<div class="q-box" id="qbox_${qIndex}" role="radiogroup">
+            <p><strong>Q${qIndex + 1}: ${q.question}</strong></p>`;
+        
+        q.options.forEach((opt, optIndex) => {
+            block += `
+                <label class="option" id="label_${qIndex}_${optIndex}">
+                    <input type="radio" name="q_number_${qIndex}" value="${optIndex}" onclick="revealAnswer(${qIndex}, ${optIndex}, ${q.correctIndex})"> ${opt}
+                </label>
+            `;
+        });
+        
+        if (q.explanation) {
+            block += `<div class="explanation" id="exp_${qIndex}"><strong>Explanation:</strong> ${q.explanation}</div>`;
+        }
+
+        block += `</div>`;
+        fullContent += block;
+    });
+
+    listContainer.innerHTML = fullContent;
+
+    function revealAnswer(qIndex, selectedIndex, correctIndex) {
+        const questionBox = document.getElementById(`qbox_${qIndex}`);
+        const expBox = document.getElementById(`exp_${qIndex}`);
+        
+        coreQuestions[qIndex].options.forEach((_, optIndex) => {
+            const label = document.getElementById(`label_${qIndex}_${optIndex}`);
+            if (optIndex === correctIndex) {
+                label.classList.add('correct');
+            } else if (optIndex === selectedIndex) {
+                label.classList.add('incorrect');
+            }
+        });
+
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+
+        questionBox.classList.add('disabled-box');
+    }
+
+    function checkYourScore() {
+        let rightAnswersCount = 0;
+        coreQuestions.forEach((q, index) => {
+            const chosen = document.querySelector(`input[name="q_number_${index}"]:checked`);
+            if (chosen && parseInt(chosen.value, 10) === q.correctIndex) {
+                rightAnswersCount++;
+            }
+        });
+        
+        document.getElementById('score-output').innerText = `Final Result: You scored ${rightAnswersCount} out of ${coreQuestions.length}!`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

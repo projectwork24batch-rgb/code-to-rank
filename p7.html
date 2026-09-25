@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Physics Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Modern Physics Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const modernPhysicsQuestions = [
+      {
+        question: "If the maximum kinetic energy of emitted photo electrons from a metal is 0.9 eV and work function is 2.2 eV, then the wavelength of incident radiation is",
+        options: ["4000 Å", "8000 Å", "3000 Å", "2000 Å"],
+        answer: "4000 Å",
+        explanation: "According to Einstein's photoelectric equation, total photon energy E = K.E_max + Work Function (Φ). E = 0.9 eV + 2.2 eV = 3.1 eV. Wavelength λ = 12400 / E(in eV) = 12400 / 3.1 = 4000 Å."
+      },
+      {
+        question: "If the angle of incidence of a ray is greater than the critical angle at the core cladding interface in an optical fiber, then the ray travels",
+        options: ["In the core", "In the cladding", "In the buffer", "Along the interface"],
+        answer: "In the core",
+        explanation: "When the angle of incidence exceeds the critical angle, total internal reflection occurs inside the core, guiding the light ray continuously within the core."
+      },
+      {
+        question: "Electrons are emitted with zero velocity from a certain metal surface when it is exposed to radiations of wavelength 7000 Å. The work function of the metal is",
+        options: ["1 eV", "1.52 eV", "2.52 eV", "1.77 eV"],
+        answer: "1.77 eV",
+        explanation: "When electrons are emitted with zero velocity, K.E = 0, so work function Φ = hc / λ. Φ = 12400 eV·Å / 7000 Å ≈ 1.77 eV."
+      },
+      {
+        question: "A superconducting material exhibits",
+        options: [
+          "Zero conductivity and complete diamagnetism",
+          "Zero resistivity and complete paramagnetism",
+          "Infinite conductivity and complete paramagnetism",
+          "Zero resistivity and complete diamagnetism"
+        ],
+        answer: "Zero resistivity and complete diamagnetism",
+        explanation: "Superconductors possess two defining characteristics: zero electrical resistance (zero resistivity) below their critical temperature and complete expulsion of magnetic flux (perfect diamagnetism/Meissner effect)."
+      },
+      {
+        question: "The maximum kinetic energy of the photoelectrons emitted from a surface is dependent on the",
+        options: [
+          "Intensity of incident radiation",
+          "Potential of the collector electrode",
+          "Frequency of incident radiation",
+          "Angle of incident of radiation of the surface"
+        ],
+        answer: "Frequency of incident radiation",
+        explanation: "The maximum kinetic energy of emitted photoelectrons depends solely on the frequency (or wavelength) of the incident radiation and the material's work function, according to K.E_max = hf - Φ."
+      },
+      {
+        question: "In an optical fibre, relation between refractive index of core (n1) and refractive index of cladding (n2) is",
+        options: ["n1 > n2", "n1 < n2", "n1 = n2", "n1 ≤ n2"],
+        answer: "n1 > n2",
+        explanation: "Total internal reflection requires light to travel from a denser medium to a rarer medium, meaning the core refractive index (n1) must be strictly greater than the cladding refractive index (n2)."
+      },
+      {
+        question: "Which of the following are not the properties of superconductors?",
+        options: [
+          "They possess infinite conductivity",
+          "They possess zero resistivity",
+          "They are ferromagnetic in nature",
+          "They are diamagnetic in nature"
+        ],
+        answer: "They are ferromagnetic in nature",
+        explanation: "Superconductors are perfect diamagnetic materials (Meissner effect). Ferromagnetism is incompatible with the superconducting state."
+      },
+      {
+        question: "The minimum energy required for a photoelectron to escape from a metal plate in a photocell is called",
+        options: ["Planck's constant", "Work function", "Threshold energy", "Stopping voltage"],
+        answer: "Work function",
+        explanation: "The minimum energy needed to remove an electron from a metal surface is defined as the work function of that metal."
+      },
+      {
+        question: "The critical angle for total internal reflection is maximum for",
+        options: ["Red light", "Blue light", "Ultraviolet rays", "Infrared rays"],
+        answer: "Infrared rays",
+        explanation: "Critical angle θc = sin⁻¹(1/n). Refractive index 'n' decreases as wavelength increases. Infrared rays have the longest wavelength among the options, giving them the lowest 'n' and thus the maximum critical angle."
+      },
+      {
+        question: "Photon of frequency (f) has a momentum (p) associated with it. If c is the velocity of light, the momentum is",
+        options: ["hf/c", "f/c", "hfc", "hf/c²"],
+        answer: "hf/c",
+        explanation: "Energy of a photon E = hf. Using the relativistic relation E = pc, momentum p = E/c = hf/c."
+      },
+      {
+        question: "A ray of light will undergo total internal reflection if it",
+        options: [
+          "Travels from denser medium to rarer medium & angle of incidence should be greater than critical angle",
+          "Travels from rarer medium to denser medium & angle of incidence should be greater than critical angle",
+          "Travels from denser medium to rarer medium & angle of incidence should be less than critical angle",
+          "Travels from rarer medium to denser medium & angle of incidence should be less than critical angle"
+        ],
+        answer: "Travels from denser medium to rarer medium & angle of incidence should be greater than critical angle",
+        explanation: "The two mandatory conditions for total internal reflection are: light must travel from an optically denser to a rarer medium, and the angle of incidence must exceed the critical angle."
+      },
+      {
+        question: "The expulsion of a magnetic field from the interior of a superconductor, a phenomenon is known as",
+        options: ["Isotopic effect", "BCS theory", "Meissner effect", "London theory"],
+        answer: "Meissner effect",
+        explanation: "The Meissner effect is the phenomenon where magnetic field lines are completely expelled from the interior of a material when it transitions into the superconducting state."
+      },
+      {
+        question: "If the critical angle for total internal reflection from a medium to vacuum is 30°, the velocity of light in the medium is",
+        options: ["3 × 10⁸ m/s", "1.5 × 10⁸ m/s", "2.0 × 10⁸ m/s", "2.5 × 10⁸ m/s"],
+        answer: "1.5 × 10⁸ m/s",
+        explanation: "Refractive index n = 1 / sin(θc) = 1 / sin(30°) = 2. Speed of light in the medium v = c / n = (3 × 10⁸ m/s) / 2 = 1.5 × 10⁸ m/s."
+      },
+      {
+        question: "Light rays of wave length 4.36 × 10⁻⁷ m incident on a metal surface of work function 1.24 eV. The stopping potential required to stop the emission of photoelectrons is",
+        options: ["1.6 V", "1.24 V", "3.2 V", "4.8 V"],
+        answer: "1.6 V",
+        explanation: "Photon energy E = hc / λ = (1240 eV·nm) / (436 nm) ≈ 2.84 eV. Maximum K.E = E - Φ = 2.84 eV - 1.24 eV = 1.6 eV. Stopping potential V0 = 1.6 V (which corresponds to 1.6 eV of kinetic energy)."
+      },
+      {
+        question: "An endoscope is employed by a physician to view the internal parts of a body organ. It is based on the principle of",
+        options: ["Refraction", "Reflection", "Dispersion", "Total internal reflection"],
+        answer: "Total internal reflection",
+        explanation: "Endoscopes utilize flexible optical fiber bundles to transmit light via total internal reflection to illuminate and capture images of internal organs."
+      },
+      {
+        question: "Light of wavelength 5000 Å falls on a sensitive plate with photo electric work function of 1.9 eV. The kinetic energy of the emitted photoelectron will be",
+        options: ["0.58 eV", "2.48 eV", "1.24 eV", "1.16 eV"],
+        answer: "0.58 eV",
+        explanation: "Photon energy E = 12400 / 5000 = 2.48 eV. Kinetic energy K.E = E - Φ = 2.48 eV - 1.9 eV = 0.58 eV."
+      },
+      {
+        question: "In a photoelectric experiment, the stopping potential for incident light of wavelength 4000 Å is 2V. If the wavelength is changed to 3000 Å, the new stopping potential will be approximately: (Use h = 4.14 × 10⁻¹⁵ eV s, c = 3 × 10⁸ m/s)",
+        options: ["2 V", "3.03 V", "4.14 V", "1.5 V"],
+        answer: "3.03 V",
+        explanation: "Energy at 4000 Å: E1 = 12420 / 4000 = 3.105 eV. Since V1 = 2V, work function Φ = 3.105 - 2 = 1.105 eV. Energy at 3000 Å: E2 = 12420 / 3000 = 4.14 eV. New stopping potential V2 = E2 - Φ = 4.14 - 1.105 ≈ 3.03 V."
+      },
+      {
+        question: "In Optical Fiber communication, the signal is transmitted in the form of:",
+        options: ["Electrical pulses", "Light pulses", "Radio waves", "Sound waves"],
+        answer: "Light pulses",
+        explanation: "Optical fiber communication transmits information in the form of light pulses guided through the core via total internal reflection."
+      },
+      {
+        question: "In a superconducting ring, a persistent current has been flowing without decay for years. This is possible because:",
+        options: [
+          "Resistance is exactly zero and flux is quantized",
+          "Resistance is very small but finite",
+          "The ring is at absolute zero temperature",
+          "Magnetic field lines are expelled"
+        ],
+        answer: "Resistance is exactly zero and flux is quantized",
+        explanation: "Because electrical resistance is strictly zero in the superconducting state, electric current experiences no energy dissipation and can flow indefinitely, supported by magnetic flux quantization."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = modernPhysicsQuestions.map((q, index) => `
+        <div class="question-card" id="q-card-${index}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${index}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${index}" value="${option}" onchange="onSelectOption(${index}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </label>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${index}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function onSelectOption(questionIndex, selectedValue) {
+      const q = modernPhysicsQuestions[questionIndex];
+      const explanationEl = document.getElementById(`exp-${questionIndex}`);
+
+      explanationEl.style.display = "block";
+
+      if (selectedValue === q.answer) {
+        userScores[questionIndex] = 1;
+      } else {
+        userScores[questionIndex] = 0;
+      }
+
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${questionIndex}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    function submitQuiz() {
+      let finalScore = 0;
+
+      modernPhysicsQuestions.forEach((q, index) => {
+        if (userScores[index] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${modernPhysicsQuestions.length}`;
+
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

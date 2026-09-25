@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Networks & Microprocessors Practice Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
+        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .q-box { background: #fafafa; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 6px; }
+        
+        .option { display: block; margin: 10px 0; font-size: 16px; cursor: pointer; padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; transition: background 0.2s; }
+        .option:hover { background: #f0f0f0; }
+        .option input { margin-right: 12px; transform: scale(1.1); }
+
+        .option.correct { background-color: #d4edda !important; border-color: #c3e6cb !important; color: #155724; font-weight: bold; }
+        .option.incorrect { background-color: #f8d7da !important; border-color: #f5c6cb !important; color: #721c24; }
+        
+        .disabled-box { pointer-events: none; }
+        .explanation { display: none; margin-top: 15px; padding: 12px; background-color: #e9ecef; border-left: 4px solid #007BFF; font-size: 14px; color: #495057; border-radius: 0 4px 4px 0; }
+
+        .btn { display: block; width: 100%; background: #007BFF; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #0056b3; }
+        #score-output { font-size: 22px; font-weight: bold; margin-top: 25px; color: #28a745; text-align: center; }
+        .back-nav { display: inline-block; margin-bottom: 20px; color: #007BFF; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <a href="core.html" class="back-nav">← Back to Menu</a>
+    <h1>Computer Networks & Microprocessors Practice Quiz</h1>
+    
+    <div id="questions-list"></div>
+    
+    <button class="btn" onclick="checkYourScore()">Finish & Calculate Score</button>
+    <div id="score-output"></div>
+</div>
+
+<script>
+    const coreQuestions = [
+      {
+        id: 1,
+        question: "The first address of a block of classless addresses if one of the addresses is 12.2.2.127/28 is",
+        options: ["A) 12.2.2.0", "B) 12.2.2.96", "C) 12.2.2.112", "D) 12.2.2.28"],
+        correctIndex: 2,
+        explanation: "For a /28 subnet mask, the block size is 2^(32-28) = 16. The given IP 12.2.2.127 falls into the block starting at 12.2.2.112 (since 112 is a multiple of 16 and 112 + 16 = 128)."
+      },
+      {
+        id: 2,
+        question: "The size of the MAC Address and IPv4 addresses are _____ and _____ respectively.",
+        options: ["A) 64, 32", "B) 48, 64", "C) 64, 48", "D) 48, 32"],
+        correctIndex: 3,
+        explanation: "A MAC address is 48 bits (6 bytes) long, and an IPv4 address is 32 bits (4 bytes) long."
+      },
+      {
+        id: 3,
+        question: "Delimiting and synchronization of data exchange is provided by",
+        options: ["A) Application layer", "B) Session layer", "C) Transport layer", "D) Link layer"],
+        correctIndex: 1,
+        explanation: "The Session layer establishes, manages, and terminates sessions between applications, providing mechanisms for delimiting and synchronization of data exchange."
+      },
+      {
+        id: 4,
+        question: "IP address which is reserved for loopback testing is",
+        options: ["A) 192.0.0.1", "B) 127.0.0.1", "C) 255.255.255.255", "D) 10.255.255.255"],
+        correctIndex: 1,
+        explanation: "The IPv4 address range 127.0.0.0/8 (with 127.0.0.1 as the standard) is reserved for loopback testing."
+      },
+      {
+        id: 5,
+        question: "In _____ topology, every device has a dedicated point-to-point link to every other device.",
+        options: ["A) Mesh", "B) Star", "C) Bus", "D) Ring"],
+        correctIndex: 0,
+        explanation: "In a mesh topology, every device has a dedicated point-to-point link to every other device in the network."
+      },
+      {
+        id: 6,
+        question: "In classful addressing, when a direct delivery is made, both the deliverer and receiver have the same _____.",
+        options: ["A) netid", "B) hostid", "C) IP address", "D) Next hop address"],
+        correctIndex: 0,
+        explanation: "For direct delivery, both communicating hosts reside on the same physical network, meaning they share the same network ID (netid)."
+      },
+      {
+        id: 7,
+        question: "_____ Cable accepts and transports signals in the form of light.",
+        options: ["A) Twisted pair", "B) Coaxial", "C) Optical fiber", "D) Copper"],
+        correctIndex: 2,
+        explanation: "Optical fiber cables transmit data as pulses of light through glass or plastic fibers."
+      },
+      {
+        id: 8,
+        question: "During the instruction cycle of 80386, any debug fault can be ignored if:",
+        options: ["A) VM flag is set", "B) VM flag is cleared", "C) RF is cleared", "D) RF is set"],
+        correctIndex: 3,
+        explanation: "The Resume Flag (RF) in the EFLAGS register enables/disables debug faults. When RF is set, debug faults are ignored for the instruction."
+      },
+      {
+        id: 9,
+        question: "The instruction, JMP 5000H:2000H, is an example of:",
+        options: ["A) intrasegment direct mode", "B) intrasegment indirect mode", "C) intersegment direct mode", "D) intersegment indirect mode"],
+        correctIndex: 2,
+        explanation: "JMP with a full segment:offset target address specifies a jump across different segments (intersegment) with the target explicitly provided (direct)."
+      },
+      {
+        id: 10,
+        question: "The instruction, MOV AX, [2500H] is an example of:",
+        options: ["A) immediate addressing mode", "B) direct addressing mode", "C) indirect addressing mode", "D) register addressing mode"],
+        correctIndex: 1,
+        explanation: "In direct addressing mode, the effective address of the data is explicitly specified within the instruction (here [2500H])."
+      },
+      {
+        id: 11,
+        question: "_____ is the most important segment that contains the actual assembly language instructions to be executed by the microprocessor.",
+        options: ["A) Data segment", "B) Code segment", "C) Stack segment", "D) Extra segment"],
+        correctIndex: 1,
+        explanation: "The Code Segment (CS) contains all the executable machine code/instructions for the program."
+      },
+      {
+        id: 12,
+        question: "The numbers of address and data lines of 8086 are _____ and _____ respectively.",
+        options: ["A) 8 and 8", "B) 16 and 16", "C) 20 and 16", "D) 16 and 20"],
+        correctIndex: 2,
+        explanation: "The 8086 microprocessor has a 20-bit address bus (supporting 1MB of memory) and a 16-bit data bus."
+      },
+      {
+        id: 13,
+        question: "_____ register is used as a default counter in case of string and loop instructions.",
+        options: ["A) AX", "B) BX", "C) CX", "D) DX"],
+        correctIndex: 2,
+        explanation: "The CX (Count) register serves as the automatic counter for loop and string manipulation instructions in x86 architecture."
+      },
+      {
+        id: 14,
+        question: "Which protocol assigns an IP address to the client connected to the Internet?",
+        options: ["A) ARP", "B) IP", "C) TELNET", "D) DHCP"],
+        correctIndex: 3,
+        explanation: "The Dynamic Host Configuration Protocol (DHCP) automatically assigns IP addresses and network configurations to devices."
+      },
+      {
+        id: 15,
+        question: "Which type of communication is offered by TCP?",
+        options: ["A) Full-duplex", "B) Half-duplex", "C) Semi-duplex", "D) Byte by byte"],
+        correctIndex: 0,
+        explanation: "TCP provides reliable, connection-oriented full-duplex communication where data can flow in both directions simultaneously."
+      },
+      {
+        id: 16,
+        question: "ICMP is primarily used for _____",
+        options: ["A) error and diagnostic functions", "B) Addressing", "C) Forwarding", "D) Routing"],
+        correctIndex: 0,
+        explanation: "The Internet Control Message Protocol (ICMP) is used for reporting errors and performing network diagnostics (like ping and traceroute)."
+      },
+      {
+        id: 17,
+        question: "Which layer takes care of compression and encryption?",
+        options: ["A) Application", "B) Presentation", "C) Session", "D) Network"],
+        correctIndex: 1,
+        explanation: "The Presentation layer handles data formatting, syntax translation, encryption/decryption, and compression/decompression."
+      },
+      {
+        id: 18,
+        question: "In which topology the network consists of direct link between two computers?",
+        options: ["A) Bus", "B) Ring", "C) Star", "D) P2P"],
+        correctIndex: 3,
+        explanation: "A Point-to-Point (P2P) topology provides a dedicated direct link strictly between two nodes or computers."
+      },
+      {
+        id: 19,
+        question: "What is the class of the IP address 172.50.4.12?",
+        options: ["A) Class D", "B) Class C", "C) Class B", "D) Class A"],
+        correctIndex: 2,
+        explanation: "Class B IP addresses range from 128.0.0.0 to 191.255.255.255. Since 172 falls in this range, it is a Class B address."
+      },
+      {
+        id: 20,
+        question: "If n devices are connected by mesh topology that uses simplex connections, then how many cables or lines are required?",
+        options: ["A) n", "B) n - 1", "C) n(n - 1)", "D) n(n - 1) / 2"],
+        correctIndex: 2,
+        explanation: "In a directed/simplex mesh network, every device sends a connection to every other device, resulting in n * (n - 1) unidirectional links."
+      },
+      {
+        id: 21,
+        question: "Two hosts are 10,000 km apart and they are connected by single direct link of bandwidth 10^6 bits per second. What is the propagation time if the propagation speed along the link is 2 * 10^8 m/sec?",
+        options: ["A) 50 milli sec", "B) 100 milli sec", "C) 200 milli sec", "D) 400 milli sec"],
+        correctIndex: 0,
+        explanation: "Propagation Time = Distance / Speed = (10,000 km = 10^7 meters) / (2 * 10^8 m/s) = 0.05 seconds = 50 milliseconds."
+      },
+      {
+        id: 22,
+        question: "_____ network topology makes use of token system for managing the network.",
+        options: ["A) Mesh", "B) Ring", "C) Star", "D) Tree"],
+        correctIndex: 1,
+        explanation: "Token ring networks use a token-passing mechanism to regulate transmission and avoid collisions."
+      },
+      {
+        id: 23,
+        question: "The network address of 172.16.0.0/19 provides how many subnets and hosts?",
+        options: ["A) 7 subnets, each having 30 hosts", "B) 8 subnets, each having 8190 hosts", "C) 8 subnets, each having 2046 hosts", "D) 7 subnets, each having 2046 hosts"],
+        correctIndex: 1,
+        explanation: "Class B default mask is /16. A /19 mask borrows 3 bits for subnets (2^3 = 8 subnets) and leaves 32 - 19 = 13 bits for hosts (2^13 - 2 = 8190 hosts)."
+      },
+      {
+        id: 24,
+        question: "A device which is used to convert analog to digital signal.",
+        options: ["A) Switch", "B) Repeater", "C) Booster", "D) Modem"],
+        correctIndex: 3,
+        explanation: "A Modem (Modulator-Demodulator) converts digital signals to analog for transmission over telephone lines and vice versa."
+      },
+      {
+        id: 25,
+        question: "_____ device operates on Data link layer with point-to-point communication.",
+        options: ["A) Switch", "B) Bridge", "C) Hub", "D) Router"],
+        correctIndex: 0,
+        explanation: "A network switch operates at Layer 2 (Data Link layer) and uses MAC addresses to manage point-to-point frame switching."
+      },
+      {
+        id: 26,
+        question: "_____ device is used to transmit the signal to every port except the incoming port.",
+        options: ["A) Switch", "B) Bridge", "C) Hub", "D) Router"],
+        correctIndex: 2,
+        explanation: "A network hub is a physical layer device that broadcasts incoming electrical signals out to all active ports."
+      },
+      {
+        id: 27,
+        question: "Which of the following is serializable?",
+        options: ["A) Interface", "B) Class", "C) Object", "D) Exception"],
+        correctIndex: 0,
+        explanation: "In Java, marker interfaces like java.io.Serializable are implemented by classes to indicate that their objects can be serialized."
+      },
+      {
+        id: 28,
+        question: "Full form of NIC:",
+        options: ["A) Network Interface Card", "B) Network Internet Card", "C) Networking Internal Card", "D) Network Information Card"],
+        correctIndex: 0,
+        explanation: "NIC stands for Network Interface Card, the hardware component enabling computers to connect to a network."
+      },
+      {
+        id: 29,
+        question: "Which statement best describes a Metropolitan Area Network (MAN)?",
+        options: [
+          "A) A network that covers a small geographic area, such as a single building",
+          "B) A network that spans a large geographic area, such as a country",
+          "C) A network that connects multiple LANs within a city",
+          "D) A wireless network providing access to mobile users"
+        ],
+        correctIndex: 2,
+        explanation: "A MAN spans a physical area larger than a LAN but smaller than a WAN, typically covering an entire town or city."
+      },
+      {
+        id: 30,
+        question: "Which protocol operates at the Transport Layer of the OSI model?",
+        options: ["A) IP", "B) TCP", "C) ARP", "D) ICMP"],
+        correctIndex: 1,
+        explanation: "Transmission Control Protocol (TCP) is a core protocol functioning at the Transport layer to ensure reliable data delivery."
+      },
+      {
+        id: 31,
+        question: "The primary purpose of an IP address is to _____.",
+        options: ["A) Identify devices on a network", "B) Authenticate users", "C) Encrypt Data", "D) Manage network protocols"],
+        correctIndex: 0,
+        explanation: "An IP address uniquely identifies network interfaces and hosts across an IP network."
+      },
+      {
+        id: 32,
+        question: "What is the main function of a router?",
+        options: ["A) Signal Amplification", "B) Collision Avoidance", "C) Frame Filtering", "D) Packet Switching"],
+        correctIndex: 3,
+        explanation: "Routers operate at Layer 3 to forward and switch data packets between different networks."
+      },
+      {
+        id: 33,
+        question: "What is the default subnet mask for a Class B IP address?",
+        options: ["A) 255.0.0.0", "B) 255.255.0.0", "C) 255.255.255.0", "D) 255.255.255.255"],
+        correctIndex: 1,
+        explanation: "Class B networks allocate the first two octets for network identification, yielding a default subnet mask of 255.255.0.0."
+      },
+      {
+        id: 34,
+        question: "Which OSI layer is responsible for end-to-end communication?",
+        options: ["A) Transport", "B) Network", "C) Data Link", "D) Physical"],
+        correctIndex: 0,
+        explanation: "The Transport layer is responsible for reliable, end-to-end connection and delivery of data between application processes."
+      },
+      {
+        id: 35,
+        question: "The size of each segment in 8086 is:",
+        options: ["A) 64 KB", "B) 24 KB", "C) 50 KB", "D) 16 KB"],
+        correctIndex: 0,
+        explanation: "Each segment register in the 8086 is 16 bits wide, allowing it to address a maximum segment size of 2^16 bytes = 64 KB."
+      },
+      {
+        id: 36,
+        question: "_____ allows you to connect and login to a remote computer.",
+        options: ["A) Telnet", "B) FTP", "C) HTTP", "D) SMTP"],
+        correctIndex: 0,
+        explanation: "Telnet is a network protocol used for bidirectional text-oriented communication via a virtual terminal connection."
+      },
+      {
+        id: 37,
+        question: "How many layers are present in the Internet protocol stack (TCP/IP model)?",
+        options: ["A) 5", "B) 7", "C) 6", "D) 10"],
+        correctIndex: 0,
+        explanation: "The standard TCP/IP reference model comprises 5 layers: Physical, Data Link, Network, Transport, and Application."
+      }
+    ];
+
+    const listContainer = document.getElementById('questions-list');
+    let fullContent = '';
+    
+    coreQuestions.forEach((q, qIndex) => {
+        let block = `<div class="q-box" id="qbox_${qIndex}" role="radiogroup">
+            <p><strong>Q${qIndex + 1}: ${q.question}</strong></p>`;
+        
+        q.options.forEach((opt, optIndex) => {
+            block += `
+                <label class="option" id="label_${qIndex}_${optIndex}">
+                    <input type="radio" name="q_number_${qIndex}" value="${optIndex}" onclick="revealAnswer(${qIndex}, ${optIndex}, ${q.correctIndex})"> ${opt}
+                </label>
+            `;
+        });
+        
+        if (q.explanation) {
+            block += `<div class="explanation" id="exp_${qIndex}"><strong>Explanation:</strong> ${q.explanation}</div>`;
+        }
+
+        block += `</div>`;
+        fullContent += block;
+    });
+
+    listContainer.innerHTML = fullContent;
+
+    function revealAnswer(qIndex, selectedIndex, correctIndex) {
+        const questionBox = document.getElementById(`qbox_${qIndex}`);
+        const expBox = document.getElementById(`exp_${qIndex}`);
+        
+        coreQuestions[qIndex].options.forEach((_, optIndex) => {
+            const label = document.getElementById(`label_${qIndex}_${optIndex}`);
+            if (optIndex === correctIndex) {
+                label.classList.add('correct');
+            } else if (optIndex === selectedIndex) {
+                label.classList.add('incorrect');
+            }
+        });
+
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+
+        questionBox.classList.add('disabled-box');
+    }
+
+    function checkYourScore() {
+        let rightAnswersCount = 0;
+        coreQuestions.forEach((q, index) => {
+            const chosen = document.querySelector(`input[name="q_number_${index}"]:checked`);
+            if (chosen && parseInt(chosen.value, 10) === q.correctIndex) {
+                rightAnswersCount++;
+            }
+        });
+        
+        document.getElementById('score-output').innerText = `Final Result: You scored ${rightAnswersCount} out of ${coreQuestions.length}!`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

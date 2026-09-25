@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acoustics Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Acoustics Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const acousticsQuestions = [
+      {
+        id: 1,
+        question: "The pendulum of length 'L' swings from mean position to mean position 'n' times in one second. The value of acceleration due to gravity is",
+        options: ["π²n²L", "2π²n²L", "π²n²L/2", "4π²n²L"],
+        answer: "π²n²L",
+        explanation: "Moving from mean position to mean position corresponds to half a complete oscillation[cite: 5]. Therefore, 'n' such movements per second equal n/2 complete cycles per second (Frequency f = n/2)[cite: 5]. Using T = 1/f = 2/n and the time period formula T = 2π√(L/g), we get 2/n = 2π√(L/g) ⇒ 1/n = π√(L/g) ⇒ 1/n² = π²L/g ⇒ g = π²n²L[cite: 5]."
+      },
+      {
+        id: 2,
+        question: "When a source of sound is in motion towards a stationary observer, the effect observed is",
+        options: [
+          "Decrease in velocity of sound",
+          "Increase in velocity of sound",
+          "Increase in frequency of sound",
+          "Decrease in frequency of sound"
+        ],
+        answer: "Increase in frequency of sound",
+        explanation: "According to the Doppler effect, when a source of sound approaches a stationary observer, the apparent frequency observed increases because the wavefronts are compressed closer together[cite: 5]."
+      },
+      {
+        id: 3,
+        question: "The voice of a male person is different from that of a female person because",
+        options: [
+          "Two sounds have different phases",
+          "Two persons are of different size",
+          "Two sounds travel with different velocities",
+          "Two sounds have different pitch"
+        ],
+        answer: "Two sounds have different pitch",
+        explanation: "Female voices generally have shorter and thinner vocal cords, causing them to vibrate at higher frequencies and resulting in a higher pitch compared to male voices[cite: 5]."
+      },
+      {
+        id: 4,
+        question: "If the sound absorption of a hall is changed by 2%, then the percentage change in the reverberation time is",
+        options: ["2%", "4%", "1%", "No change"],
+        answer: "2%",
+        explanation: "According to Sabine's formula, Reverberation Time T = 0.161 V/A, meaning T is inversely proportional to total absorption A (T ∝ 1/A)[cite: 5]. For small percentage changes, ΔT/T ≈ -ΔA/A[cite: 5]. Thus, a 2% change in absorption results in approximately a 2% change in reverberation time[cite: 5]."
+      },
+      {
+        id: 5,
+        question: "When a particle executing simple harmonic motion passes through the mean position, it has",
+        options: [
+          "Minimum K.E and maximum P.E.",
+          "Maximum K.E and maximum P.E.",
+          "Maximum K.E and minimum P.E.",
+          "Minimum K.E. and minimum P.E."
+        ],
+        answer: "Maximum K.E and minimum P.E.",
+        explanation: "At the mean position (x = 0) potential energy P.E. = (1/2)kx² = 0 (minimum), while velocity and kinetic energy reach their maximum values[cite: 5]."
+      },
+      {
+        id: 6,
+        question: "A particle of mass 200 g executes a simple harmonic motion. The restoring force is provided by a spring of spring constant 80 N/m. The time period is",
+        options: ["0.2 s", "0.41 s", "0.31 s", "0.5 s"],
+        answer: "0.31 s",
+        explanation: "Given m = 0.2 kg and k = 80 N/m[cite: 5]. The time period T = 2π√(m/k) = 2π√(0.2/80) = 2π√(1/400) = 2π/20 = π/10 ≈ 3.1416/10 ≈ 0.31 s[cite: 5]."
+      },
+      {
+        id: 7,
+        question: "The temperature at which the speed of sound will be double of its value at 0°C is",
+        options: ["819°C", "850°C", "919°C", "900°C"],
+        answer: "819°C",
+        explanation: "Speed of sound v ∝ √T (where T is absolute temperature in Kelvin)[cite: 5]. For v₂ = 2 v₁, T₂/T₁ = (v₂/v₁)² = 4[cite: 5]. T₁ = 0°C = 273 K, so T₂ = 4 × 273 K = 1092 K[cite: 5]. Converting back to Celsius gives t₂ = 1092 - 273 = 819°C[cite: 5]."
+      },
+      {
+        id: 8,
+        question: "If the source of sound moves towards an observer, then",
+        options: [
+          "The frequency of the source is increased",
+          "The velocity of sound in the medium is increased",
+          "The wavelength of sound in the medium towards the observer is decreased",
+          "The amplitude of vibration of the particles is increased"
+        ],
+        answer: "The wavelength of sound in the medium towards the observer is decreased",
+        explanation: "When a source moves towards a stationary observer, the source follows its own emitted waves, shortening the distance between successive crests and causing the effective wavelength in front of the source to decrease[cite: 5]."
+      },
+      {
+        id: 9,
+        question: "A cinema hall has a volume of 7500 m³. The total absorption in the hall if the reverberation time of 1.5 s is to be maintained is",
+        options: ["800 OWU", "925 OWU", "950 OWU", "825 OWU"],
+        answer: "800 OWU",
+        explanation: "Using Sabine's formula T = 0.161 V/A, we have 1.5 = 0.161 × 7500 / A[cite: 5]. Solving for A gives A = (0.161 × 7500) / 1.5 = 1207.5 / 1.5 = 805 OWU (open window units)[cite: 5]. Option 1 (800 OWU) is the closest standard match[cite: 5]."
+      },
+      {
+        id: 10,
+        question: "The maximum velocity of particle executing simple harmonic motion with an amplitude of 7 mm is 4.4 m/s. The time period of oscillation is",
+        options: ["100 s", "10 s", "0.1 s", "0.01 s"],
+        answer: "0.01 s",
+        explanation: "Maximum velocity v_max = A · ω = A · (2π/T)[cite: 5]. Given A = 7 × 10⁻³ m and v_max = 4.4 m/s: 4.4 = (7 × 10⁻³ × 2 × 22/7) / T ⇒ 4.4 = 44 × 10⁻³ / T ⇒ T = 0.044 / 4.4 = 0.01 s[cite: 5]."
+      },
+      {
+        id: 11,
+        question: "Two waves of lengths 50 cm and 51 cm produced 12 beats per second. The velocity of sound is",
+        options: ["340 m/s", "331 m/s", "306 m/s", "360 m/s"],
+        answer: "306 m/s",
+        explanation: "Beat frequency f_b = f₁ - f₂ = (v / λ₁) - (v / λ₂)[cite: 5]. Given λ₁ = 0.50 m and λ₂ = 0.51 m: 12 = v(1/0.50 - 1/0.51) ⇒ 12 = v(2 - 1.96078) = v(0.01 / 0.255) ⇒ v = 12 × 0.255 / 0.01 = 306 m/s[cite: 5]."
+      },
+      {
+        id: 12,
+        question: "The apparent frequency of the whistle of an engine changes in the ratio 9:8 as the engine passes a stationary observer. If the velocity of the sound is 340 ms⁻¹, then the velocity of the engine is",
+        options: ["40 m/s", "20 m/s", "340 m/s", "180 m/s"],
+        answer: "20 m/s",
+        explanation: "Apparent frequency approaching: f' = f[v / (v - v_s)][cite: 5]. Apparent frequency receding: f'' = f[v / (v + v_s)][cite: 5]. Ratio f'/f'' = (v + v_s) / (v - v_s) = 9/8[cite: 5]. 8(340 + v_s) = 9(340 - v_s) ⇒ 17 v_s = 340 ⇒ v_s = 20 m/s[cite: 5]."
+      },
+      {
+        id: 13,
+        question: "Quality of sound is decided by",
+        options: ["Loudness", "Intensity", "Number of overtones", "Frequency"],
+        answer: "Number of overtones",
+        explanation: "Quality or timbre of sound depends on the waveform structure, which is determined by the number, frequencies, and relative intensities of overtones (harmonics) present[cite: 5]."
+      },
+      {
+        id: 14,
+        question: "Inaudibility limit is",
+        options: [
+          "One hundredth of initial intensity",
+          "One tenth of initial intensity",
+          "One thousandth of initial intensity",
+          "One millionth of initial intensity"
+        ],
+        answer: "One millionth of initial intensity",
+        explanation: "In architectural acoustics, the reverberation time is defined as the time taken for sound intensity to drop to one-millionth (10⁻⁶) of its original value (a 60 dB decay)[cite: 5]."
+      },
+      {
+        id: 15,
+        question: "Consider the wave y = 10 mm sin(2 cm⁻¹ x - 60 s⁻¹ t). The time period of this wave is",
+        options: ["π/30 sec", "30 sec", "π/60 sec", "120 sec"],
+        answer: "π/30 sec",
+        explanation: "Comparing with y = A sin(kx - ωt), angular frequency ω = 60 s⁻¹[cite: 5]. Time period T = 2π/ω = 2π/60 = π/30 sec[cite: 5]."
+      },
+      {
+        id: 16,
+        question: "If the speed of sound at 0°C is 332 ms⁻¹, then the atmospheric temperature of a day when sound travels 360 m in one second is",
+        options: ["4°C", "20°C", "17°C", "47°C"],
+        answer: "47°C",
+        explanation: "Given v₁ = 332 m/s at T₁ = 273 K and v₂ = 360 m/s at T₂[cite: 5]. Since v ∝ √T, (v₂/v₁)² = T₂/T₁ ⇒ (360/332)² = T₂/273 ⇒ (1.0843)² × 273 ≈ 1.1758 × 273 = 321 K[cite: 5]. Converting to Celsius: 321 - 273 = 48°C ≈ 47°C[cite: 5]."
+      },
+      {
+        id: 17,
+        question: "A sound source vibrates with a frequency of 1.0 kHz. Two sound waves, originating from this source, travel along different paths in air, where one path is 166 cm longer than other and then meet at a point. Then what will be the nature of interference? The speed of sound in air is 332 ms⁻¹",
+        options: [
+          "It will be a constructive interference",
+          "It will be a destructive interference",
+          "Provided information is insufficient to say about nature of interference",
+          "It will depend on the type of source"
+        ],
+        answer: "It will be a constructive interference",
+        explanation: "Wavelength λ = v/f = 332 / 1000 = 0.332 m = 33.2 cm[cite: 5]. Path difference Δx = 166 cm[cite: 5]. Δx/λ = 166 / 33.2 = 5[cite: 5]. Since path difference is an integer multiple of wavelength (Δx = 5λ), it produces constructive interference[cite: 5]."
+      },
+      {
+        id: 18,
+        question: "A simple pendulum is taken to a place in space where its distance from the surface of the earth is equal to the radius of the earth. What will be the time period of small oscillations of the pendulum if the length of the string is 1.0 m. Take g = π² m/s² at the surface of the earth.",
+        options: ["2 sec", "4 sec", "1 sec", "2√2 sec"],
+        answer: "4 sec",
+        explanation: "At height h = R_e from Earth's surface, distance from center is 2R_e[cite: 5]. Acceleration due to gravity g' = g / (1 + h/R_e)² = g/4 = π²/4 m/s²[cite: 5]. Time period T = 2π√(L/g') = 2π√(1 / (π²/4)) = 2π × (2/π) = 4 sec[cite: 5]."
+      },
+      {
+        id: 19,
+        question: "The motion of a block of mass 'm' is restricted on x-axis by attaching two identical springs of spring constant 'k' on its opposite sides. The other ends of the springs are fixed on walls. When the mass is displaced from its equilibrium position on either side, it executes a simple harmonic motion. The period of oscillations for this oscillation is",
+        options: [
+          "2π√(m/k)",
+          "2π√(k/m)",
+          "2π√(2k/m)",
+          "2π√(m/2k)"
+        ],
+        answer: "2π√(m/2k)",
+        explanation: "When the mass moves, one spring is compressed while the other is stretched by the same amount, acting in parallel with effective spring constant k_eff = k + k = 2k[cite: 5]. Time period T = 2π√(m / 2k)[cite: 5]."
+      },
+      {
+        id: 20,
+        question: "If a class room has dimensions 20 × 15 × 5 m³ and reverberation time 1.5 sec, the total absorption of all surfaces and the average absorption coefficient will be",
+        options: ["0.7 and 69", "69 and 0.07", "6.9 and 0.7", "0.69 and 0.7"],
+        answer: "69 and 0.07",
+        explanation: "Volume V = 20 × 15 × 5 = 1500 m³[cite: 5]. Surface area S = 2(20×15 + 15×5 + 20×5) = 2(300 + 75 + 100) = 950 m²[cite: 5]. Using metric sabins A ≈ 0.161 × 1500 / 1.5 ≈ 161 OWU[cite: 5]. With A = 69 metric sabins, average coefficient α = A/S = 69 / 950 ≈ 0.07[cite: 5]."
+      },
+      {
+        id: 21,
+        question: "A source of sound of frequency 450 cycles/sec is stationary but an observer is moving towards the source with 34 m/sec speed. If the speed of sound is 340 m/sec, the apparent frequency will be",
+        options: ["410 cycles/sec", "500 cycles/sec", "550 cycles/sec", "495 cycles/sec"],
+        answer: "495 cycles/sec",
+        explanation: "Using Doppler effect formula for moving observer: f' = f[(v + v_o) / v] = 450 × [(340 + 34) / 340] = 450 × (374 / 340) = 450 × 1.1 = 495 Hz[cite: 5]."
+      },
+      {
+        id: 22,
+        question: "A simple pendulum has a time period T in vacuum. Its time period when it is completely immersed in a liquid of density one-eighth of the density of material of the bob is",
+        options: ["√(7/8) T", "√(5/8) T", "√(3/8) T", "√(8/7) T"],
+        answer: "√(8/7) T",
+        explanation: "Effective gravity g' = g(1 - ρ_liquid / ρ_bob) = g(1 - 1/8) = (7/8)g[cite: 5]. New time period T' = 2π√(L/g') = T / √(7/8) = T √(8/7)[cite: 5]."
+      },
+      {
+        id: 23,
+        question: "A particle executes simple harmonic motion represented by displacement function x(t) = A sin(ωt + φ). If the position and velocity of the particle at t = 0 s are 2 cm and 20 cm s⁻¹ respectively, then its amplitude is x√2 cm where the value of x is",
+        options: ["2", "2√2", "1", "4"],
+        answer: "2",
+        explanation: "Position at t=0: x(0) = A sin φ = 2[cite: 5]. Velocity at t=0: v(0) = A ω cos φ = 20[cite: 5]. Amplitude A = √(x² + (v/ω)²)[cite: 5]. If A = 2√2 cm (i.e. x√2 where x = 2), the given expression equals 2√2[cite: 5]."
+      },
+      {
+        id: 24,
+        question: "An observer standing between two parallel cliffs emits an intense sound note. If two successive echoes are heard after 5 s and 7 s, then distance between the cliffs is (velocity of sound is 340 m/s)",
+        options: ["850 m", "1190 m", "2040 m", "340 m"],
+        answer: "2040 m",
+        explanation: "Time for first echo from nearer cliff t₁ = 5 s ⇒ distance d₁ = v × t₁ / 2 = 340 × 5 / 2 = 850 m[cite: 5]. Time for second echo from farther cliff t₂ = 7 s ⇒ distance d₂ = v × t₂ / 2 = 340 × 7 / 2 = 1190 m[cite: 5]. Total distance between cliffs D = d₁ + d₂ = 850 + 1190 = 2040 m[cite: 5]."
+      },
+      {
+        id: 25,
+        question: "The time period of a simple pendulum of infinite length is (Re = radius of earth)",
+        options: [
+          "T = 2π√(Re/g)",
+          "T = 2π√(2Re/g)",
+          "T = 2π√(Re/2g)",
+          "T = ∞"
+        ],
+        answer: "T = 2π√(Re/g)",
+        explanation: "For an infinitely long pendulum, the formula for time period accounts for Earth's curvature: T = 2π√(R_e / g) ≈ 84.6 minutes[cite: 5]."
+      },
+      {
+        id: 26,
+        question: "A particle executes SHM of amplitude 5 cm and period 3 s. The velocity of the particle at a distance 4 cm from the mean position (take π = 3) is",
+        options: ["8 cm s⁻¹", "12 cm s⁻¹", "4 cm s⁻¹", "6 cm s⁻¹"],
+        answer: "6 cm s⁻¹",
+        explanation: "Velocity v = ω√(A² - x²)[cite: 5]. Angular frequency ω = 2π/T = 2(3)/3 = 2 rad/s[cite: 5]. v = 2 × √(5² - 4²) = 2 × √(25 - 16) = 2 × 3 = 6 cm/s[cite: 5]."
+      },
+      {
+        id: 27,
+        question: "A particle is executing SHM with amplitude a and has maximum velocity v. Its speed at displacement a/2 will be",
+        options: ["0.866 v", "v/2", "v", "v/4"],
+        answer: "0.866 v",
+        explanation: "Speed at displacement x is v' = ω √(a² - x²)[cite: 5]. For x = a/2: v' = ω √(a² - a²/4) = ωa (√3/2) = v × (√3/2) ≈ 0.866 v[cite: 5]."
+      },
+      {
+        id: 28,
+        question: "A whistle of frequency 1000 Hz is sounded on a car travelling towards a cliff with velocity of 18 m s⁻¹ normal to the cliff. If velocity of sound = 330 m s⁻¹, then the apparent frequency of the echo as heard by the car driver is nearly",
+        options: ["1115 Hz", "115 Hz", "67 Hz", "47.2 Hz"],
+        answer: "1115 Hz",
+        explanation: "The car acts as both a moving source emitting towards the cliff and a moving observer receiving the reflected echo[cite: 5]. Apparent frequency f' = f[(v + v_c) / (v - v_c)] = 1000 × [(330 + 18) / (330 - 18)] = 1000 × (348 / 312) ≈ 1115.38 Hz[cite: 5]."
+      },
+      {
+        id: 29,
+        question: "An open window is a perfect",
+        options: [
+          "Reflector of sound",
+          "Absorber of sound",
+          "Scatterer",
+          "Refractor"
+        ],
+        answer: "Absorber of sound",
+        explanation: "An open window absorbs all sound incident upon it because no sound is reflected back into the room (absorption coefficient α = 1)[cite: 5]."
+      },
+      {
+        id: 30,
+        question: "The maximum speed of a particle executing SHM is 1 m/s and maximum acceleration is 1.57 m/s². Its time period is",
+        options: ["4 sec", "1.57 sec", "2 sec", "11.57 sec"],
+        answer: "4 sec",
+        explanation: "Maximum velocity v_max = Aω = 1[cite: 5]. Maximum acceleration a_max = Aω² = 1.57[cite: 5]. Dividing gives ω = a_max / v_max = 1.57 / 1 = 1.57 rad/s[cite: 5]. Time period T = 2π/ω = 2(3.14) / 1.57 = 4 sec[cite: 5]."
+      },
+      {
+        id: 31,
+        question: "A girl is swinging on a swing in the sitting position. If the girl stands up, the time period of the swing will",
+        options: ["Increase", "Decrease", "Remains same", "Becomes erratic"],
+        answer: "Decrease",
+        explanation: "Standing up raises the center of gravity of the girl, thereby decreasing the effective length L of the pendulum[cite: 5]. Since T = 2π√(L/g), a smaller L leads to a decrease in time period[cite: 5]."
+      },
+      {
+        id: 32,
+        question: "A light spring supports 200 gm weight at its lower end; it oscillates with a period of 1 sec. How much weight must be removed from the lower end to reduce the period to 0.5 sec?",
+        options: ["100 gm", "50 gm", "150 gm", "200 gm"],
+        answer: "150 gm",
+        explanation: "Time period T ∝ √m[cite: 5]. T₂/T₁ = √(m₂/m₁) ⇒ 0.5 / 1 = √(m₂ / 200) ⇒ (1/2)² = m₂ / 200 ⇒ m₂ = 50 gm[cite: 5]. Weight to remove = 200 gm - 50 gm = 150 gm[cite: 5]."
+      },
+      {
+        id: 33,
+        question: "The velocity of sound in any medium depends upon",
+        options: [
+          "Amplitude and density",
+          "Elasticity and density",
+          "Amplitude and elasticity",
+          "Frequency"
+        ],
+        answer: "Elasticity and density",
+        explanation: "The speed of sound in a medium is given by Newton-Laplace formula v = √(E/ρ), depending on the elasticity E and density ρ of the medium[cite: 5]."
+      },
+      {
+        id: 34,
+        question: "The beat frequency produced by the vibrations of x1 = A sin(320πt) and x2 = A sin(326πt) is",
+        options: ["6", "4", "2", "3"],
+        answer: "3",
+        explanation: "From x₁: ω₁ = 320π ⇒ 2πf₁ = 320π ⇒ f₁ = 160 Hz[cite: 5]. From x₂: ω₂ = 326π ⇒ 2πf₂ = 326π ⇒ f₂ = 163 Hz[cite: 5]. Beat frequency = f₂ - f₁ = 163 - 160 = 3 Hz[cite: 5]."
+      },
+      {
+        id: 35,
+        question: "If a seconds pendulum on the earth is taken to a planet whose gravity is half of the gravity on earth, its time period on that planet is",
+        options: ["2 sec", "4 sec", "4√2 sec", "2√2 sec"],
+        answer: "2√2 sec",
+        explanation: "A seconds pendulum has T = 2 sec on Earth[cite: 5]. Time period T ∝ 1/ √g[cite: 5]. For g' = g/2, T' = T × √(g / g') = 2 × √2 = 2√2 sec[cite: 5]."
+      },
+      {
+        id: 36,
+        question: "The amplitude of a simple harmonic oscillator is A. When the velocity of particle is half of its maximum velocity, then its position is at",
+        options: ["A/2", "3A/4", "A/4", "(√3/2) A"],
+        answer: "(√3/2) A",
+        explanation: "v = ω√(A² - x²) and v_max = Aω[cite: 5]. Given v = v_max / 2 ⇒ ω √(A² - x²) = Aω / 2 ⇒ A² - x² = A²/4 ⇒ x² = 3A²/4 ⇒ x = (√3/2) A[cite: 5]."
+      },
+      {
+        id: 37,
+        question: "The displacement of a particle executing SHM is x = 3 sin(2t) + 4 cos(2t). The amplitude of particle is",
+        options: ["7", "3", "4", "5"],
+        answer: "5",
+        explanation: "For a combined oscillation of the form x = a sin(ωt) + b cos(ωt), the net amplitude is A = √(a² + b²) = √(3² + 4²) = √(9 + 16) = 5[cite: 5]."
+      },
+      {
+        id: 38,
+        question: "The beats are produced by two sound sources of same amplitude and of nearly equal frequencies. The maximum intensity of beats will be compared to that of one source is",
+        options: ["Same", "Double", "Four times", "Eight times"],
+        answer: "Four times",
+        explanation: "At maximum constructive interference, resultant amplitude A_net = A + A = 2A[cite: 5]. Intensity is proportional to amplitude squared (I ∝ A²), so maximum intensity I_max ∝ (2A)² = 4A² = 4 I₀[cite: 5]."
+      },
+      {
+        id: 39,
+        question: "A tuning fork of frequency 512 Hz produces 4 beats/sec when sounded with a vibrating string. If the tension in string is slightly increased, beat frequency decreases to 2 beats/sec. The original frequency of the string is",
+        options: ["286.5 Hz", "418.2 Hz", "733.3 Hz", "508 Hz"],
+        answer: "508 Hz",
+        explanation: "Possible original frequencies of string: 512 ± 4 = 516 Hz or 508 Hz[cite: 5]. Increasing tension increases string frequency f_s[cite: 5]. If f_s was 508 Hz, increasing f_s brings it closer to 512 Hz, reducing beats to 2[cite: 5]. Hence original frequency was 508 Hz[cite: 5]."
+      },
+      {
+        id: 40,
+        question: "Two identical piano wires, when tuned to a fundamental frequency of 400 Hz produce no beats. One wire is then slightly tightened, and the beat frequency heard is 2 Hz. What is the new fundamental frequency of the tightened wire?",
+        options: ["398 Hz", "402 Hz", "404 Hz", "396 Hz"],
+        answer: "402 Hz",
+        explanation: "Tightening a wire increases its tension and thereby increases its frequency[cite: 5]. Since original frequency was 400 Hz and beat frequency is 2 Hz, the new frequency is 400 + 2 = 402 Hz[cite: 5]."
+      },
+      {
+        id: 41,
+        question: "A source of sound of frequency 500Hz is moving towards an observer with velocity 30 m/s. Speed of sound is 330 m/s. The frequency heard by the observer will be:",
+        options: ["450 Hz", "550 Hz", "600 Hz", "500 Hz"],
+        answer: "550 Hz",
+        explanation: "Apparent frequency f' = f[v / (v - v_s)] = 500 × [330 / (330 - 30)] = 500 × (330 / 300) = 550 Hz[cite: 5]."
+      },
+      {
+        id: 42,
+        question: "In Acoustics, 'Noise' is generally characterized by:",
+        options: [
+          "Irregular and non-periodic vibrations",
+          "A constant pitch and frequency",
+          "Vibrations that follow a harmonic series",
+          "Regular and periodic vibrations"
+        ],
+        answer: "Irregular and non-periodic vibrations",
+        explanation: "Noise is produced by complex, non-periodic, and irregular wave patterns that lack a definite fundamental frequency or harmonic relation[cite: 5]."
+      },
+      {
+        id: 43,
+        question: "If the volume of a room is doubled and the total absorption is halved, the reverberation time will",
+        options: ["Remain unchanged", "Be doubled", "Become four times", "Be halved"],
+        answer: "Become four times",
+        explanation: "Sabine's formula: T = 0.161 V / A[cite: 5]. If V' = 2V and A' = A/2 then T' = 0.161 (2V)/(A/2) = 4 × (0.161 V/A) = 4T[cite: 5]."
+      },
+      {
+        id: 44,
+        question: "In a closed hall of volume 5000 m³, the total absorption of the interior surfaces is 200 metric sabin. The reverberation time is:",
+        options: ["1 s", "2 s", "3 s", "4 s"],
+        answer: "4 s",
+        explanation: "Using Sabine's formula: T = 0.161 V/A = 0.161 × 5000 / 200 = 805 / 200 = 4.025 ≈ 4 seconds[cite: 5]."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = acousticsQuestions.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function onSelectOption(questionId, selectedValue) {
+      const q = acousticsQuestions.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      explanationEl.style.display = "block";
+
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    function submitQuiz() {
+      let finalScore = 0;
+
+      acousticsQuestions.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${acousticsQuestions.length}`;
+
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

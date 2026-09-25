@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heat & Thermodynamics Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Heat & Thermodynamics Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const heatQuestions = [
+      {
+        question: "In which of the following process, the internal energy of the system remains constant?",
+        options: ["Adiabatic", "Isothermal", "Isobaric", "Isochoric"],
+        answer: "Isothermal",
+        explanation: "Internal energy of an ideal gas depends solely on its absolute temperature. In an isothermal process, the temperature remains constant (ΔT = 0), so the internal energy remains unchanged (ΔU = 0)."
+      },
+      {
+        question: "Heat required to raise the temperature of one gram of water through 1 K is",
+        options: ["1.0 Kcal", "0.1 Kcal", "0.01 Kcal", "0.001 Kcal"],
+        answer: "0.001 Kcal",
+        explanation: "By definition, 1 calorie (0.001 kcal) is the amount of heat energy needed to raise the temperature of 1 gram of water by 1°C (or 1 K)."
+      },
+      {
+        question: "The specific heat of a gas in an isothermal process is",
+        options: ["Infinity", "Zero", "Finite positive", "Finite negative"],
+        answer: "Infinity",
+        explanation: "Specific heat is given by C = Q / (m · ΔT). Since temperature remains constant during an isothermal process (ΔT = 0), C = Q / 0 = Infinity."
+      },
+      {
+        question: "Specific heat of aluminium is 0.25 cal/g/°C. The water equivalent of an aluminium vessel of mass one kilogram is",
+        options: ["40 cal/°C", "400 cal/°C", "250 cal/°C", "25 cal/°C"],
+        answer: "250 cal/°C",
+        explanation: "Water equivalent is calculated as w = m · c. Given mass m = 1000 g and specific heat c = 0.25 cal/g/°C, w = 1000 × 0.25 = 250 g (or 250 cal/°C equivalent)."
+      },
+      {
+        question: "What should be the percentage increase in the pressure so that the volume of a gas may decrease by 5% at constant temperature?",
+        options: ["5%", "5.26%", "10%", "4.26%"],
+        answer: "5.26%",
+        explanation: "At constant temperature, P1 · V1 = P2 · V2. If V2 = 0.95 · V1, then P2 = P1 / 0.95 ≈ 1.0526 P1. The percentage increase in pressure is (1.0526 - 1) × 100% = 5.26%."
+      },
+      {
+        question: "One mole of oxygen is heated at constant pressure starting at 0°C. The heat energy that must be supplied to the gas to double its volume is",
+        options: ["2.5 × 273 × R", "3.5 × 273 × R", "2.5 × 546 × R", "3.5 × 546 × R"],
+        answer: "3.5 × 273 × R",
+        explanation: "At constant pressure, V ∝ T. Doubling volume doubles absolute temperature from T1 = 273 K to T2 = 546 K (ΔT = 273 K). Oxygen is a diatomic gas, so Cp = (7/2)R = 3.5R. Heat supplied Q = n · Cp · ΔT = 1 × 3.5R × 273 = 3.5 × 273 × R."
+      },
+      {
+        question: "A vessel contains a gas at a temperature of 27°C and a pressure of 20 atm. If one half of the gas is released and the temperature of the remaining gas is raised by 50°C, the new pressure will be",
+        options: ["12.24 atm", "11.67 atm", "13.79 atm", "11 atm"],
+        answer: "11.67 atm",
+        explanation: "Using ideal gas law PV = nRT: P ∝ n · T at constant volume. T1 = 300 K, T2 = 350 K, n2 = n1 / 2. P2 / P1 = (n2 / n1) × (T2 / T1) = (1/2) × (350/300) = 35 / 60. P2 = 20 × (35/60) ≈ 11.67 atm."
+      },
+      {
+        question: "The temperature of 5 gm of air is raised from 0°C to 1°C. The increase in the internal energy of air is (Cv = 0.172 cal/gm/°C and J = 4.18 × 10^7 erg/cal)",
+        options: ["3.595 × 10^7 erg", "3 × 10^7 erg", "4.5 × 10^7 erg", "2.595 × 10^7 erg"],
+        answer: "3.595 × 10^7 erg",
+        explanation: "Change in internal energy ΔU = m · Cv · ΔT = 5 g × 0.172 cal/g/°C × 1°C = 0.86 cal. Converting to ergs: ΔU = 0.86 × 4.18 × 10^7 erg ≈ 3.595 × 10^7 erg."
+      },
+      {
+        question: "In all reversible processes entropy of the system",
+        options: ["Decreases", "Increases", "Remains constant", "Remains zero"],
+        answer: "Remains constant",
+        explanation: "For any reversible cyclic or overall closed system process, the total change in entropy is zero, meaning entropy remains constant."
+      },
+      {
+        question: "If one mole of a monoatomic gas (γ = 5/3) is mixed with one mole of a diatomic gas (γ = 7/5), the value of γ for the mixture is",
+        options: ["1.40", "1.50", "1.53", "3.07"],
+        answer: "1.50",
+        explanation: "For monoatomic gas: Cv1 = (3/2)R. For diatomic gas: Cv2 = (5/2)R. Cv(mix) = (Cv1 + Cv2)/2 = 2R. Cp(mix) = Cv(mix) + R = 3R. γ(mix) = Cp / Cv = 3R / 2R = 1.50."
+      },
+      {
+        question: "A Carnot's engine operates with source at 127°C and sink at 27°C. If the source supplies 40 kJ of heat energy, the work done by the engine is",
+        options: ["30 kJ", "10 kJ", "4 kJ", "1 kJ"],
+        answer: "10 kJ",
+        explanation: "T1 = 400 K, T2 = 300 K. Carnot efficiency η = 1 - T2/T1 = 1 - 300/400 = 0.25 (25%). Work done W = η · Q1 = 0.25 × 40 kJ = 10 kJ."
+      },
+      {
+        question: "A monoatomic gas initially at 17°C is suddenly compressed to one eighth of its original volume. The temperature after compression is",
+        options: ["1160 K", "36.25 K", "2320 K", "887 K"],
+        answer: "1160 K",
+        explanation: "Sudden compression is adiabatic. T1 · V1^(γ-1) = T2 · V2^(γ-1) with γ = 5/3. T1 = 290 K, V1/V2 = 8. T2 = 290 × (8)^(5/3-1) = 290 × (8)^(2/3) = 290 × 4 = 1160 K."
+      },
+      {
+        question: "Two cylinders of volumes 20 cc and 30 cc have gases at pressures 40 cm and 50 cm of Hg under the same temperature. If they are connected by a very narrow pipe, the pressure in cm of Hg will be",
+        options: ["45", "50", "46", "15"],
+        answer: "46",
+        explanation: "By Boyle's law P · V = P1 · V1 + P2 · V2. P × (20 + 30) = (40 × 20) + (50 × 30) => 50P = 800 + 1500 = 2300. P = 2300 / 50 = 46 cm of Hg."
+      },
+      {
+        question: "In an adiabatic expansion, a gas does 25J of work while in an adiabatic compression 100J of work is done on a gas. The change of internal energy in the two processes respectively are",
+        options: ["25J and -100J", "-25J and 100J", "-25J and -100J", "25J and 100J"],
+        answer: "-25J and 100J",
+        explanation: "First law of thermodynamics: Q = ΔU + W. In adiabatic processes, Q = 0, so ΔU = -W. For expansion (W = +25 J), ΔU = -25 J. For compression (W = -100 J), ΔU = +100 J."
+      },
+      {
+        question: "The volume of one mole of an ideal gas changes from V to 2V at temperature of 300 K. If R is universal gas constant, then work done in this process is",
+        options: ["300Rln2", "600Rln2", "300ln2", "600ln2"],
+        answer: "300Rln2",
+        explanation: "Work done in an isothermal expansion is W = nRT ln(V2/V1). For n = 1 mole and T = 300 K, W = 1 × R × 300 × ln(2V/V) = 300R ln 2."
+      },
+      {
+        question: "Is it true that dU = Cv·dT?",
+        options: ["Yes", "No, it is never true", "It is true only for ideal gas", "It is true only for non-ideal gas"],
+        answer: "It is true only for ideal gas",
+        explanation: "For an ideal gas, internal energy depends only on temperature, making dU = Cv·dT universally valid for all processes. For real gases, internal energy also depends on volume."
+      },
+      {
+        question: "One mole of ideal monatomic gas is confined in a cylinder by a piston and is maintained at a constant temperature T0 by thermal contact with a heat reservoir. The gas slowly expands from V1 to V2 while being held at the same temperature T0. The change in internal energy of the gas is",
+        options: ["RT0ln(V2/V1)", "Zero", "RT0", "RT0ln(V1/V2)"],
+        answer: "Zero",
+        explanation: "Since the process occurs at constant temperature T0 (isothermal), the change in internal energy ΔU for an ideal gas is zero."
+      },
+      {
+        question: "A pan filled with hot food cools from 94°C to 86°C in 2 minutes when the room temperature is at 20°C. How long will it take to cool from 71°C to 69°C?",
+        options: ["0.7 min", "0.5 min", "0.4 min", "2 min"],
+        answer: "0.7 min",
+        explanation: "Using Newton's law of cooling: Rate = K(T_avg - T0). Case 1: (94-86)/2 = K(90-20) => 4 = 70K => K = 4/70. Case 2: (71-69)/t = K(70-20) => 2/t = 50K = 50 × (4/70) = 20/7 => t = 14/20 = 0.7 min."
+      },
+      {
+        question: "In an adiabatic expansion of an ideal gas",
+        options: ["PV = constant", "PV^(γ-1) = constant", "TV = constant", "P^(1-γ) T^γ = constant"],
+        answer: "P^(1-γ) T^γ = constant",
+        explanation: "The relation between pressure and temperature in an adiabatic process is P^(1-γ) T^γ = constant (or T^γ / P^(γ-1) = constant)."
+      },
+      {
+        question: "The rms speed of a nitrogen (N2) molecule at 300K is (One mole of N2 has a mass of 28 g and kB = 1.38 × 10^-23 J K^-1)",
+        options: ["450 ms^-1", "123 ms^-1", "517 ms^-1", "230 ms^-1"],
+        answer: "517 ms^-1",
+        explanation: "v_rms = √(3RT/M) = √(3 × 8.314 × 300 / 0.028) ≈ √(74826 / 0.028) = √2672357 ≈ 517 m/s."
+      },
+      {
+        question: "M grams of steam at 100°C is mixed with 200 g of ice at its melting point in a thermally insulated container. If it produced liquid water at 40°C [heat of vaporization of water is 540 cal/g and heat of fusion of ice is 80 cal/g], the value of M is",
+        options: ["20", "80", "40", "10"],
+        answer: "40",
+        explanation: "Heat lost by steam: M(540) + M(1)(100-40) = 600M cal. Heat gained by ice: 200(80) + 200(1)(40-0) = 16000 + 8000 = 24000 cal. Equating heat lost and gained: 600M = 24000 => M = 40 g."
+      },
+      {
+        question: "Which type of ideal gas will have the largest value for Cp - Cv?",
+        options: ["Polyatomic", "Diatomic", "Monoatomic", "The value will be the same for all"],
+        answer: "The value will be the same for all",
+        explanation: "According to Mayer's relation, Cp - Cv = R for any ideal gas, regardless of its atomicity."
+      },
+      {
+        question: "In thermodynamics, heat and work are",
+        options: ["Path functions", "Intensive thermodynamic state variables", "Extensive thermodynamic state variables", "Point functions"],
+        answer: "Path functions",
+        explanation: "Heat and work depend on the specific path taken between states during a process, making them path functions rather than state functions."
+      },
+      {
+        question: "For an adiabatic expansion of an ideal gas, the fractional change in its pressure is equal to (where γ is the ratio of specific heats):",
+        options: ["-γ (dV/V)", "-γ V dV", "-(1/γ) V dV", "-(1/γ) (dV/V)"],
+        answer: "-γ (dV/V)",
+        explanation: "Taking natural log of P · V^γ = C gives ln P + γ ln V = C. Differentiating yields dP/P + γ(dV/V) = 0 => dP/P = -γ(dV/V)."
+      },
+      {
+        question: "Which of the following processes must violate the first law of thermodynamics?",
+        options: ["W > 0, Q > 0, and ΔEint < 0", "W > 0, Q < 0, and ΔEint > 0", "W < 0, Q > 0, and ΔEint < 0", "W > 0, Q < 0, and ΔEint = 0"],
+        answer: "W > 0, Q < 0, and ΔEint = 0",
+        explanation: "First Law states ΔEint = Q - W. If Q < 0 and W > 0, then ΔEint must be strictly negative. Having ΔEint = 0 violates energy conservation."
+      },
+      {
+        question: "A gas is found to obey P^2 V = constant. The initial temperature and volume are T0 and V0. If the gas expands to volume 2V0 then the final temperature is",
+        options: ["2 T0", "√2 T0", "T0 / 2", "T0 / √2"],
+        answer: "√2 T0",
+        explanation: "Since P^2 V = C and P = RT/V, we get (RT/V)^2 V = C => T^2 / V = C' => T ∝ √V. For V2 = 2V0, T2 = T0 √2 = √2 T0."
+      },
+      {
+        question: "The constant in ideal gas equation is known as",
+        options: ["Universal gas constant", "Pressure constant", "Temperature constant", "Boltzmann constant"],
+        answer: "Universal gas constant",
+        explanation: "In PV = nRT, R is known as the Universal Gas Constant."
+      },
+      {
+        question: "The ratio of specific heats for a mono atomic gas is given by",
+        options: ["7/5", "5/2", "5/3", "9/5"],
+        answer: "5/3",
+        explanation: "For a monoatomic gas, Cp = (5/2)R and Cv = (3/2)R, giving γ = Cp / Cv = 5/3."
+      },
+      {
+        question: "Two identical samples of a gas are allowed to expand (i) isothermally (ii) adiabatically. Work done is",
+        options: ["More in the isothermal process", "Equal in both processes", "No Work done in any process", "More in adiabatic process"],
+        answer: "More in the isothermal process",
+        explanation: "In a P-V diagram, the isothermal curve lies above the adiabatic curve during expansion, meaning the area under the isothermal curve (work done) is larger."
+      },
+      {
+        question: "The heat required to raise 0.5 Kg of sand from 30°C to 90°C is given by (Specific Heat of sand = 830 J/Kg°C)",
+        options: ["23450 J", "54560 J", "4578 J", "24900 J"],
+        answer: "24900 J",
+        explanation: "Heat required Q = m · c · ΔT = 0.5 kg × 830 J/kg°C × (90 - 30)°C = 0.5 × 830 × 60 = 24,900 J."
+      },
+      {
+        question: "The Boyle's law is stated by PV = C, C depends on",
+        options: ["Nature of gas", "Atomic weight of gas", "Temperature of gas", "Quantity and temperature of gas"],
+        answer: "Quantity and temperature of gas",
+        explanation: "From ideal gas law PV = nRT, constant C equals nRT, which depends on mass/amount of gas (n) and temperature (T)."
+      },
+      {
+        question: "The equation of state for 5g of oxygen (O2) at pressure P and temperature T, when occupying a volume V, will be (R is universal gas constant)",
+        options: ["PV = 5RT", "PV = (5/2)RT", "PV = (5/16)RT", "PV = (5/32)RT"],
+        answer: "PV = (5/32)RT",
+        explanation: "Molar mass of oxygen (O2) is 32 g/mol. Number of moles n = 5/32. Hence PV = (5/32)RT."
+      },
+      {
+        question: "The volume of a gas at constant pressure of 10^3 N/m2 expands by 0.25 m3. The work done in this process is",
+        options: ["25 J", "50 J", "250 J", "5 J"],
+        answer: "250 J",
+        explanation: "Work done W = P · ΔV = (10^3 N/m²) × 0.25 m³ = 250 J."
+      },
+      {
+        question: "For an adiabatic expansion of a perfect gas the value of dP/P is equal to",
+        options: ["dV/V", "-γ (dV/V)", "-1/γ (dV/V)", "-dV/V"],
+        answer: "-γ (dV/V)",
+        explanation: "Differentiating P · V^γ = constant gives dP/P = -γ (dV/V)."
+      },
+      {
+        question: "First law of Thermodynamics is a special case of",
+        options: ["Boyle's law", "Charles law", "Law of conservation of mass", "Law of conservation of energy"],
+        answer: "Law of conservation of energy",
+        explanation: "The First Law of Thermodynamics is the application of the Law of Conservation of Energy to thermodynamic systems."
+      },
+      {
+        question: "During the melting of a slab of ice at 273K at atmospheric pressure",
+        options: [
+          "Positive work is done by the ice-water system on the atmosphere",
+          "Positive work is done on the ice-water system by the atmosphere",
+          "Negative work is done on the ice-water system by the atmosphere",
+          "No work is done"
+        ],
+        answer: "Positive work is done on the ice-water system by the atmosphere",
+        explanation: "When ice melts to water, its volume decreases (V_final < V_initial). Since ΔV is negative, work done by system is negative, meaning positive work is done on the system by the atmosphere."
+      },
+      {
+        question: "A gas is compressed at a constant pressure of 50 N/m2 from a volume of 10 m3 to a volume of 4 m3. Energy of 100 J is then added to the gas by heating. Its internal energy is",
+        options: ["Increases by 400 J", "Increases by 200 J", "Increases by 100 J", "Decreases by 200 J"],
+        answer: "Increases by 400 J",
+        explanation: "Work done on gas W_by = P · ΔV = 50 × (4 - 10) = -300 J. Q = +100 J. ΔU = Q - W_by = 100 - (-300) = +400 J."
+      },
+      {
+        question: "A vessel containing 10 liters of an ideal gas at a pressure of 760 mm of Hg is connected to an evacuated 9 liter vessel. The resultant pressure is",
+        options: ["400 mm of Hg", "1440 mm of Hg", "40 mm of Hg", "760 mm of Hg"],
+        answer: "400 mm of Hg",
+        explanation: "Total final volume V2 = 10 L + 9 L = 19 L. By Boyle's Law: P1 · V1 = P2 · V2 => 760 × 10 = P2 × 19 => P2 = 7600 / 19 = 400 mm of Hg."
+      },
+      {
+        question: "A sealed glass jar is full of water. When its temperature is decreased to 0°C",
+        options: [
+          "The glass jar remains as it is with ice",
+          "The glass jar remains as it is with water",
+          "Glass jar contains half the amount of ice mixed with water",
+          "The glass jar breaks due to the formation of ice"
+        ],
+        answer: "The glass jar breaks due to the formation of ice",
+        explanation: "Water expands upon freezing due to its anomalous expansion property. In a rigid sealed container, this expansion exerts massive pressure, causing the glass to break."
+      },
+      {
+        question: "A bubble rises from the bottom of a lake 90 m deep on reaching the surface, its volume becomes (Atmospheric pressure is 10 m of water)",
+        options: ["4 times", "8 times", "10 times", "3 times"],
+        answer: "10 times",
+        explanation: "Bottom pressure P1 = P_atm + h = 10m + 90m = 100 m of water. Surface pressure P2 = 10 m of water. By Boyle's Law: P1 · V1 = P2 · V2 => 100 V1 = 10 V2 => V2 = 10 V1."
+      },
+      {
+        question: "In an Isothermal process",
+        options: [
+          "Internal energy of the system never remains constant",
+          "Total heat energy of the system remains constant",
+          "Volume of the system remains constant",
+          "Temperature of the system remains constant"
+        ],
+        answer: "Temperature of the system remains constant",
+        explanation: "By definition, an isothermal process is a thermodynamic process in which the temperature of a system remains constant throughout."
+      },
+      {
+        question: "If the pressure of an ideal gas is doubled and its absolute temperature is halved; the volume will become:",
+        options: ["1/4 of initial volume", "1/2 initial volume", "Same as initial volume", "2 times of initial volume"],
+        answer: "1/4 of initial volume",
+        explanation: "From PV/T = C => V = C·T/P. If T2 = T1 / 2 and P2 = 2P1, then V2 = C(T1 / 2) / (2P1) = (1/4)(C · T1 / P1) = V1 / 4."
+      },
+      {
+        question: "At constant temperature, the product PV is plotted against pressure P for an ideal gas. The graph obtained is:",
+        options: ["Straight line parallel to P-axis", "Straight line with positive slope", "Straight line through origin", "Parabola"],
+        answer: "Straight line parallel to P-axis",
+        explanation: "By Boyle's law, PV = constant at constant temperature. Plotting a constant quantity against P yields a horizontal straight line parallel to the P-axis."
+      },
+      {
+        question: "A bubble of an ideal gas rises from the bottom of a lake to the surface. At the bottom, the pressure is 3 Atm. and the temperature is 7°C. At the surface, the pressure is 1 atm. and the temperature is 27°C If the initial volume of the bubble was V0 what is its volume Vf at the surface?",
+        options: ["3V0", "3.21V0", "0.9V0", "5.4V0"],
+        answer: "3.21V0",
+        explanation: "Using P1 · V1 / T1 = P2 · V2 / T2: 3 × V0 / 280 = 1 × Vf / 300 => Vf = 3V0 × (300/280) = 3V0 × 1.0714 ≈ 3.21 V0."
+      },
+      {
+        question: "The R.M.S. speed of oxygen molecules at 27°C is v. At 927°C, the rms speed will be:",
+        options: ["v", "v/2", "2v", "4v"],
+        answer: "2v",
+        explanation: "RMS speed v ∝ √T. T1 = 27 + 273 = 300 K, T2 = 927 + 273 = 1200 K. v2 / v1 = √(1200/300) = √4 = 2 => v2 = 2v."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = heatQuestions.map((q, index) => `
+        <div class="question-card" id="q-card-${index}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${index}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${index}" value="${option}" onchange="onSelectOption(${index}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </label>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${index}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function onSelectOption(questionIndex, selectedValue) {
+      const q = heatQuestions[questionIndex];
+      const explanationEl = document.getElementById(`exp-${questionIndex}`);
+
+      explanationEl.style.display = "block";
+
+      if (selectedValue === q.answer) {
+        userScores[questionIndex] = 1;
+      } else {
+        userScores[questionIndex] = 0;
+      }
+
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${questionIndex}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    function submitQuiz() {
+      let finalScore = 0;
+
+      heatQuestions.forEach((q, index) => {
+        if (userScores[index] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${heatQuestions.length}`;
+
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

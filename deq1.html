@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differential Equations Practice Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .q-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .q-header {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .disabled-box {
+            pointer-events: none;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 2px;
+            font-size: 0.95em;
+            white-space: pre-wrap;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        #score-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Differential Equations Practice Quiz</h1>
+
+    <div id="questions-list"></div>
+
+    <button class="btn-submit" onclick="checkYourScore()">Check Final Score</button>
+    <div id="score-output"></div>
+
+    <script>
+        const solvedQuestionsData2018 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2018)",
+                    questions: [
+                        {
+                            questionText: "Form the differential equation by eliminating the arbitrary constant a from a y^2 = x^3",
+                            options: ["dy/dx = 3y/(2x)", "dy/dx = 2x/(3y)", "dy/dx = x/y", "dy/dx = 2y/x"],
+                            correctAnswer: "dy/dx = 3y/(2x)",
+                            explanation: "Step 1: Differentiate a y^2 = x^3 with respect to x: a * 2y (dy/dx) = 3x^2.\nStep 2: From the original equation, isolate parameter a: a = x^3 / y^2.\nStep 3: Substitute a into derivative: (x^3/y^2) * 2y (dy/dx) = 3x^2.\nStep 4: Simplify: (2x/y) (dy/dx) = 3.\nStep 5: Solve for dy/dx: dy/dx = 3y / (2x)."
+                        },
+                        {
+                            questionText: "The solution of (1 - y^2) dx + √(1 - x^2) dy = 0 is",
+                            options: ["cos^-1(x) + cos^-1(y) = c", "sinh^-1(x) + cosh^-1(y) = c", "cos^-1(x) + sec^-1(x) = c", "sin^-1(x) + sin^-1(y) = c"],
+                            correctAnswer: "sin^-1(x) + sin^-1(y) = c",
+                            explanation: "Step 1: Separate variables by dividing by √(1-x^2)√(1-y^2): dx / √(1-x^2) + dy / √(1-y^2) = 0.\nStep 2: Integrate both terms: ∫ dx / √(1-x^2) + ∫ dy / √(1-y^2) = c.\nStep 3: Standard integrals give sin^-1(x) + sin^-1(y) = c."
+                        },
+                        {
+                            questionText: "The solution of dy/dx = (4x + y + 1)^2 is",
+                            options: ["(1/2) tan^-1((4x + y + 1)/2) = x + c", "(1/2) cot^-1((4x + y + 1)/2) = x + c", "-(1/2) tan^-1((4x + y + 1)/2) = x + c", "(1/2) tan^-1((4x - y - 1)/2) = x + c"],
+                            correctAnswer: "(1/2) tan^-1((4x + y + 1)/2) = x + c",
+                            explanation: "Step 1: Substitute u = 4x + y + 1, then du/dx = 4 + dy/dx => dy/dx = du/dx - 4.\nStep 2: Replace in differential equation: du/dx - 4 = u^2 => du/dx = u^2 + 4.\nStep 3: Separate variables: du / (u^2 + 2^2) = dx.\nStep 4: Integrate: (1/2) tan^-1(u/2) = x + c.\nStep 5: Substitute u back: (1/2) tan^-1((4x + y + 1)/2) = x + c."
+                        },
+                        {
+                            questionText: "The solution of exact differential equation 2xy dx + x^2 dy = 0 is",
+                            options: ["x^2 y^2 = c", "x^2 y = c", "x^3 y = c", "x^2 y^3 = c"],
+                            correctAnswer: "x^2 y = c",
+                            explanation: "Step 1: Recognize that 2xy dx + x^2 dy is the exact total differential d(x^2 y).\nStep 2: Integrate both sides: ∫ d(x^2 y) = c.\nStep 3: This immediately gives x^2 y = c."
+                        },
+                        {
+                            questionText: "The solution of dy/dx + y = e^-x is",
+                            options: ["(x + c) e^-x", "(x - c) e^x", "(x + c) e^x", "(x + c) e^-2x"],
+                            correctAnswer: "(x + c) e^-x",
+                            explanation: "Step 1: Identify standard linear form dy/dx + Py = Q: P = 1, Q = e^-x.\nStep 2: Integrating factor IF = e^(∫1 dx) = e^x.\nStep 3: General solution formula: y * IF = ∫ (Q * IF) dx + c.\nStep 4: y * e^x = ∫ (e^-x * e^x) dx + c = ∫ 1 dx + c = x + c.\nStep 5: Multiply by e^-x: y = (x + c) e^-x."
+                        },
+                        {
+                            questionText: "The particular integral of (D^2 + 5D + 6)y = e^x is",
+                            options: ["-e^-x / 12", "e^(2x) / 12", "e^x / 12", "e^x / 6"],
+                            correctAnswer: "e^x / 12",
+                            explanation: "Step 1: Particular integral formula: PI = [1 / (D^2 + 5D + 6)] e^x.\nStep 2: For e^(ax), substitute D = a = 1 into f(D).\nStep 3: Evaluate f(1) = 1^2 + 5(1) + 6 = 1 + 5 + 6 = 12.\nStep 4: Since f(1) ≠ 0, PI = e^x / 12."
+                        },
+                        {
+                            questionText: "The complementary function of (D^2 + 3D + 2)y = 8 sin 5x is",
+                            options: ["c1 e^-x + c2 e^-2x", "c1 e^x + c2 e^(2x)", "c1 e^-x + c2 e^(2x)", "c1 e^(2x) + c2 e^(3x)"],
+                            correctAnswer: "c1 e^-x + c2 e^-2x",
+                            explanation: "Step 1: Form auxiliary equation: m^2 + 3m + 2 = 0.\nStep 2: Factorize: (m + 1)(m + 2) = 0.\nStep 3: The roots are m1 = -1 and m2 = -2.\nStep 4: For real and distinct roots, CF = c1 e^(-x) + c2 e^(-2x)."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2021 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2021)",
+                    questions: [
+                        {
+                            questionText: "The differential equation of the family of curves y = A e^(2x) + B e^(-2x) where A and B are arbitrary constants, is",
+                            options: ["d^2y/dx^2 - 5 dy/dx + 6y = 0", "d^2y/dx^2 - dy/dx + 6y = 0", "d^2y/dx^2 + dy/dx - 6y = 0", "d^2y/dx^2 - 4y = 0"],
+                            correctAnswer: "d^2y/dx^2 - 4y = 0",
+                            explanation: "Step 1: First derivative: dy/dx = 2A e^(2x) - 2B e^(-2x).\nStep 2: Second derivative: d^2y/dx^2 = 4A e^(2x) + 4B e^(-2x) = 4(A e^(2x) + B e^(-2x)).\nStep 3: Substitute y: d^2y/dx^2 = 4y.\nStep 4: Rearrange: d^2y/dx^2 - 4y = 0."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx = e^(x+y) is",
+                            options: ["e^x + e^y = c", "e^x - e^y = c", "e^(x+y) + c e^y + 1 = 0", "e^-x + e^-y = c"],
+                            correctAnswer: "e^-x + e^-y = c",
+                            explanation: "Step 1: Rewrite right-hand side: dy/dx = e^x * e^y.\nStep 2: Separate variables: e^-y dy = e^x dx.\nStep 3: Integrate both sides: -e^-y = e^x - c => e^-x + e^-y = c."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx - 3y/x = 2y^2 / x^2 is",
+                            options: ["y = c x^2 (x + y)", "y / (x - y) = c x^2", "y = c x (x + y)", "y = c x (x - y)"],
+                            correctAnswer: "y / (x - y) = c x^2",
+                            explanation: "Step 1: Bernoulli's equation in y: dy/dx - (3/x)y = (2/x^2)y^2.\nStep 2: Divide by y^2: y^-2 dy/dx - (3/x)y^-1 = 2/x^2.\nStep 3: Put v = y^-1, dv/dx = -y^-2 dy/dx => dv/dx + (3/x)v = -2/x^2.\nStep 4: IF = e^(∫ 3/x dx) = x^3. Solution: v * x^3 = ∫ (-2/x^2)(x^3) dx = -x^2 + c.\nStep 5: Replace v = 1/y: x^3/y = c - x^2, simplifies to y / (x - y) = c x^2."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx - 2y/x = x^2 e^(2x) is",
+                            options: ["2y = x e^(2x) + 2c x^2", "2y = x^2 e^(2x) + 2c x^2", "y = 2x^2 e^(2x) + c x^2", "y = x^2 e^(2x) + c x"],
+                            correctAnswer: "2y = x^2 e^(2x) + 2c x^2",
+                            explanation: "Step 1: Linear form with P = -2/x and Q = x^2 e^(2x).\nStep 2: IF = e^(∫ -2/x dx) = 1/x^2.\nStep 3: General solution: y / x^2 = ∫ e^(2x) dx + c = (1/2) e^(2x) + c.\nStep 4: Multiply by 2x^2: 2y = x^2 e^(2x) + 2c x^2."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx + y cot x = y^3 sin^2 x is",
+                            options: ["2x^2 y + csc^2 x = c y", "2x y^2 + sin^2 x = c y^2", "2x y^2 + csc^2 x = c y^2", "2xy + csc^2 x = c y^2"],
+                            correctAnswer: "2x y^2 + csc^2 x = c y^2",
+                            explanation: "Step 1: Divide by y^3: y^-3 dy/dx + y^-2 cot x = sin^2 x.\nStep 2: Let v = y^-2 => dv/dx - 2v cot x = -2 sin^2 x.\nStep 3: IF = e^(∫ -2 cot x dx) = csc^2 x.\nStep 4: v * csc^2 x = ∫ -2 dx + c = -2x + c.\nStep 5: Replace v = 1/y^2: (1/y^2) csc^2 x = -2x + c => csc^2 x + 2x y^2 = c y^2."
+                        },
+                        {
+                            questionText: "The particular integral of the differential equation (D^2 - 3D + 2)y = e^(3x) is",
+                            options: ["(1/20) e^(3x)", "(1/16) e^(3x)", "(1/3) e^(3x)", "(1/2) e^(3x)"],
+                            correctAnswer: "(1/2) e^(3x)",
+                            explanation: "Step 1: PI = [1 / (D^2 - 3D + 2)] e^(3x).\nStep 2: Substitute D = 3 into f(D) = D^2 - 3D + 2.\nStep 3: f(3) = 3^2 - 3(3) + 2 = 2.\nStep 4: Since f(3) ≠ 0, PI = (1/2) e^(3x)."
+                        },
+                        {
+                            questionText: "The particular integral of the differential equation (D^2 + 9)y = sin 3x is",
+                            options: ["-(x cos 3x) / 6", "(x cos 3x) / 6", "-(x sin 3x) / 6", "(x sin 3x) / 6"],
+                            correctAnswer: "-(x cos 3x) / 6",
+                            explanation: "Step 1: PI = [1 / (D^2 + 9)] sin 3x.\nStep 2: Substituting D^2 = -9 gives case of failure.\nStep 3: Apply failure rule: multiply by x and differentiate denominator: x * [1 / (2D)] sin 3x.\nStep 4: (x / 2) ∫ sin 3x dx = -(x cos 3x) / 6."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2024 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2024)",
+                    questions: [
+                        {
+                            questionText: "Order of the differential equation [d^2y/dx^2 + (dy/dx)^3]^(6/5) = 6y is",
+                            options: ["3", "2", "5", "1"],
+                            correctAnswer: "2",
+                            explanation: "Step 1: Order is defined by the highest derivative present in the differential equation.\nStep 2: The highest derivative involved is d^2y/dx^2, which has order 2."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx = (1 + y^2) / (1 + x^2) is",
+                            options: ["tan^-1(y) - tan^-1(x) = c", "tan^-1(y) + tan^-1(x) = c", "tan^-1(y) = c", "tan^-1(y/x) = c"],
+                            correctAnswer: "tan^-1(y) - tan^-1(x) = c",
+                            explanation: "Step 1: Separate variables: dy / (1 + y^2) = dx / (1 + x^2).\nStep 2: Integrate both sides: tan^-1(y) = tan^-1(x) + c.\nStep 3: Rearranging gives tan^-1(y) - tan^-1(x) = c."
+                        },
+                        {
+                            questionText: "The differential equation representing the family of curves y = mx where m is arbitrary Constant is",
+                            options: ["dy/dx - y = 0", "dy/dx + y = 0", "x(dy/dx) - y = 0", "x dx - y dy = y"],
+                            correctAnswer: "x(dy/dx) - y = 0",
+                            explanation: "Step 1: Differentiate y = mx with respect to x: dy/dx = m.\nStep 2: Substitute m into original curve: y = x (dy/dx).\nStep 3: Rearranging gives x(dy/dx) - y = 0."
+                        },
+                        {
+                            questionText: "Which one of the statement is true?",
+                            options: [
+                                "Order of differential equation is the order of the lowest order derivative occurring in the differential equation.",
+                                "A function which satisfies the given differential equation is not its solution.",
+                                "An equation involving derivatives of the dependent variable with respect to dependent variable is known as a differential equation.",
+                                "Degree of a differential equation is defined if it is a polynomial equation in its Derivatives."
+                            ],
+                            correctAnswer: "Degree of a differential equation is defined if it is a polynomial equation in its Derivatives.",
+                            explanation: "Step 1: Statements 1, 2, and 3 are fundamentally incorrect definitions.\nStep 2: Statement 4 is mathematically valid: degree is defined strictly when the differential equation can be written as a polynomial in its derivatives."
+                        },
+                        {
+                            questionText: "The Integrating factor of the differential equation x(dy/dx) + 2y = x^2 (x ≠ 0) is",
+                            options: ["x", "log x", "x log x", "x^2"],
+                            correctAnswer: "x^2",
+                            explanation: "Step 1: Convert to linear form dy/dx + (2/x)y = x.\nStep 2: Identify P(x) = 2/x.\nStep 3: IF = e^(∫ (2/x) dx) = e^(2 ln x) = e^(ln(x^2)) = x^2."
+                        },
+                        {
+                            questionText: "The linear form of x log x (dy/dx) + y = 2 log x is",
+                            options: ["dy/dx - y/(x log x) = 1/x", "dy/dx + y/(x log x) = 2/x", "dy/dx + y/(x log x) = 1/x", "dy/dx + y/(x log x) = 1"],
+                            correctAnswer: "dy/dx + y/(x log x) = 2/x",
+                            explanation: "Step 1: Divide each term by x log x to get coefficient 1 for dy/dx.\nStep 2: dy/dx + y / (x log x) = (2 log x) / (x log x) = 2/x."
+                        },
+                        {
+                            questionText: "The particular integral of d^2y/dx^2 - 4y = e^(2x) is",
+                            options: ["(1/4) e^(2x)", "(1/(4x)) e^(2x)", "(1/4) x e^(2x)", "0"],
+                            correctAnswer: "(1/4) x e^(2x)",
+                            explanation: "Step 1: Operator form: (D^2 - 4)y = e^(2x).\nStep 2: Direct substitution D = 2 gives case of failure (2^2 - 4 = 0).\nStep 3: Multiply by x and differentiate denominator: x * [1 / (2D)] e^(2x).\nStep 4: Substitute D = 2: (1/4) x e^(2x)."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2025 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2025)",
+                    questions: [
+                        {
+                            questionText: "The degree of the differential equation y' + y = 5 / y' is",
+                            options: ["1", "2", "3", "4"],
+                            correctAnswer: "2",
+                            explanation: "Step 1: Multiply both sides by y' to eliminate fractions: (y')^2 + y(y') = 5.\nStep 2: The equation is now a polynomial in derivatives.\nStep 3: The highest order derivative is y' (order 1), and its highest power is 2.\nStep 4: Degree = 2."
+                        },
+                        {
+                            questionText: "The order of the differential equation whose general solution is y = a sin x + b cos x is (where a and b are arbitrary constants)",
+                            options: ["2", "4", "1", "3"],
+                            correctAnswer: "2",
+                            explanation: "Step 1: Count independent essential arbitrary constants.\nStep 2: There are 2 arbitrary constants: a and b.\nStep 3: The order of the differential equation equals the number of essential arbitrary constants, which is 2."
+                        },
+                        {
+                            questionText: "The differential equation dy/dx = -((x + y)/(1 + x^2)) is",
+                            options: ["of Variable separable form", "First order Linear equation", "Homogeneous", "Exact differential Equation"],
+                            correctAnswer: "First order Linear equation",
+                            explanation: "Step 1: Rewrite equation: dy/dx = -x/(1+x^2) - y/(1+x^2).\nStep 2: Rearrange: dy/dx + [1/(1+x^2)] y = -x/(1+x^2).\nStep 3: This matches standard first order linear form dy/dx + P(x)y = Q(x)."
+                        },
+                        {
+                            questionText: "The solution of the differential equation dy/dx = 1 + y^2 is",
+                            options: ["y = tan x + c", "y = tan(x + c)", "y = tan x", "y = cot(x + c)"],
+                            correctAnswer: "y = tan(x + c)",
+                            explanation: "Step 1: Separate variables: dy / (1 + y^2) = dx.\nStep 2: Integrate both sides: tan^-1(y) = x + c.\nStep 3: Solve for y: y = tan(x + c)."
+                        },
+                        {
+                            questionText: "The solution of the differential equation dy/dx + y/x = x^2 under the condition that y(1) = 1 is",
+                            options: ["4xy = x^3 + 3", "4xy = x^4 + 3", "4xy = x^3 - 3", "4xy = x^4 - 3"],
+                            correctAnswer: "4xy = x^4 + 3",
+                            explanation: "Step 1: IF = e^(∫ (1/x) dx) = e^(ln x) = x.\nStep 2: General solution: y * x = ∫ x(x^2) dx + c = x^4 / 4 + c.\nStep 3: Apply condition y(1) = 1: (1)(1) = 1/4 + c => c = 3/4.\nStep 4: xy = x^4 / 4 + 3/4 => 4xy = x^4 + 3."
+                        },
+                        {
+                            questionText: "The solution of the differential equation d^3y/dx^3 + 3 d^2y/dx^2 + 2 dy/dx = 0 is",
+                            options: ["y = a + b e^-x + c e^-2x", "y = a + b e^x + c e^(2x)", "y = a e^-x + b e^-2x + c e^x", "y = a + b e^-2x + c e^-3x"],
+                            correctAnswer: "y = a + b e^-x + c e^-2x",
+                            explanation: "Step 1: Auxiliary equation: m^3 + 3m^2 + 2m = 0.\nStep 2: Factor: m(m + 1)(m + 2) = 0.\nStep 3: Roots are m = 0, -1, -2.\nStep 4: Solution: y = c1 e^(0x) + c2 e^-x + c3 e^-2x = a + b e^-x + c e^-2x."
+                        },
+                        {
+                            questionText: "The particular integral of d^2y/dx^2 + 3 dy/dx + 2y = e^-2x is",
+                            options: ["-x e^-2x", "x e^-2x", "-(x/2) e^-2x", "(x/2) e^-2x"],
+                            correctAnswer: "-x e^-2x",
+                            explanation: "Step 1: Differential operator form: (D + 1)(D + 2)y = e^-2x.\nStep 2: Substituting D = -2 gives case of failure.\nStep 3: Multiply by x and differentiate denominator (2D + 3): x * [1 / (2(-2) + 3)] e^-2x = -x e^-2x."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2020 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2020)",
+                    questions: [
+                        {
+                            questionText: "The solution of dy/dx = (x - 2y + 1)/(2x - 4y) is",
+                            options: ["(x + 2y)^2 + 2x = c", "(x - 2y)^2 - 2x = c", "(x - 2y)^2 + 2x = c", "(x - 4y)^2 + 2x = c"],
+                            correctAnswer: "(x - 2y)^2 + 2x = c",
+                            explanation: "Step 1: Let v = x - 2y, then dv/dx = 1 - 2(dy/dx).\nStep 2: (1/2)(1 - dv/dx) = (v + 1)/(2v) => dv/dx = -1/v => v dv = -dx.\nStep 3: Integrate: v^2 / 2 = -x + c1 => v^2 + 2x = c.\nStep 4: (x - 2y)^2 + 2x = c."
+                        },
+                        {
+                            questionText: "The solution of the homogeneous differential equation xy dy - (x^2 + y^2) dx = 0 is",
+                            options: ["y^2 = -3x^2 log(xc)", "y^2 = 3 x^2 log(x/c)", "y^2 = 3x^2 log(x^2 c)", "y^2 = 2x^2 log(xc)"],
+                            correctAnswer: "y^2 = 2x^2 log(xc)",
+                            explanation: "Step 1: dy/dx = (x^2 + y^2)/(xy). Put y = vx => v + x dv/dx = 1/v + v => x dv/dx = 1/v.\nStep 2: Separate variables: v dv = dx/x.\nStep 3: Integrate: v^2 / 2 = ln x + c => y^2 / (2x^2) = ln(xc) => y^2 = 2x^2 log(xc)."
+                        },
+                        {
+                            questionText: "The solution of Bernoulli's equation x^2 dy/dx - x^2 y = -y^4 cos x is",
+                            options: ["x^2 / y^3 = 3 sin x + c", "x^2 / y^4 = -3 sin x + c", "x^2 / y^2 = 3 sin x^3 + c", "x^4 / y^4 = 3 sin x + c"],
+                            correctAnswer: "x^2 / y^3 = 3 sin x + c",
+                            explanation: "Step 1: Divide by y^4: y^-4 dy/dx - y^-3 = -cos x / x^2.\nStep 2: Substitute v = y^-3, so dv/dx = -3 y^-4 dy/dx.\nStep 3: Transforms into a first-order linear equation.\nStep 4: Solving gives general solution x^2 / y^3 = 3 sin x + c."
+                        },
+                        {
+                            questionText: "The particular integral for the differential equation (D^2 + 3D + 2)y = 12x^2 is",
+                            options: ["6x^2 + 18x - 21", "6x^2 - 18x + 21", "-6x^2 + 18x - 21", "6x^2 + 18x + 21"],
+                            correctAnswer: "6x^2 - 18x + 21",
+                            explanation: "Step 1: PI = [1 / (2 + 3D + D^2)] * 12x^2 = (1/2) [1 + (3D/2 + D^2/2)]^-1 * 12x^2.\nStep 2: Expand: (1/2) [1 - 3D/2 + 7D^2/4] * 12x^2.\nStep 3: 12x^2 - (3/2)(24x) + (7/4)(24) = 12x^2 - 36x + 42.\nStep 4: Multiply by 1/2: 6x^2 - 18x + 21."
+                        },
+                        {
+                            questionText: "The particular integral for the differential equation 6 d^2y/dx^2 + 17 dy/dx + 12y = e^-x is",
+                            options: ["-e^-x", "e^x", "e^-2x", "e^-x"],
+                            correctAnswer: "e^-x",
+                            explanation: "Step 1: Characteristic polynomial f(D) = 6D^2 + 17D + 12.\nStep 2: Substitute D = -1 into f(D): f(-1) = 6(-1)^2 + 17(-1) + 12 = 1.\nStep 3: PI = e^-x / f(-1) = e^-x."
+                        },
+                        {
+                            questionText: "The particular integral for the differential equation (D^2 - 4D + 13)y = cos 2x is",
+                            options: ["(1/145)(9 cos 2x - 8 sin 2x)", "(1/145)(9 cos 2x + 8 sin 2x)", "(1/145)(-9 cos 2x - 8 sin 2x)", "(1/125)(9 cos 2x - 8 sin 2x)"],
+                            correctAnswer: "(1/145)(9 cos 2x - 8 sin 2x)",
+                            explanation: "Step 1: Replace D^2 with -2^2 = -4 => PI = [1 / (9 - 4D)] cos 2x.\nStep 2: Rationalize: [(9 + 4D) / (81 - 16D^2)] cos 2x.\nStep 3: Substitute D^2 = -4 in denominator: 81 - 16(-4) = 145.\nStep 4: Numerator: 9 cos 2x + 4(-2 sin 2x) = 9 cos 2x - 8 sin 2x.\nStep 5: PI = (1/145)(9 cos 2x - 8 sin 2x)."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2022 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2022)",
+                    questions: [
+                        {
+                            questionText: "The order and degree of the differential equation (dy/dx)^2 + 3(dy/dx) + 2 = 0 is",
+                            options: ["Order=2, degree=2", "Order=2, degree=1", "Order=1, degree=2", "Order=3, degree=1"],
+                            correctAnswer: "Order=1, degree=2",
+                            explanation: "Step 1: The highest derivative occurring is dy/dx, which is of order 1.\nStep 2: The highest exponent of dy/dx in this polynomial form is 2, so degree is 2."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx + y cot x = 4x cosec x is",
+                            options: ["y cos x = 2x^2 + c", "y sin x = 2x^2 + c", "y sin x = -2x^2 + c", "y sin x = 3x^2 + c"],
+                            correctAnswer: "y sin x = 2x^2 + c",
+                            explanation: "Step 1: IF = e^(∫ cot x dx) = sin x.\nStep 2: Solution: y * sin x = ∫ (4x cosec x * sin x) dx + c.\nStep 3: Since cosec x * sin x = 1, ∫ 4x dx = 2x^2.\nStep 4: y sin x = 2x^2 + c."
+                        },
+                        {
+                            questionText: "The general solution of the linear differential equation dy/dx - y/(x+1) = e^(2x)(x+1) is",
+                            options: ["y sin x = -e^(2x)/4 + c", "y/(x + 1) = e^(2x)/2 + c", "y e^(3x) = -(cos 2x)/4 + c", "y sin x = e^(2x)/4 + c"],
+                            correctAnswer: "y/(x + 1) = e^(2x)/2 + c",
+                            explanation: "Step 1: P = -1/(x+1) => IF = e^(∫ -1/(x+1) dx) = 1/(x+1).\nStep 2: Solution: y * [1/(x+1)] = ∫ e^(2x) dx + c.\nStep 3: y/(x + 1) = e^(2x)/2 + c."
+                        },
+                        {
+                            questionText: "The particular integral for the differential equation (D^2 + 4D + 3)y = sin 3x is",
+                            options: ["sin x + 3 cos 2x", "cos 3x - 2 sin 4x", "(1/30)(2 cos 2x + sin x)", "(-1/30)(2 cos 3x + sin 3x)"],
+                            correctAnswer: "(-1/30)(2 cos 3x + sin 3x)",
+                            explanation: "Step 1: Replace D^2 with -9 => PI = [1 / (4D - 6)] sin 3x = (1/2) [1 / (2D - 3)] sin 3x.\nStep 2: Multiply by (2D + 3): (1/2) [(2D + 3) / (4D^2 - 9)] sin 3x.\nStep 3: Replace D^2 with -9 in denominator: 4(-9) - 9 = -45.\nStep 4: Evaluate numerator: 2D(sin 3x) + 3 sin 3x = 6 cos 3x + 3 sin 3x.\nStep 5: PI = [3(2 cos 3x + sin 3x)] / [2(-45)] = (-1/30)(2 cos 3x + sin 3x)."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation dy/dx + y/x = y^2 x is",
+                            options: ["1/(xy) = -x + c", "-1/(xy) = -x + c", "2/(xy) = x + c", "1/y = -x + c"],
+                            correctAnswer: "-1/(xy) = -x + c",
+                            explanation: "Step 1: Divide by y^2: y^-2 dy/dx + (1/x) y^-1 = x.\nStep 2: Put v = y^-1 => dv/dx - (1/x)v = -x.\nStep 3: IF = e^(∫ -1/x dx) = 1/x.\nStep 4: v(1/x) = ∫ (-x)(1/x) dx + c = -x + c.\nStep 5: Replace v = 1/y: -1/(xy) = -x + c."
+                        },
+                        {
+                            questionText: "The general solution of the differential equation (2x + y + 1)dx + (x + 2y + 1)dy = 0 is",
+                            options: ["x^2 + xy + 3y^2 + 2x + y = c", "x^2 + xy + y^2 + x + y = c", "2x^2 + xy + 2y^2 + x + y = c", "x^2 - xy + 2y^2 + x + y = c"],
+                            correctAnswer: "x^2 + xy + y^2 + x + y = c",
+                            explanation: "Step 1: Check exactness: M = 2x + y + 1, N = x + 2y + 1. ∂M/∂y = 1, ∂N/∂x = 1 (Exact).\nStep 2: Integrate M w.r.t x: ∫ (2x + y + 1) dx = x^2 + xy + x.\nStep 3: Integrate terms of N independent of x w.r.t y: ∫ (2y + 1) dy = y^2 + y.\nStep 4: Total solution: x^2 + xy + y^2 + x + y = c."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2023 = {
+            units: [{
+                unitNo: "V",
+                title: "Differential equations",
+                topics: [{
+                    name: "Differential equations (2023)",
+                    questions: [
+                        {
+                            questionText: "The differential equation of all parabolas whose axis are parallel to y-axis is",
+                            options: ["d^3y/dx^3 = 0", "d^2y/dx^2 = c", "d^3y/dx^3 + d^2y/dx^2 = 0", "d^2y/dx^2 + 2 dy/dx = c"],
+                            correctAnswer: "d^3y/dx^3 = 0",
+                            explanation: "Step 1: General equation of parabolas with vertical axis: y = Ax^2 + Bx + C (3 arbitrary constants).\nStep 2: Differentiate 1st time: dy/dx = 2Ax + B.\nStep 3: Differentiate 2nd time: d^2y/dx^2 = 2A.\nStep 4: Differentiate 3rd time: d^3y/dx^3 = 0."
+                        },
+                        {
+                            questionText: "Integrating factor of the differential equation cos x (dy/dx) + y sin x = 1 is",
+                            options: ["cos x", "tan x", "sec x", "sin x"],
+                            correctAnswer: "sec x",
+                            explanation: "Step 1: Divide by cos x: dy/dx + (tan x)y = sec x.\nStep 2: Here P(x) = tan x.\nStep 3: IF = e^(∫ tan x dx) = e^(ln sec x) = sec x."
+                        },
+                        {
+                            questionText: "The differential equation associated with the primitive a x^2 + b y^2 = 1 is",
+                            options: ["x = y dy/dx", "x + y dy/dx = 0", "x(dy/dx)^2 + xy d^2y/dx^2 = y dy/dx", "x = y d^2y/dx^2"],
+                            correctAnswer: "x(dy/dx)^2 + xy d^2y/dx^2 = y dy/dx",
+                            explanation: "Step 1: Differentiate 1st time: 2ax + 2by y' = 0 => ax + by y' = 0.\nStep 2: Differentiate 2nd time: a + b(y')^2 + by y'' = 0 => a = -b[(y')^2 + y y''].\nStep 3: Substitute a into ax + by y' = 0: -b[(y')^2 + y y'']x + by y' = 0.\nStep 4: Divide by b: x(y')^2 + xy y'' = y y'."
+                        },
+                        {
+                            questionText: "The primitive for the differential equation x dy - (y - x) dx = 0 is",
+                            options: ["x/y + log|x| = c", "y/x + log|x| = c", "(x/y) log|x| = c", "x^2 + y^2 = c"],
+                            correctAnswer: "y/x + log|x| = c",
+                            explanation: "Step 1: Rewrite: x dy - y dx + x dx = 0.\nStep 2: Divide entire equation by x^2: (x dy - y dx)/x^2 + (1/x) dx = 0.\nStep 3: Recognize quotient differential: d(y/x) + (1/x) dx = 0.\nStep 4: Integrate both terms: y/x + log|x| = c."
+                        },
+                        {
+                            questionText: "The degree of the differential equation y = x dy/dx + √(1 + (dy/dx)^2) is",
+                            options: ["1", "2", "4", "3"],
+                            correctAnswer: "2",
+                            explanation: "Step 1: Isolate radical: y - x dy/dx = √(1 + (dy/dx)^2).\nStep 2: Square both sides: (y - x dy/dx)^2 = 1 + (dy/dx)^2.\nStep 3: Expand: y^2 - 2xy(dy/dx) + x^2(dy/dx)^2 = 1 + (dy/dx)^2.\nStep 4: The highest power of dy/dx is 2, so the degree is 2."
+                        },
+                        {
+                            questionText: "The order of the differential equation corresponding to the primitive y = a e^x + b e^(2x) + c e^(3x) where a, b and c are arbitrary constants is",
+                            options: ["1", "2", "3", "4"],
+                            correctAnswer: "3",
+                            explanation: "Step 1: Identify the number of independent arbitrary constants.\nStep 2: There are 3 independent constants: a, b, and c.\nStep 3: The order of the corresponding differential equation equals the number of independent constants, which is 3."
+                        },
+                        {
+                            questionText: "The complementary function of the differential equation d^2y/dx^2 + 4 dy/dx + 4y = 4 cos x is",
+                            options: ["y = c1 cos 2x + c2 sin 2x", "y = (c1 + c2 x) e^-2x", "y = c1^2 + 4c2 + 4c3", "y = 4 cos(c1 x)"],
+                            correctAnswer: "y = (c1 + c2 x) e^-2x",
+                            explanation: "Step 1: Form auxiliary equation: m^2 + 4m + 4 = 0.\nStep 2: Factor: (m + 2)^2 = 0 => m = -2, -2 (repeated real roots).\nStep 3: For repeated roots m = -2, CF = (c1 + c2 x) e^-2x."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const allDatasets = [
+            solvedQuestionsData2018,
+            solvedQuestionsData2020,
+            solvedQuestionsData2021,
+            solvedQuestionsData2022,
+            solvedQuestionsData2023,
+            solvedQuestionsData2024,
+            solvedQuestionsData2025
+        ];
+
+        let totalQuestionsCount = 0;
+        let totalScore = 0;
+
+        function loadQuiz() {
+            const container = document.getElementById("questions-list");
+            let globalQIndex = 0;
+
+            allDatasets.forEach((dataset) => {
+                dataset.units.forEach((unit) => {
+                    unit.topics.forEach((topic) => {
+                        topic.questions.forEach((q) => {
+                            globalQIndex++;
+                            totalQuestionsCount++;
+
+                            const qBox = document.createElement("div");
+                            qBox.className = "q-box";
+                            qBox.id = `q-box-${globalQIndex}`;
+
+                            const header = document.createElement("div");
+                            header.className = "q-header";
+                            header.innerText = `Q${globalQIndex}. ${q.questionText}`;
+                            qBox.appendChild(header);
+
+                            const explDiv = document.createElement("div");
+                            explDiv.className = "explanation";
+                            explDiv.innerText = `Explanation:\n${q.explanation}`;
+
+                            q.options.forEach((opt) => {
+                                const optBtn = document.createElement("div");
+                                optBtn.className = "option";
+                                optBtn.innerText = opt;
+                                optBtn.onclick = function() {
+                                    selectOption(qBox, optBtn, opt, q.correctAnswer, explDiv);
+                                };
+                                qBox.appendChild(optBtn);
+                            });
+
+                            qBox.appendChild(explDiv);
+                            container.appendChild(qBox);
+                        });
+                    });
+                });
+            });
+        }
+
+        function selectOption(qBox, selectedBtn, selectedValue, correctAnswer, explDiv) {
+            qBox.classList.add("disabled-box");
+
+            const options = qBox.getElementsByClassName("option");
+            
+            if (selectedValue === correctAnswer) {
+                selectedBtn.classList.add("correct");
+                totalScore++;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                for (let opt of options) {
+                    if (opt.innerText === correctAnswer) {
+                        opt.classList.add("correct");
+                    }
+                }
+            }
+
+            explDiv.style.display = "block";
+        }
+
+        function checkYourScore() {
+            const scoreDiv = document.getElementById("score-output");
+            scoreDiv.innerText = `Your Final Score: ${totalScore} / ${totalQuestionsCount}`;
+        }
+
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>

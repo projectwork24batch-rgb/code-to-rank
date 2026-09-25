@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electrochemistry Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Electrochemistry Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "One Faraday is equal to",
+        options: [
+          "99650 C",
+          "93100 C",
+          "96500 C",
+          "94500 C"
+        ],
+        answer: "96500 C",
+        explanation: "One Faraday (F) represents the magnitude of electric charge per mole of electrons, which is approximately equal to 96,500 Coulombs (C)."
+      },
+      {
+        id: 2,
+        question: "The cell reaction of a cell is Mg(s) + 2 H⁺(aq) → Mg²⁺(aq) + H₂(g). If the standard reduction potential of Zn is -2.372 V, then the emf of the cell is",
+        options: [
+          "+2.372 V",
+          "-2.372 V",
+          "0.00 V",
+          "-1.372 V"
+        ],
+        answer: "+2.372 V",
+        explanation: "The standard EMF is calculated as E°cell = E°cathode - E°anode. Here, hydrogen is reduced at the cathode (E° = 0.00 V) and magnesium is oxidized at the anode (E° = -2.372 V), yielding E°cell = 0.00 V - (-2.372 V) = +2.372 V."
+      },
+      {
+        id: 3,
+        question: "Galvanic cells are the cells which convert",
+        options: [
+          "Electrical energy to chemical energy",
+          "Chemical energy to electrical energy",
+          "Chemical energy to free energy",
+          "Potential energy to kinetic energy"
+        ],
+        answer: "Chemical energy to electrical energy",
+        explanation: "Galvanic (or voltaic) cells harness spontaneous chemical redox reactions to generate electrical energy."
+      },
+      {
+        id: 4,
+        question: "Mass of substance produced at electrode is directly proportional to the quantity of electricity passed. This is known as",
+        options: [
+          "Faraday's second law",
+          "Faraday's first law",
+          "Newton's third law",
+          "Newton's first law"
+        ],
+        answer: "Faraday's first law",
+        explanation: "Faraday's First Law of Electrolysis states that the mass (m) of a substance liberated at an electrode is directly proportional to the electric charge (Q) passed through the electrolyte."
+      },
+      {
+        id: 5,
+        question: "Laws of electrolysis were given by",
+        options: [
+          "Ostwald",
+          "Faraday",
+          "Arrhenius",
+          "Volta"
+        ],
+        answer: "Faraday",
+        explanation: "Michael Faraday formulated the two fundamental quantitative laws governing electrochemistry and electrolysis in 1834."
+      },
+      {
+        id: 6,
+        question: "Common electrolyte used in the salt bridge is",
+        options: [
+          "NaOH",
+          "Na2CO3",
+          "KCl",
+          "KOH"
+        ],
+        answer: "KCl",
+        explanation: "KCl is commonly used in salt bridges because K⁺ and Cl⁻ ions have nearly identical ionic mobilities, minimizing junction potentials while maintaining electrical neutrality."
+      },
+      {
+        id: 7,
+        question: "Standard Reduction Potential of an element is equal to",
+        options: [
+          "1 x Its reduction potential",
+          "-1 x Its standard oxidation potential",
+          "-1 x Its reduction potential",
+          "1 x Its standard oxidation potential"
+        ],
+        answer: "-1 x Its standard oxidation potential",
+        explanation: "By IUPAC convention, the standard reduction potential of an electrode is equal in magnitude but opposite in sign to its standard oxidation potential (E°red = -E°ox)."
+      },
+      {
+        id: 8,
+        question: "The standard emf for the cell reaction Zn + Cu²⁺ → Cu + Zn²⁺ is 1.10 V at 25°C. The emf of the cell reaction when 0.1 M Cu²⁺ and 0.1 M Zn²⁺ solutions are used at 25°C is",
+        options: [
+          "1.10 V",
+          "0.11 V",
+          "-1.10 V",
+          "-0.11 V"
+        ],
+        answer: "1.10 V",
+        explanation: "According to the Nernst equation, E = E° - (0.0591/2) log([Zn²⁺]/[Cu²⁺]). Since [Zn²⁺] = [Cu²⁺] = 0.1 M, log(1) = 0, meaning E remains equal to E° (1.10 V)."
+      },
+      {
+        id: 9,
+        question: "One Faraday is equal to",
+        options: [
+          "96500 C",
+          "96000 C",
+          "96400 C",
+          "95600 C"
+        ],
+        answer: "96500 C",
+        explanation: "1 Faraday represents the total charge carried by 1 mole of electrons, which is numerically taken as 96,500 C."
+      },
+      {
+        id: 10,
+        question: "Common electrolyte used in the salt bridge is",
+        options: [
+          "KCl",
+          "NaCl",
+          "CuSO₄",
+          "ZnSO₄"
+        ],
+        answer: "KCl",
+        explanation: "Potassium chloride (KCl) mixed in agar-agar gel is widely used as an inert electrolyte in salt bridges."
+      },
+      {
+        id: 11,
+        question: "SI Units of Electrical conductivity",
+        options: [
+          "Siemens",
+          "Siemens per meter",
+          "Siemens per millimeter",
+          "Siemens per kilometer"
+        ],
+        answer: "Siemens per meter",
+        explanation: "Electrical conductivity (κ) is the reciprocal of resistivity. Its SI unit is Siemens per meter (S m⁻¹)."
+      },
+      {
+        id: 12,
+        question: "Standard emf for the cell reaction Zn + Cu²⁺ → Cu + Zn²⁺ is 1.10 V at 25°C. The emf of the cell reaction when 0.1 M Cu²⁺ and 0.1 M Zn²⁺ solutions are used at 25°C is",
+        options: [
+          "1.10 V",
+          "0.11 V",
+          "1.20 V",
+          "-0.11 V"
+        ],
+        answer: "1.10 V",
+        explanation: "When ion concentrations in both half-cells are equal ([Zn²⁺] = [Cu²⁺]), the logarithmic term in the Nernst equation becomes zero, making the cell EMF equal to its standard EMF (1.10 V)."
+      },
+      {
+        id: 13,
+        question: "Decrease in electrical conductivity of metals with an increase in temperature is due to an increase in",
+        options: [
+          "the velocity of electrons",
+          "the resistance of the metal",
+          "the number of electrons",
+          "the number of metal atoms"
+        ],
+        answer: "the resistance of the metal",
+        explanation: "As temperature increases, thermal vibrations of kernel metal ions increase, impeding electron flow and increasing internal resistance, thereby lowering electrical conductivity."
+      },
+      {
+        id: 14,
+        question: "In the electrolytic cell, flow of electrons is from",
+        options: [
+          "Cathode to anode in the solution",
+          "Cathode to anode through external circuit",
+          "Anode to cathode through external circuit",
+          "Anode to cathode in the solution"
+        ],
+        answer: "Anode to cathode through external circuit",
+        explanation: "In an electrolytic cell, electrons are driven by the external power source to travel from the anode to the cathode through the external wiring."
+      },
+      {
+        id: 15,
+        question: "The product of electrolysis of aqueous NaCl solution is",
+        options: [
+          "Na at cathode and Cl₂ at anode",
+          "H₂ at cathode and Cl₂ at anode",
+          "H₂ at cathode and O₂ at anode",
+          "Na at cathode and O₂ at anode"
+        ],
+        answer: "H₂ at cathode and Cl₂ at anode",
+        explanation: "During electrolysis of aqueous NaCl, water is preferentially reduced at the cathode producing H2 gas, while Cl⁻ ions are oxidized at the anode producing Cl2 gas due to overpotential."
+      },
+      {
+        id: 16,
+        question: "When zinc piece is kept in CuSO4 solution, copper is precipitated because",
+        options: [
+          "Standard reduction potential of zinc is more than copper",
+          "Standard reduction potential of zinc is less than copper",
+          "Atomic number of zinc is larger than copper",
+          "Atomic number of zinc is lower than copper"
+        ],
+        answer: "Standard reduction potential of zinc is less than copper",
+        explanation: "Zinc has a lower reduction potential (E° = -0.76 V) than copper (E° = +0.34 V), making zinc a stronger reducing agent that can displace Cu²⁺ ions into solid copper."
+      },
+      {
+        id: 17,
+        question: "The cell potential (emf) of a cell depends on",
+        options: [
+          "Temperature",
+          "Concentration of electrolyte",
+          "Nature of electrodes",
+          "All of these"
+        ],
+        answer: "All of these",
+        explanation: "According to the Nernst equation, cell EMF depends on temperature, electrolyte concentration, and the intrinsic standard reduction potentials (nature) of the electrode materials."
+      },
+      {
+        id: 18,
+        question: "During electrolysis of aqueous CuSO4 solution using copper electrodes, the reaction occurring at anode is",
+        options: [
+          "Oxidation of copper",
+          "Reduction of copper",
+          "Evolution of oxygen",
+          "Evolution of hydrogen"
+        ],
+        answer: "Oxidation of copper",
+        explanation: "When active copper electrodes are used, the copper anode itself undergoes oxidation (Cu → Cu²⁺ + 2e⁻) rather than oxygen evolution."
+      },
+      {
+        id: 19,
+        question: "In an electrochemical cell, the electrons flow from:",
+        options: [
+          "Cathode to Anode",
+          "Anode to Cathode",
+          "Anode to Solution",
+          "Solution to Cathode"
+        ],
+        answer: "Anode to Cathode",
+        explanation: "Electrons are liberated at the anode via oxidation and travel through the external circuit to the cathode where reduction takes place."
+      },
+      {
+        id: 20,
+        question: "How many faradays are required to reduce 1 mole of MnO4⁻ ions to Mn²⁺ ions?",
+        options: [
+          "5",
+          "2",
+          "3",
+          "1"
+        ],
+        answer: "5",
+        explanation: "In the reduction half-reaction MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O, the oxidation state of Mn changes from +7 to +2, requiring 5 moles of electrons (5 Faradays) per mole of MnO4⁻."
+      },
+      {
+        id: 21,
+        question: "At 298 K, the emf of the cell M | M²⁺(1M) || Cu²⁺(1M) | Cu(s) is x V. If E°(Cu²⁺/Cu) = +0.34 V, then E°(M²⁺/M) (in V) is:",
+        options: [
+          "(x - 0.34)",
+          "(0.34 - x)",
+          "(0.34 + x)",
+          "0.34"
+        ],
+        answer: "(0.34 - x)",
+        explanation: "Since E°cell = E°cathode - E°anode, we have x = 0.34 - E°(M²⁺/M). Rearranging gives E°(M²⁺/M) = 0.34 - x."
+      },
+      {
+        id: 22,
+        question: "Identify the strongest reducing agent from the following:",
+        options: [
+          "E°(K⁺/K) = -2.93 V",
+          "E°(Al³⁺/Al) = -1.66 V",
+          "E°(Zn²⁺/Zn) = -0.76 V",
+          "E°(Ag⁺/Ag) = +0.80 V"
+        ],
+        answer: "E°(K⁺/K) = -2.93 V",
+        explanation: "A more negative standard reduction potential indicates a greater tendency to lose electrons, making potassium (E° = -2.93 V) the strongest reducing agent."
+      },
+      {
+        id: 23,
+        question: "SI unit of specific conductance is",
+        options: [
+          "S m⁻¹",
+          "S m",
+          "S m²",
+          "S⁻¹ m⁻¹"
+        ],
+        answer: "S m⁻¹",
+        explanation: "Specific conductance (conductivity) is expressed as κ = l / (R × A), which yields the SI units Siemens per meter (S m⁻¹)."
+      },
+      {
+        id: 24,
+        question: "The correct statement regarding Galvanic cell is",
+        options: [
+          "Salt bridge maintains electrical neutrality",
+          "Anode is positive electrode",
+          "Cathode is negative electrode",
+          "Oxidation takes place at cathode"
+        ],
+        answer: "Salt bridge maintains electrical neutrality",
+        explanation: "The salt bridge allows migration of ions between half-cells to prevent charge buildup and maintain electrical neutrality."
+      },
+      {
+        id: 25,
+        question: "In a Galvanic cell consisting of Zn and Fe electrodes",
+        options: [
+          "Zn acts as anode and Fe as cathode",
+          "Zn acts as cathode and Fe as anode",
+          "Fe acts as anode and Zn as cathode",
+          "Both act as anodes"
+        ],
+        answer: "Zn acts as anode and Fe as cathode",
+        explanation: "Zinc is more reactive and has a lower reduction potential (-0.76 V) compared to iron (-0.44 V), so zinc undergoes oxidation at the anode while iron serves as the cathode."
+      },
+      {
+        id: 26,
+        question: "Which of the following is a strong electrolyte?",
+        options: [
+          "NaCl",
+          "CH₃COOH",
+          "NH₄OH",
+          "H₂CO₃"
+        ],
+        answer: "NaCl",
+        explanation: "NaCl is an ionic salt that completely dissociates into Na⁺ and Cl⁻ ions in aqueous solution, making it a strong electrolyte."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

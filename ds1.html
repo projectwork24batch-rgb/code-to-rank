@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Structures Quiz - All Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 750px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #f4f6f9;
+    }
+    .quiz-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .question-card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      margin-bottom: 25px;
+    }
+    .question-title {
+      font-weight: bold;
+      white-space: pre-wrap;
+      margin-bottom: 15px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      padding: 12px 15px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .option-btn:hover:not(:disabled) {
+      background-color: #f0f0f0;
+    }
+    .option-btn.correct {
+      background-color: #d4edda;
+      color: #155724;
+      border-color: #c3e6cb;
+      font-weight: bold;
+    }
+    .option-btn.wrong {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-color: #f5c6cb;
+      font-weight: bold;
+    }
+    .explanation {
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #e9ecef;
+      border-left: 4px solid #495057;
+      border-radius: 4px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .submit-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .submit-btn {
+      padding: 12px 35px;
+      font-size: 18px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background-color: #218838;
+    }
+    .score-container {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 8px;
+      margin-top: 25px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="quiz-title">Data Structures Quiz</h1>
+
+  <div id="quiz-container"></div>
+
+  <div class="submit-container">
+    <button id="submit-btn" class="submit-btn" onclick="calculateScore()">Submit Quiz</button>
+  </div>
+
+  <div id="score-card" class="score-container"></div>
+
+  <script>
+    const dsQuestions = [
+      {
+        question: "What is the Worst-Case Time complexity to search key in array of size N using Binary Search?",
+        options: ["O(N)", "O(N²)", "O(1)", "O(logN)"],
+        answer: "O(logN)",
+        explanation: "Binary search divides the search space in half with each step, leading to a maximum of log2N steps in the worst case."
+      },
+      {
+        question: "Number of Nodes in a full Binary tree with n leaves is",
+        options: ["2n-1", "logn-1", "n²-1", "n²+1"],
+        answer: "2n-1",
+        explanation: "In a full binary tree, every internal node has 2 children. If there are n leaves, there are n-1 internal nodes, making the total number of nodes (n+n-1)=2n-1."
+      },
+      {
+        question: "Which of the following operation in Single linked list needs less execution time?",
+        options: ["Inserting a node in the beginning", "Inserting a node in the middle", "Inserting a node at the end", "Inserting a node at position 2"],
+        answer: "Inserting a node in the beginning",
+        explanation: "Inserting at the beginning takes O(1) time since it only requires updating the head pointer without traversing the list."
+      },
+      {
+        question: "If the given input array is sorted or nearly sorted, which of the following algorithm gives the best performance?",
+        options: ["Quick sort", "Selection sort", "Insertion sort", "Merge sort"],
+        answer: "Insertion sort",
+        explanation: "Insertion sort runs in O(N) time for a sorted or nearly sorted array because it only performs O(1) comparisons per element."
+      },
+      {
+        question: "Which data structure uses the FIFO (First In, First Out) principle?",
+        options: ["Stack", "Queue", "Linked List", "Tree"],
+        answer: "Queue",
+        explanation: "A queue processes elements in First-In, First-Out (FIFO) order, where the element added first is removed first."
+      },
+      {
+        question: "What is the time complexity of Binary Search on a sorted array?",
+        options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
+        answer: "O(log n)",
+        explanation: "Binary search reduces the problem size by half at each step, resulting in O(log n) time complexity."
+      },
+      {
+        question: "Which operation in a queue removes an element?",
+        options: ["Push", "Pop", "Enqueue", "Dequeue"],
+        answer: "Dequeue",
+        explanation: "Dequeue is the operation used to remove an element from the front of a queue."
+      },
+      {
+        question: "Which one of the following is NOT a linear data structure?",
+        options: ["Array", "Stack", "Queue", "Tree"],
+        answer: "Tree",
+        explanation: "Trees are non-linear, hierarchical data structures, whereas arrays, stacks, and queues store data sequentially."
+      },
+      {
+        question: "In Selection Sort, which element is selected at each step while sorting the elements in ascending order?",
+        options: ["The largest element", "The Smallest element", "The Middle element", "Any Random element"],
+        answer: "The Smallest element",
+        explanation: "Selection sort repeatedly finds the minimum element from the unsorted sub-array and places it at the beginning."
+      },
+      {
+        question: "What type of data structure is used in recursion?",
+        options: ["Stack", "Queue", "Tree", "Linked List"],
+        answer: "Stack",
+        explanation: "Recursion relies on the call stack (call stack frames) to store return addresses and local variables across nested function calls."
+      },
+      {
+        question: "Which sorting algorithm is based on the divide-and-conquer principle?",
+        options: ["Bubble Sort", "Selection Sort", "Merge Sort", "Insertion Sort"],
+        answer: "Merge Sort",
+        explanation: "Merge sort divides the array into sub-arrays, recursively sorts them, and then merges the sorted sub-arrays."
+      },
+      {
+        question: "Which one is not a dynamic data structure?",
+        options: ["Array", "Stack", "Queue", "Linked List"],
+        answer: "Array",
+        explanation: "Standard arrays are static data structures because their size is fixed at allocation time and cannot grow dynamically."
+      },
+      {
+        question: "What is the time complexity of deleting an element from the beginning of a linked list?",
+        options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+        answer: "O(1)",
+        explanation: "Deleting the head node in a linked list requires changing the head pointer, taking constant time O(1)."
+      },
+      {
+        question: "Which of the following sorting algorithms is the most efficient in the average case?",
+        options: ["Bubble Sort", "Selection Sort", "Quick Sort", "Insertion Sort"],
+        answer: "Quick Sort",
+        explanation: "Quick Sort has an average-case time complexity of O(n log n) with very low constant-factor overhead, making it highly efficient."
+      },
+      {
+        question: "The declaration shown below refers to:\nstruct list {\n  int info;\n  struct list *prev, *next;\n};",
+        options: ["Doubly linked list", "Circular linked list with head", "Single linked list", "Circular queue"],
+        answer: "Doubly linked list",
+        explanation: "The inclusion of both 'prev' and 'next' pointers within a node structure defines a doubly linked list."
+      },
+      {
+        question: "The total number of elements in the array A [3][4][2] is",
+        options: ["9", "24", "12", "36"],
+        answer: "24",
+        explanation: "Total elements in a multidimensional array is the product of its dimensions: 3 x 4 x 2 = 24."
+      },
+      {
+        question: "To construct a unique binary search tree, which tree traversals are required?",
+        options: ["only post order", "Postorder and Inorder", "Preorder and Post order", "only preorder"],
+        answer: "Postorder and Inorder",
+        explanation: "Inorder traversal provides the sorted order of BST keys, and combining it with either Preorder or Postorder traversal guarantees a unique tree structure."
+      },
+      {
+        question: "What is the infix expression for the following prefix expression? - ^ A B + C D",
+        options: ["(A^B)-(C+D)", "(A^B)+(C-D)", "(A-B)*(C+D)", "(A+B)*(C-D)"],
+        answer: "(A^B)-(C+D)",
+        explanation: "Evaluating prefix '- ^ A B + C D': '^ A B' becomes '(A^B)', '+ C D' becomes '(C+D)', and operator '-' yields '(A^B)-(C+D)'."
+      },
+      {
+        question: "The number of swappings needed to sort the numbers { 7, 20, 6, 9, 30, 18, 4, 12 } into ascending order using Bubble sort is",
+        options: ["14", "12", "13", "11"],
+        answer: "14",
+        explanation: "The number of swaps in Bubble Sort equals the number of inverted pairs (i < j where A[i] > A[j]). Invert pairs are: (7,6), (7,4), (20,6), (20,9), (20,18), (20,4), (20,12), (6,4), (9,4), (30,18), (30,4), (30,12), (18,4), (18,12), totaling 14 swaps."
+      },
+      {
+        question: "To implement recursive technique for Quick Sort method, which basic data structure is required?",
+        options: ["Queue", "Tree", "Stack", "Linked List"],
+        answer: "Stack",
+        explanation: "Recursive execution implicitly relies on the call stack to keep track of pending recursive sub-array calls."
+      },
+      {
+        question: "Which of the following sorting technique is slowest?",
+        options: ["Heap sort", "Merge sort", "Bubble Sort", "Shell Sort"],
+        answer: "Bubble Sort",
+        explanation: "Bubble Sort has a worst-case and average-case time complexity of O(n²), making it much slower than O(n log n) algorithms."
+      },
+      {
+        question: "Which of the following sorting algorithms is best if a list is already sorted?",
+        options: ["Heap sort", "Insertion sort", "Quick sort", "Selection sort"],
+        answer: "Insertion sort",
+        explanation: "Insertion sort requires only O(n) comparisons and 0 swaps on an already sorted list."
+      },
+      {
+        question: "Evaluating expressions consisting of operands and operators is an application of data structure.",
+        options: ["Stack", "Queue", "Tree", "Graph"],
+        answer: "Stack",
+        explanation: "Stacks are commonly used for parsing and evaluating infix, prefix, and postfix expressions."
+      },
+      {
+        question: "Example for Non linear Data structure is",
+        options: ["Stack", "Trees", "Queue", "Linked List"],
+        answer: "Trees",
+        explanation: "Trees organize elements hierarchically rather than in a linear sequence, making them non-linear data structures."
+      },
+      {
+        question: "The best case time complexity of quick sort is",
+        options: ["O(log n)", "O(n log n)", "O(n²)", "O(1)"],
+        answer: "O(n log n)",
+        explanation: "In the best case, Quick Sort splits the list into two equal halves at each recursion level, leading to O(n log n) complexity."
+      },
+      {
+        question: "In queue, the elements can be inserted or removed from both the ends of the queue.",
+        options: ["Dequeue", "Priority Queue", "Circular Queue", "Linear Queue"],
+        answer: "Dequeue",
+        explanation: "A Double-Ended Queue (Deque) permits insertions and deletions at both the front and rear ends."
+      },
+      {
+        question: "Implementation of Depth First search is done using",
+        options: ["Circular queue", "Linear queue", "Stack", "Double ended queue"],
+        answer: "Stack",
+        explanation: "Depth First Search (DFS) uses a LIFO stack structure (or call stack recursion) to explore deeply along graph branches."
+      },
+      {
+        question: "tree traversal technique prints the elements of binary search tree in ascending order",
+        options: ["Pre order", "Post order", "Inverse order", "In order"],
+        answer: "In order",
+        explanation: "An In-order traversal (Left, Root, Right) of a Binary Search Tree always yields keys in non-decreasing sorted order."
+      },
+      {
+        question: "One of the applications of Queue is",
+        options: ["Evaluation post fix expression", "Recursion", "Post order implementation", "Memory management"],
+        answer: "Memory management",
+        explanation: "Queues are used in CPU scheduling, print spooling, and memory buffer management (FIFO buffer handling)."
+      },
+      {
+        question: "sorting technique gives best performance with irrespective data distribution.",
+        options: ["Merge sort", "Quick sort", "Insertion sort", "Bubble sort"],
+        answer: "Merge sort",
+        explanation: "Merge sort consistently guarantees O(n log n) time complexity in all cases (best, average, and worst) regardless of data order."
+      },
+      {
+        question: "Polynomial manipulations are one of the application of data structure",
+        options: ["Stack", "Tree", "Linked list", "Graph"],
+        answer: "Linked list",
+        explanation: "Polynomial terms (coefficient and exponent) are easily stored, added, and manipulated using linked lists."
+      },
+      {
+        question: "data structure requires multiple runs of traversals.",
+        options: ["Linear", "Array", "Non Linear", "Differential"],
+        answer: "Non Linear",
+        explanation: "Non-linear data structures like trees and graphs require complex multiple-path traversals (e.g., DFS, BFS) to visit all nodes."
+      },
+      {
+        question: "Linked lists are not suitable for the implementation of",
+        options: ["Insertion sort", "Radix sort", "Binary search", "Polynomial manipulation"],
+        answer: "Binary search",
+        explanation: "Binary search requires fast random access to middle elements O(1), which linked lists cannot provide efficiently (O(n))."
+      },
+      {
+        question: "Let A be an array. How do you access the 3rd element using pointers?",
+        options: ["*A+2", "*(A+2)", "&(A+2)", "*(A+2)"],
+        answer: "*(A+2)",
+        explanation: "Array indexing A[2] for the 3rd element translates to pointer dereferencing *(A+2)."
+      },
+      {
+        question: "What is the disadvantage of array data structure?",
+        options: ["Static memory allocation", "Dynamic memory allocation", "Accessing elements in constant time", "Index starting at 0"],
+        answer: "Static memory allocation",
+        explanation: "Arrays require fixed size allocation at compile/initialization time, which leads to fixed capacity limitations."
+      },
+      {
+        question: "When a pop() operation is called on an empty queue, what is the condition called?",
+        options: ["Overflow", "Underflow", "Syntax Error", "Garbage value"],
+        answer: "Underflow",
+        explanation: "Attempting to remove or dequeue an element from an empty data structure triggers an Underflow condition."
+      },
+      {
+        question: "What is a complete binary tree?",
+        options: [
+          "Each node has exactly zero or two children",
+          "A tree in which all nodes have degree 2",
+          "A binary tree, which is completely filled, with the possible exception of the bottom level, which is filled from left to right",
+          "A binary tree, which is completely filled, with the possible exception of the bottom level, which is filled from right to left"
+        ],
+        answer: "A binary tree, which is completely filled, with the possible exception of the bottom level, which is filled from left to right",
+        explanation: "By definition, a complete binary tree has all levels completely filled except possibly the last level, which is filled sequentially from left to right."
+      },
+      {
+        question: "If the height of a tree with single node is considered as 1, What is the maximum number of nodes in a binary tree of height 5?",
+        options: ["31", "7", "13", "15"],
+        answer: "31",
+        explanation: "The maximum number of nodes in a binary tree of height h is 2^h - 1. For h=5, 2^5 - 1 = 31."
+      },
+      {
+        question: "What is the drawback of a Linked List?",
+        options: ["Random access is not possible in a linked list", "Memory is not wasted as no pre-allocation is done", "Insertion operation complexity", "Deletion operation complexity"],
+        answer: "Random access is not possible in a linked list",
+        explanation: "Elements in a linked list must be accessed sequentially, which prevents instant O(1) random access by index."
+      },
+      {
+        question: "Which sorting algorithm has the worst-case time complexity of O(n²) while other cases time complexities are much better than the worst case?",
+        options: ["Quick sort", "Merge sort", "Insertion sort", "Selection sort"],
+        answer: "Quick sort",
+        explanation: "Quick sort runs in O(n log n) average/best case, but degrades to O(n²) worst case when worst pivot choices are made."
+      },
+      {
+        question: "An infix expression can be converted to a postfix expression using a",
+        options: ["Stack", "Queue", "Dequeue", "Tree"],
+        answer: "Stack",
+        explanation: "The Shunting-Yard algorithm uses a Stack to hold operators during infix to postfix conversion."
+      },
+      {
+        question: "A sorted file contains 16 items. Using binary search, the maximum number of comparisons to search for an item in this file is",
+        options: ["15", "4", "8", "1"],
+        answer: "4",
+        explanation: "The maximum comparisons for Binary Search is log2(N). For N=16, log2(16) = 4."
+      },
+      {
+        question: "If the In-order and Pre-order traversal of a binary tree are D.B.F.E.G.H.A.C and A.B.D.E.F.G.H.C respectively, then the Post-order traversal of that tree is",
+        options: ["D.F.G.A.B.C.H.E", "F.H.D.G.E.B.C.A", "C.G.H.F.E.D.B.A", "D.F.H.G.E.B.C.A"],
+        answer: "D.F.H.G.E.B.C.A",
+        explanation: "Reconstructing the tree step-by-step using root elements from Pre-order and subtrees from In-order gives the Post-order traversal D.F.H.G.E.B.C.A."
+      },
+      {
+        question: "How many distinct binary search trees can be formed which contain the integers 1, 2, 3?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+        explanation: "The total number of distinct BSTs with n keys is given by the nth Catalan number C_n = (2n)! / ((n + 1)! * n!). For n=3, C_3 = 6! / (4! * 3!) = 5."
+      },
+      {
+        question: "The number of comparisons required to sort 5 numbers in ascending order using bubble sort is",
+        options: ["5", "10", "6", "7"],
+        answer: "10",
+        explanation: "The total comparisons in standard Bubble sort for N items is N(N-1)/2. For 5 numbers, 5x4/2 = 10."
+      },
+      {
+        question: "Which sorting algorithm is the best if the list is already in order?",
+        options: ["Quicksort", "Insertion sort", "Merge sort", "Heapsort"],
+        answer: "Insertion sort",
+        explanation: "Insertion sort works in O(n) time for already sorted lists as it makes only 1 comparison per element without shifting."
+      },
+      {
+        question: "Find the post order by using the given pre-order and in-order.\nInorder Traversal in[] = {4,2,5,1,3,6}\nPreorder Traversal pre[] = {1,2,4,5,3,6}",
+        options: [
+          "Post-Order post = {4,2,5,6,3,1}",
+          "Post-Order post = {2,6,3,4,5,1}",
+          "Post-Order post = {4,5,2,6,1,3}",
+          "Post-Order post = {4,5,2,6,3,1}"
+        ],
+        answer: "Post-Order post = {4,5,2,6,3,1}",
+        explanation: "Root is 1. Left subtree has in={4,2,5} & pre={2,4,5} yielding post {4,5,2}. Right subtree has in={3,6} & pre={3,6} yielding post {6,3}. Combining gives {4,5,2,6,3,1}."
+      },
+      {
+        question: "Memory efficient Doubly linked list is also called as",
+        options: ["XOR linked list", "Circular Single linked list", "NOR linked list", "Single linked list"],
+        answer: "XOR linked list",
+        explanation: "An XOR linked list stores the bitwise XOR of previous and next node addresses in a single pointer field to save memory."
+      },
+      {
+        question: "The time complexity of a quick sort algorithm which makes use of median found by an O(n) algorithm as pivot element is",
+        options: ["O(n²)", "O(n log n)", "O(n log log n)", "O(n)"],
+        answer: "O(n log n)",
+        explanation: "Using a linear O(n) median-finding algorithm guarantees a balanced split at every step, avoiding the O(n²) worst-case."
+      },
+      {
+        question: "What is the corresponding postfix expression for the given infix expression a+b*(c^d-e)^(f+g*h)-i",
+        options: [
+          "abc^de-fg+*^*+i-",
+          "abcde^-fg*+*^h*+i-",
+          "abcd^e-fgh*+^*+i-",
+          "ab^-dc*+ef^gh*+i-"
+        ],
+        answer: "abcd^e-fgh*+^*+i-",
+        explanation: "Converting sub-expressions step-by-step: 'c^d-e' -> 'cd^e-', 'f+g*h' -> 'fgh*+', 'b*(cd^e-)^(fgh*+)' -> 'bcdefgh*+^*', then full expression yields 'abcd^e-fgh*+^*+i-'."
+      },
+      {
+        question: "Sorting techniques when applied to data items available in the secondary memory are referred to as sorting techniques.",
+        options: ["External", "Internal", "Secondary", "Auxiliary"],
+        answer: "External",
+        explanation: "External sorting algorithms are designed to handle large datasets stored in external/secondary memory (like disks) that cannot fit into main RAM."
+      },
+      {
+        question: "Which of the following characteristic of the data is not required for linear search but essential for binary search?",
+        options: ["Length of the list", "Maximum value in the list", "Type of elements of the list", "Order of the elements of the list"],
+        answer: "Order of the elements of the list",
+        explanation: "Binary search requires elements to be sorted (ordered), whereas linear search works on unsorted lists."
+      },
+      {
+        question: "In a queue, we remove the item that is added.",
+        options: ["Least recently", "Most recently", "both Least recently and Most recently", "Either Least recently or Most recently"],
+        answer: "Least recently",
+        explanation: "Because a Queue operates on FIFO (First In, First Out), the item that was added least recently (the oldest item) is removed first."
+      },
+      {
+        question: "Match the following for binary tree traversal:\n(1) Pre Order | (A) Root Left Right\n(2) In Order | (B) Left Right Root\n(3) Post Order | (C) Left Root Right",
+        options: ["1-A, 2-B, 3-C", "1-A, 2-C, 3-B", "1-B, 2-A, 3-C", "1-C, 2-B, 3-A"],
+        answer: "1-A, 2-C, 3-B",
+        explanation: "Pre-order visits Root-Left-Right (1-A), In-order visits Left-Root-Right (2-C), and Post-order visits Left-Right-Root (3-B)."
+      },
+      {
+        question: "Sorting of playing cards in our hands is an example for",
+        options: ["Selection", "Insertion", "Bubble", "Merge"],
+        answer: "Insertion",
+        explanation: "When sorting playing cards manually, each new card is picked and inserted into its correct relative position among the already sorted cards."
+      }
+    ];
+
+    let userAnswers = new Array(dsQuestions.length).fill(null);
+
+    function renderAllQuestions() {
+      const container = document.getElementById("quiz-container");
+      container.innerHTML = "";
+
+      dsQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.classList.add("question-card");
+
+        const title = document.createElement("div");
+        title.classList.add("question-title");
+        title.innerText = `Q${index + 1}: ${q.question}`;
+        card.appendChild(title);
+
+        const optionsContainer = document.createElement("div");
+        optionsContainer.classList.add("options-container");
+        optionsContainer.id = `options-q${index}`;
+
+        q.options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.innerText = option;
+          btn.classList.add("option-btn");
+          btn.onclick = () => selectOption(index, btn, option, q.answer);
+          optionsContainer.appendChild(btn);
+        });
+
+        card.appendChild(optionsContainer);
+
+        const expDiv = document.createElement("div");
+        expDiv.classList.add("explanation");
+        expDiv.id = `exp-q${index}`;
+        expDiv.innerText = "Explanation: " + q.explanation;
+        card.appendChild(expDiv);
+
+        container.appendChild(card);
+      });
+    }
+
+    function selectOption(qIndex, selectedBtn, selectedOption, correctAnswer) {
+      userAnswers[qIndex] = selectedOption === correctAnswer;
+
+      const optionsContainer = document.getElementById(`options-q${qIndex}`);
+      const buttons = optionsContainer.querySelectorAll(".option-btn");
+
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedOption === correctAnswer) {
+        selectedBtn.classList.add("correct");
+      } else {
+        selectedBtn.classList.add("wrong");
+        buttons.forEach(btn => {
+          if (btn.innerText === correctAnswer) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+
+      const expDiv = document.getElementById(`exp-q${qIndex}`);
+      expDiv.style.display = "block";
+    }
+
+    function calculateScore() {
+      let score = 0;
+      userAnswers.forEach(isCorrect => {
+        if (isCorrect === true) score++;
+      });
+
+      const scoreCard = document.getElementById("score-card");
+      scoreCard.innerText = `Your Final Score: ${score} / ${dsQuestions.length}`;
+      scoreCard.style.display = "block";
+
+      document.getElementById("submit-btn").disabled = true;
+    }
+
+    renderAllQuestions();
+  </script>
+</body>
+</html>

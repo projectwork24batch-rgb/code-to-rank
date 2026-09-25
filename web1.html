@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Technologies Practice Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
+        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .q-box { background: #fafafa; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 6px; }
+        
+        .option { display: block; margin: 10px 0; font-size: 16px; cursor: pointer; padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; transition: background 0.2s; }
+        .option:hover { background: #f0f0f0; }
+        .option input { margin-right: 12px; transform: scale(1.1); }
+
+        .option.correct { background-color: #d4edda !important; border-color: #c3e6cb !important; color: #155724; font-weight: bold; }
+        .option.incorrect { background-color: #f8d7da !important; border-color: #f5c6cb !important; color: #721c24; }
+        
+        .disabled-box { pointer-events: none; }
+        .explanation { display: none; margin-top: 15px; padding: 12px; background-color: #e9ecef; border-left: 4px solid #007BFF; font-size: 14px; color: #495057; border-radius: 0 4px 4px 0; }
+
+        .btn { display: block; width: 100%; background: #007BFF; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #0056b3; }
+        #score-output { font-size: 22px; font-weight: bold; margin-top: 25px; color: #28a745; text-align: center; }
+        .back-nav { display: inline-block; margin-bottom: 20px; color: #007BFF; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <a href="web.html" class="back-nav">← Back to Menu</a>
+    <h1>Web Technologies Practice Quiz</h1>
+    
+    <div id="questions-list"></div>
+    
+    <button class="btn" onclick="checkYourScore()">Finish & Calculate Score</button>
+    <div id="score-output"></div>
+</div>
+
+<script>
+    const webEcetQuestions = [
+      {
+        id: 1,
+        question: "Which of the following statements is true?",
+        options: [
+          "A) Attribute names must be in uppercase",
+          "B) Attribute values must be quoted",
+          "C) Attribute minimization is mandatory",
+          "D) Attribute values must not be quoted"
+        ],
+        correctIndex: 1,
+        explanation: "HTML attribute values are generally written inside quotation marks."
+      },
+      {
+        id: 2,
+        question: "What will be the output of the given PHP code?",
+        options: ["A) 0", "B) 1", "C) Null", "D) Error"],
+        correctIndex: 3,
+        explanation: "The variable usage in the given code is incorrect."
+      },
+      {
+        id: 3,
+        question: "Correct HTML tag for the largest heading is:",
+        options: ["A) <head>", "B) <h6>", "C) <heading>", "D) <h1>"],
+        correctIndex: 3,
+        explanation: "<h1> is the largest HTML heading tag."
+      },
+      {
+        id: 4,
+        question: "Which function converts a string to all uppercase letters?",
+        options: ["A) strtoupper()", "B) uppercase()", "C) str_uppercase()", "D) struppercase()"],
+        correctIndex: 0,
+        explanation: "In PHP, strtoupper() converts all characters in a string to uppercase."
+      },
+      {
+        id: 5,
+        question: "Which attribute is used to extend the lifetime of a cookie?",
+        options: ["A) higher-age", "B) increase-age", "C) max-age", "D) lifetime"],
+        correctIndex: 2,
+        explanation: "The max-age attribute specifies how long a cookie should remain valid."
+      },
+      {
+        id: 6,
+        question: "How can data be displayed in sorted order using a DataSet?",
+        options: [
+          "A) Use Sort method of DataTable",
+          "B) Use Sort method of DataSet",
+          "C) Use DataView object with sorting",
+          "D) Use data paging and sorting"
+        ],
+        correctIndex: 2,
+        explanation: "A DataView can be used to display DataTable data in sorted order."
+      },
+      {
+        id: 7,
+        question: "What are the three primary kinds of parameters?",
+        options: [
+          "A) Input, Integer, String",
+          "B) Integer, String, DateTime",
+          "C) int, varchar, nvarchar",
+          "D) Input, Output, InputOutput"
+        ],
+        correctIndex: 3,
+        explanation: "Parameters can send data into a method, receive data from it, or do both."
+      },
+      {
+        id: 8,
+        question: "Which of the following is NOT a method of DataAdapter?",
+        options: ["A) Fill", "B) Schema", "C) ReadData", "D) Update"],
+        correctIndex: 2,
+        explanation: "Fill() and Update() are DataAdapter methods."
+      },
+      {
+        id: 9,
+        question: "Which method of the Command object is best suited for aggregate functions in a SELECT statement?",
+        options: ["A) ExecuteScalar", "B) ExecuteReader", "C) ExecuteNonQuery", "D) Execute"],
+        correctIndex: 0,
+        explanation: "ExecuteScalar() returns a single value, which is useful for functions such as COUNT() and SUM()."
+      },
+      {
+        id: 10,
+        question: "ADO.NET provides the ability to create and process in-memory databases called:",
+        options: ["A) Views", "B) Relations", "C) Tables", "D) Datasets"],
+        correctIndex: 3,
+        explanation: "A DataSet stores data in memory and can contain multiple tables."
+      },
+      {
+        id: 11,
+        question: "Which element contains meta information about an HTML document?",
+        options: ["A) <head>", "B) <html>", "C) <!DOCTYPE html>", "D) <title>"],
+        correctIndex: 0,
+        explanation: "The <head> element contains metadata about the HTML document."
+      },
+      {
+        id: 12,
+        question: "Which type of style sheet is used to define the style of many HTML pages?",
+        options: ["A) Inline", "B) Internal", "C) External", "D) None of the above"],
+        correctIndex: 2,
+        explanation: "An external CSS file can be connected to many HTML pages."
+      },
+      {
+        id: 13,
+        question: "Identify the type of error in the given PHP code.",
+        options: ["A) Logic error", "B) Parser error", "C) Runtime error", "D) Warning"],
+        correctIndex: 1,
+        explanation: "Incorrect PHP syntax causes a parser error."
+      },
+      {
+        id: 14,
+        question: "What is the output of substr($str, 3, 4) when $str = \"welcome\"?",
+        options: ["A) lcom", "B) come", "C) lc", "D) CO"],
+        correctIndex: 1,
+        explanation: "substr() extracts a part of a string based on the starting position and length."
+      },
+      {
+        id: 15,
+        question: "Which statement about sessions and cookies is true?\nA. Sessions are secure\nB. Cookies store a large amount of data\nC. Sessions store information on the client machine",
+        options: ["A) A only", "B) B only", "C) C only", "D) A and B"],
+        correctIndex: 0,
+        explanation: "Session data is generally stored on the server, while cookies are stored on the client."
+      },
+      {
+        id: 16,
+        question: "What is the output of the PHP implode() program?",
+        options: ["A) 10 20 30", "B) 10@20@30", "C) 10,20,30", "D) [10,20,30]"],
+        correctIndex: 1,
+        explanation: "implode() joins array elements using the specified separator."
+      },
+      {
+        id: 17,
+        question: "Which data provider is NOT supported by ADO.NET?",
+        options: ["A) ODBC", "B) MySQL Server", "C) MyAccess", "D) OLEDB"],
+        correctIndex: 2,
+        explanation: "The other options refer to commonly supported data access providers."
+      },
+      {
+        id: 18,
+        question: "Which object serves as a bridge between a DataSet and a Data Source?",
+        options: ["A) Data Manipulator", "B) Data Adapter", "C) DataSet Object", "D) Data Reader"],
+        correctIndex: 1,
+        explanation: "A DataAdapter transfers data between a DataSet and a data source."
+      },
+      {
+        id: 19,
+        question: "Which method copies only the structure of a DataSet?",
+        options: ["A) AcceptChanges()", "B) Clone()", "C) Copy()", "D) HasChanges()"],
+        correctIndex: 1,
+        explanation: "Clone() copies the structure without copying the data."
+      },
+      {
+        id: 20,
+        question: "How can you open a link in a new browser window or tab?",
+        options: [
+          'A) <a href="url" target="_blank">',
+          'A) <a href="url" target="new">',
+          'C) <a href="url" target="_self">',
+          'D) <a href="url" open="blank">'
+        ],
+        correctIndex: 0,
+        explanation: 'target="_blank" opens the link in a new tab or window.'
+      },
+      {
+        id: 21,
+        question: "Which attribute is used to merge two or more rows in an HTML table?",
+        options: ["A) colspan", "B) rowspan", "C) rowmerge", "D) spanrow"],
+        correctIndex: 1,
+        explanation: "The rowspan attribute allows a table cell to extend across multiple rows."
+      },
+      {
+        id: 22,
+        question: "When form data contains sensitive information, which method is preferable?",
+        options: ["A) GET", "B) POST", "C) HOST", "D) PUT"],
+        correctIndex: 1,
+        explanation: "POST sends form data in the request body instead of placing it in the URL."
+      },
+      {
+        id: 23,
+        question: "HTML documents are transmitted from web servers to web browsers using:",
+        options: ["A) FTP", "B) SMTP", "C) HTTP", "D) TCP"],
+        correctIndex: 2,
+        explanation: "HTTP is the protocol commonly used for communication between web servers and browsers."
+      },
+      {
+        id: 24,
+        question: "Which PHP function adds a value to the end of an array?",
+        options: ["A) array_unshift()", "B) into_array()", "C) inend_array()", "D) array_push()"],
+        correctIndex: 3,
+        explanation: "array_push() adds one or more elements to the end of an array."
+      },
+      {
+        id: 25,
+        question: "What will be the output of array_sum()?",
+        options: ["A) 0", "B) 6", "C) 10", "D) Error"],
+        correctIndex: 1,
+        explanation: "array_sum() adds the numeric values in an array. Non-numeric values are not treated as normal numeric values."
+      },
+      {
+        id: 26,
+        question: "Which function is used to access a MySQL database in PHP?",
+        options: ["A) mysql_connect()", "B) sql_connect()", "C) db_connect()", "D) connect_mysql()"],
+        correctIndex: 0,
+        explanation: "In the older PHP MySQL API, mysql_connect() was used to connect to MySQL."
+      },
+      {
+        id: 27,
+        question: "Which is used in PHP to store user data in a session?",
+        options: ["A) $_SESSION", "B) SYS_SESSION", "C) $SESSION", "D) $SESSIONS"],
+        correctIndex: 0,
+        explanation: "PHP session data is stored using the $_SESSION superglobal."
+      },
+      {
+        id: 28,
+        question: "Which object is used to fill a DataSet or DataTable with query results in ADO.NET?",
+        options: ["A) DataReader", "B) DataSet", "C) DataAdapter", "D) DataTables"],
+        correctIndex: 2,
+        explanation: "A DataAdapter retrieves data and fills a DataSet or DataTable."
+      },
+      {
+        id: 29,
+        question: "ADO.NET DataAdapter provides communication between:",
+        options: [
+          "A) Application and Server",
+          "B) Data object and Data source",
+          "C) Form and Database",
+          "D) Table and Row"
+        ],
+        correctIndex: 1,
+        explanation: "The DataAdapter acts as a connection between data sources and ADO.NET objects."
+      },
+      {
+        id: 30,
+        question: "Which is used to store data on the server?",
+        options: ["A) HTML", "B) DHTML", "C) CGI", "D) CSS"],
+        correctIndex: 2,
+        explanation: "CGI programs can process and store information on the server."
+      },
+      {
+        id: 31,
+        question: "What does Error 404 or \"Not Found\" mean?",
+        options: [
+          "A) Access Denied",
+          "B) Internal Server Error",
+          "C) The server could not find the requested URL.",
+          "D) Bad Request"
+        ],
+        correctIndex: 2,
+        explanation: "A 404 error means the requested resource or page was not found."
+      },
+      {
+        id: 32,
+        question: "Which method acts as a constructor function in a PHP class?",
+        options: ["A) __construct()", "B) construct()", "C) _create()", "D) init()"],
+        correctIndex: 0,
+        explanation: "__construct() is the constructor method in modern PHP classes."
+      },
+      {
+        id: 33,
+        question: "Which function returns the number of characters in a string?",
+        options: ["A) count($variable)", "B) strcount($variable)", "C) len($variable)", "D) strlen($variable)"],
+        correctIndex: 3,
+        explanation: "strlen() returns the length of a string."
+      },
+      {
+        id: 34,
+        question: "What will be the output of the PHP code using a function variable?",
+        options: ["A) HelloWorld", "B) Error", "C) Null", "D) Undefined"],
+        correctIndex: 0,
+        explanation: "The variable contains the function name and is used to call that function."
+      },
+      {
+        id: 35,
+        question: "Which PHP function sorts an array in descending order?",
+        options: ["A) sort()", "B) asort()", "C) rsort()", "D) dsort()"],
+        correctIndex: 2,
+        explanation: "rsort() sorts array values in descending order."
+      },
+      {
+        id: 36,
+        question: "What will be the output of the PHP function program?",
+        options: ["A) 0", "B) 1", "C) Success", "D) Error"],
+        correctIndex: 3,
+        explanation: "The function declaration or syntax in the displayed program is incorrect."
+      },
+      {
+        id: 37,
+        question: "Which function in PHP starts with a double underscore?",
+        options: ["A) Default Function", "B) User-Defined Function", "C) Inbuilt Function", "D) Magic Function"],
+        correctIndex: 3,
+        explanation: "PHP magic methods usually begin with two underscores, such as __construct()."
+      },
+      {
+        id: 38,
+        question: "Which object is used to fill a DataSet/DataTable with query results in ADO.NET?",
+        options: ["A) DataReader", "B) DataAdapter", "C) CommandBuilder", "D) Connection"],
+        correctIndex: 1,
+        explanation: "The DataAdapter fills DataSets and DataTables with data."
+      },
+      {
+        id: 39,
+        question: "Which method changes data in the database, such as UPDATE, DELETE, or INSERT?",
+        options: ["A) ExecuteReader()", "B) ExecuteScalar()", "C) ExecuteXML()", "D) ExecuteNonQuery()"],
+        correctIndex: 3,
+        explanation: "ExecuteNonQuery() is used for SQL commands that do not return result sets."
+      },
+      {
+        id: 40,
+        question: "How do you create a hyperlink in HTML?",
+        options: [
+          'A) <a href="www.XYZ.com">XYZ.com</a>',
+          'B) <link src="www.XYZ.com">XYZ.com</link>',
+          'C) <hyperlink>www.XYZ.com</hyperlink>',
+          'D) <url="www.XYZ.com">XYZ.com</url>'
+        ],
+        correctIndex: 0,
+        explanation: "The <a> tag with the href attribute creates a hyperlink."
+      },
+      {
+        id: 41,
+        question: "How do you insert an image in HTML?",
+        options: [
+          'A) <img src="abc.png">',
+          'B) <image src="abc.png">',
+          'C) <pic href="abc.png">',
+          'D) <img href="abc.png">'
+        ],
+        correctIndex: 0,
+        explanation: "The <img> tag uses the src attribute to specify the image file."
+      },
+      {
+        id: 42,
+        question: "What is the correct way to open sample.txt for reading in PHP?",
+        options: [
+          'A) fopen("sample.txt", "r");',
+          'B) open("sample.txt", "read");',
+          'C) readfile("sample.txt", "r");',
+          'D) file_open("sample.txt", "r");'
+        ],
+        correctIndex: 0,
+        explanation: 'The "r" mode opens a file for reading.'
+      },
+      {
+        id: 43,
+        question: "How do you find the number of fruits in an array?",
+        options: ["A) count($fruits)", "B) size($fruits)", "C) length($fruits)", "D) total($fruits)"],
+        correctIndex: 0,
+        explanation: "The count() function returns the number of elements in an array."
+      },
+      {
+        id: 44,
+        question: "Which function in PHP begins with a double underscore?",
+        options: ["A) Magic Function", "B) Standard Function", "C) Internal Function", "D) Anonymous Function"],
+        correctIndex: 0,
+        explanation: "PHP magic methods use names beginning with double underscores."
+      },
+      {
+        id: 45,
+        question: "What happens after the SQL commands BEGIN TRANSACTION, DELETE, and ROLLBACK TRANSACTION?",
+        options: [
+          "A) All records are deleted.",
+          "B) The database will remain unchanged.",
+          "C) The transaction is committed.",
+          "D) The table is dropped."
+        ],
+        correctIndex: 1,
+        explanation: "ROLLBACK cancels the changes made during the transaction."
+      },
+      {
+        id: 46,
+        question: "What does DESC do in ORDER BY ID, NAME DESC?",
+        options: [
+          "A) Sorts ID in descending order.",
+          "B) Sorts both ID and NAME in descending order.",
+          "C) It causes rows with the same ID to be sorted by NAME in descending order.",
+          "D) Reverses the entire dataset."
+        ],
+        correctIndex: 2,
+        explanation: "DESC means descending order."
+      },
+      {
+        id: 47,
+        question: "Which object fills a DataSet or DataTable with query results?",
+        options: ["A) DataReader", "B) DataAdapter", "C) Command", "D) Connection"],
+        correctIndex: 1,
+        explanation: "DataAdapter transfers query results into a DataSet or DataTable."
+      },
+      {
+        id: 48,
+        question: "In PHP, the foreach loop is used to iterate over:",
+        options: ["A) Number", "B) Object", "C) Function", "D) Array"],
+        correctIndex: 3,
+        explanation: "foreach is mainly used to loop through arrays."
+      },
+      {
+        id: 49,
+        question: "Which HTML tag is helpful for including an image?",
+        options: ["A) <pic>", "B) <img>", "C) <image>", "D) <graphic>"],
+        correctIndex: 1,
+        explanation: "The <img> tag displays an image on a webpage."
+      },
+      {
+        id: 50,
+        question: "The <a> tag in HTML is useful for:",
+        options: ["A) Linking other pages", "B) Formatting text", "C) Creating forms", "D) Inserting images"],
+        correctIndex: 0,
+        explanation: "The anchor (<a>) tag creates hyperlinks."
+      },
+      {
+        id: 51,
+        question: "Which tag scrolls text on an HTML page?",
+        options: ["A) <marquee>", "B) <scroll>", "C) <slider>", "D) <rotate>"],
+        correctIndex: 0,
+        explanation: "The <marquee> tag was traditionally used to create scrolling text."
+      },
+      {
+        id: 52,
+        question: "Which tag is used to link an external style sheet in an HTML document?",
+        options: ["A) <style>", "B) <css>", "C) <link>", "D) <script>"],
+        correctIndex: 2,
+        explanation: "The <link> tag connects an HTML document to an external CSS file."
+      },
+      {
+        id: 53,
+        question: "In JavaScript, the find() method of an array gives:",
+        options: [
+          "A) The first element that passes the test.",
+          "B) All elements that pass the test.",
+          "C) The index of the first element.",
+          "D) A boolean value."
+        ],
+        correctIndex: 0,
+        explanation: "find() returns the first array element that satisfies the specified condition."
+      },
+      {
+        id: 54,
+        question: "Which jQuery method hides selected elements?",
+        options: ["A) displayNone()", "B) remove()", "C) hide()", "D) invisible()"],
+        correctIndex: 2,
+        explanation: "The hide() method hides selected HTML elements."
+      },
+      {
+        id: 55,
+        question: "PHP stands for:",
+        options: [
+          "A) Perfect Hypertext Preprocessor",
+          "B) Personal HTML Page Home Processor",
+          "C) Hypertext Preprocessor",
+          "D) Processor for Hypertext Page"
+        ],
+        correctIndex: 2,
+        explanation: "PHP is a server-side scripting language and stands for Hypertext Preprocessor."
+      },
+      {
+        id: 56,
+        question: "Which operator is used for concatenation in PHP?",
+        options: ["A) + (plus)", "B) . (dot)", "C) & (ampersand)", "D) , (comma)"],
+        correctIndex: 1,
+        explanation: "The dot operator joins two strings together."
+      },
+      {
+        id: 57,
+        question: "Which HTML tag creates an unordered list?",
+        options: ["A) <ul>", "B) <ol>", "C) <li>", "D) <list>"],
+        correctIndex: 0,
+        explanation: "<ul> creates a bulleted list."
+      },
+      {
+        id: 58,
+        question: "Which function is used to get environment variables in PHP?",
+        options: ["A) getenv()", "B) env_get()", "C) fetch_env()", "D) read_env()"],
+        correctIndex: 0,
+        explanation: "getenv() retrieves the value of an environment variable."
+      },
+      {
+        id: 59,
+        question: "What is the return type of the hashCode() method in Java?",
+        options: ["A) Object", "B) int", "C) long", "D) void"],
+        correctIndex: 1,
+        explanation: "The hashCode() method returns an integer value."
+      },
+      {
+        id: 60,
+        question: "Which of the following is NOT an HTML tag?",
+        options: ["A) <select>", "B) <input>", "C) <textarea>", "D) <list>"],
+        correctIndex: 3,
+        explanation: "<list> is not a standard HTML tag."
+      },
+      {
+        id: 61,
+        question: "What does HTML stand for?",
+        options: [
+          "A) Hyper Text Markup Language",
+          "B) High Text Transfer Markup",
+          "C) Home Tool Markup Language",
+          "D) Hyperlink and Text Markup Language"
+        ],
+        correctIndex: 0,
+        explanation: "HTML is the standard markup language used to create web pages."
+      },
+      {
+        id: 62,
+        question: "Which HTML tag is used to create a hyperlink?",
+        options: ["A) <link>", "B) <href>", "C) <a>", "D) <hyperlink>"],
+        correctIndex: 2,
+        explanation: "The <a> tag creates a hyperlink."
+      },
+      {
+        id: 63,
+        question: "Which method of the Component class is used to set the position and size of a component?",
+        options: ["A) setSize()", "B) setBounds()", "C) setPosition()", "D) setPositionSize()"],
+        correctIndex: 1,
+        explanation: "setBounds() is used to set both the position and size of a component."
+      }
+    ];
+
+    const listContainer = document.getElementById('questions-list');
+    let fullContent = '';
+    
+    webEcetQuestions.forEach((q, qIndex) => {
+        let block = `<div class="q-box" id="qbox_${qIndex}" role="radiogroup">
+            <p><strong>Q${qIndex + 1}: ${q.question}</strong></p>`;
+        
+        q.options.forEach((opt, optIndex) => {
+            block += `
+                <label class="option" id="label_${qIndex}_${optIndex}">
+                    <input type="radio" name="q_number_${qIndex}" value="${optIndex}" onclick="revealAnswer(${qIndex}, ${optIndex}, ${q.correctIndex})"> ${opt}
+                </label>
+            `;
+        });
+        
+        if (q.explanation) {
+            block += `<div class="explanation" id="exp_${qIndex}"><strong>Explanation:</strong> ${q.explanation}</div>`;
+        }
+
+        block += `</div>`;
+        fullContent += block;
+    });
+
+    listContainer.innerHTML = fullContent;
+
+    function revealAnswer(qIndex, selectedIndex, correctIndex) {
+        const questionBox = document.getElementById(`qbox_${qIndex}`);
+        const expBox = document.getElementById(`exp_${qIndex}`);
+        
+        webEcetQuestions[qIndex].options.forEach((_, optIndex) => {
+            const label = document.getElementById(`label_${qIndex}_${optIndex}`);
+            if (optIndex === correctIndex) {
+                label.classList.add('correct');
+            } else if (optIndex === selectedIndex) {
+                label.classList.add('incorrect');
+            }
+        });
+
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+
+        questionBox.classList.add('disabled-box');
+    }
+
+    function checkYourScore() {
+        let rightAnswersCount = 0;
+        webEcetQuestions.forEach((q, index) => {
+            const chosen = document.querySelector(`input[name="q_number_${index}"]:checked`);
+            if (chosen && parseInt(chosen.value, 10) === q.correctIndex) {
+                rightAnswersCount++;
+            }
+        });
+        
+        document.getElementById('score-output').innerText = `Final Result: You scored ${rightAnswersCount} out of ${webEcetQuestions.length}!`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

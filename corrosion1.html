@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corrosion ECET Practice Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .score-badge {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background-color: #f1f5f9;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 0.75rem;
+      accent-color: var(--primary);
+    }
+
+    .option-label.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-label.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background-color: #eff6ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      color: #1e3a8a;
+    }
+
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-container {
+      text-align: center;
+      margin: 2rem 0 4rem;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .submit-btn:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Corrosion ECET Practice Quiz</h1>
+      <div class="score-badge" id="score-display">Score: 0 / 15</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="quiz-container"></div>
+    <div class="action-container">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Final Quiz</button>
+    </div>
+  </main>
+
+  <script>
+    const corrosionQuestions = [
+      {
+        "id": 1,
+        "question": "Corrosion is an example of",
+        "options": {
+          "A": "Oxidation",
+          "B": "Reduction",
+          "C": "Electrolysis",
+          "D": "Halogenation"
+        },
+        "correctAnswer": "A",
+        "explanation": "Corrosion involves the loss of electrons by a metal when reacting with oxygen and moisture in the environment, which is an oxidation process."
+      },
+      {
+        "id": 2,
+        "question": "The composition of rust is",
+        "options": {
+          "A": "Fe(OH)3",
+          "B": "FeCl3",
+          "C": "FeO",
+          "D": "Fe2O3-XH2O"
+        },
+        "correctAnswer": "D",
+        "explanation": "Rust is chemically defined as hydrated ferric oxide, represented by the formula Fe2O3 XH2O."
+      },
+      {
+        "id": 3,
+        "question": "Chemically the rust is",
+        "options": {
+          "A": "FeO",
+          "B": "Fe3O4",
+          "C": "Fe2O3-XH2O",
+          "D": "Fe2O3-NH2O"
+        },
+        "correctAnswer": "C",
+        "explanation": "Chemically, rust consists of hydrated iron(III) oxide (Fe2O3 XH2O) formed due to atmospheric oxidation of iron in the presence of moisture."
+      },
+      {
+        "id": 4,
+        "question": "Galvanizing is the process of coating iron with",
+        "options": {
+          "A": "Mg",
+          "B": "Cu",
+          "C": "Au",
+          "D": "Zn"
+        },
+        "correctAnswer": "D",
+        "explanation": "Galvanizing is a protective coating method where iron or steel is coated with zinc (Zn) to prevent rusting."
+      },
+      {
+        "id": 5,
+        "question": "Chemically the rust is",
+        "options": {
+          "A": "FeO",
+          "B": "Fe2O3-Fe3O4",
+          "C": "Fe2O3-XH2O",
+          "D": "Fe2O3-nH2O"
+        },
+        "correctAnswer": "C",
+        "explanation": "The chemical composition of rust formed on iron surfaces is hydrated ferric oxide, Fe2O3 XH2O."
+      },
+      {
+        "id": 6,
+        "question": "The gradual loss of a metal by chemical or electrochemical action of environment is called",
+        "options": {
+          "A": "Caustic embrittlement",
+          "B": "Priming",
+          "C": "Foaming",
+          "D": "Corrosion"
+        },
+        "correctAnswer": "D",
+        "explanation": "Corrosion is defined as the slow deterioration or destruction of a metal caused by chemical or electrochemical reactions with surrounding environmental agents."
+      },
+      {
+        "id": 7,
+        "question": "Corrosion is an example of",
+        "options": {
+          "A": "Oxidation",
+          "B": "Reduction",
+          "C": "Electrolysis",
+          "D": "Hydrolysis"
+        },
+        "correctAnswer": "A",
+        "explanation": "During corrosion, metal atoms undergo oxidation as they lose electrons to form stable oxides or salts."
+      },
+      {
+        "id": 8,
+        "question": "Galvanic corrosion increases if the area of the cathodic product is",
+        "options": {
+          "A": "Increases",
+          "B": "Decreases",
+          "C": "Partially increases",
+          "D": "No change"
+        },
+        "correctAnswer": "A",
+        "explanation": "A larger cathodic area relative to a smaller anodic area accelerates the rate of corrosion because electrons produced at the anode are consumed rapidly over the larger cathode surface."
+      },
+      {
+        "id": 9,
+        "question": "Galvanization is the process of coating iron with",
+        "options": {
+          "A": "Zinc",
+          "B": "Tin",
+          "C": "Copper",
+          "D": "Nickel"
+        },
+        "correctAnswer": "A",
+        "explanation": "Galvanization specifically refers to applying a protective layer of zinc onto iron or steel structures."
+      },
+      {
+        "id": 10,
+        "question": "Corrosion of metals takes place faster in",
+        "options": {
+          "A": "Distilled water",
+          "B": "Saline water",
+          "C": "Dry air",
+          "D": "Vacuum"
+        },
+        "correctAnswer": "B",
+        "explanation": "Saline water contains dissolved salts (ions) that increase the electrical conductivity of the electrolyte medium, significantly accelerating electrochemical corrosion."
+      },
+      {
+        "id": 11,
+        "question": "Which of the following statements is NOT correct about stress cells?",
+        "options": {
+          "A": "They are formed between different parts of the same metal",
+          "B": "Stressed part of the metal acts as cathode",
+          "C": "Stressed part of the metal acts as anode",
+          "D": "Anodic part undergoes corrosion"
+        },
+        "correctAnswer": "B",
+        "explanation": "In stress corrosion cells, the stressed region of the metal has higher energy and acts as the anode (undergoing corrosion), while the unstressed region acts as the cathode."
+      },
+      {
+        "id": 12,
+        "question": "Tarnishing of silver is due to the formation of:",
+        "options": {
+          "A": "AgCl",
+          "B": "Ag2CO3",
+          "C": "Ag2O",
+          "D": "Ag2S"
+        },
+        "correctAnswer": "D",
+        "explanation": "Silver tarnishes when exposed to atmospheric hydrogen sulfide (H2S), reacting to form a thin black layer of silver sulfide (Ag2S) on the surface."
+      },
+      {
+        "id": 13,
+        "question": "The chemical composition of rust is",
+        "options": {
+          "A": "Fe2O3-XH2O",
+          "B": "FeO",
+          "C": "Fe3O4",
+          "D": "Fe(OH)3"
+        },
+        "correctAnswer": "A",
+        "explanation": "The formula Fe2O3 xH2O represents hydrated iron(III) oxide, commonly known as rust."
+      },
+      {
+        "id": 14,
+        "question": "The chemical formula of rust is",
+        "options": {
+          "A": "Fe2O3.xH2O",
+          "B": "FeO",
+          "C": "Fe3O4",
+          "D": "Fe(OH)3"
+        },
+        "correctAnswer": "A",
+        "explanation": "Rust is chemically designated as hydrated ferric oxide with the formula Fe2O3.xH2O."
+      },
+      {
+        "id": 15,
+        "question": "Prevention of corrosion by covering metal with zinc is called",
+        "options": {
+          "A": "Galvanizing",
+          "B": "Tinning",
+          "C": "Electroplating",
+          "D": "Anodizing"
+        },
+        "correctAnswer": "A",
+        "explanation": "Applying a sacrificial layer of zinc onto iron or steel surfaces to protect them from environmental corrosion is called galvanizing."
+      }
+    ];
+
+    const userAnswers = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      
+      corrosionQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "quiz-card";
+        card.id = `q-card-${q.id}`;
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = `${index + 1}. ${q.question}`;
+        card.appendChild(title);
+
+        const optionsGrid = document.createElement("div");
+        optionsGrid.className = "options-grid";
+
+        Object.entries(q.options).forEach(([key, text]) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.id = `label-${q.id}-${key}`;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question-${q.id}`;
+          radio.value = key;
+          radio.onclick = () => handleSelectOption(q.id, key);
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(`${key}) ${text}`));
+          optionsGrid.appendChild(label);
+        });
+
+        card.appendChild(optionsGrid);
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.id = `exp-${q.id}`;
+        explanation.innerHTML = `<div class="explanation-title">Explanation:</div>${q.explanation}`;
+        card.appendChild(explanation);
+
+        quizContainer.appendChild(card);
+      });
+
+      updateScoreDisplay();
+    }
+
+    function handleSelectOption(questionId, selectedKey) {
+      if (userAnswers[questionId] !== undefined) return;
+
+      const question = corrosionQuestions.find(q => q.id === questionId);
+      userAnswers[questionId] = selectedKey;
+
+      Object.keys(question.options).forEach(key => {
+        const label = document.getElementById(`label-${questionId}-${key}`);
+        const radio = label.querySelector("input");
+        radio.disabled = true;
+
+        if (key === question.correctAnswer) {
+          label.classList.add("correct");
+        } else if (key === selectedKey) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      const exp = document.getElementById(`exp-${questionId}`);
+      exp.style.display = "block";
+
+      updateScoreDisplay();
+    }
+
+    function calculateScore() {
+      let score = 0;
+      corrosionQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.correctAnswer) {
+          score++;
+        }
+      });
+      return score;
+    }
+
+    function updateScoreDisplay() {
+      const score = calculateScore();
+      document.getElementById("score-display").textContent = `Score: ${score} / ${corrosionQuestions.length}`;
+    }
+
+    function submitQuiz() {
+      const score = calculateScore();
+      const total = corrosionQuestions.length;
+      
+      alert(`Quiz Submitted!\nYour Final Score is: ${score} out of ${total}`);
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Quiz Completed";
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

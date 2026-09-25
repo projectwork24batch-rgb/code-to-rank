@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytical Geometry Practice Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .q-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .q-header {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .disabled-box {
+            pointer-events: none;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 2px;
+            font-size: 0.95em;
+            white-space: pre-wrap;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        #score-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Analytical Geometry Practice Quiz</h1>
+
+    <div id="questions-list"></div>
+
+    <button class="btn-submit" onclick="checkYourScore()">Check Final Score</button>
+    <div id="score-output"></div>
+
+    <script>
+        const analyticalGeometryData = {
+            units: [{
+                unitNo: "I",
+                title: "Analytical Geometry",
+                topics: [
+                    {
+                        name: "Analytical Geometry - Set 1",
+                        questions: [
+                            {
+                                questionText: "If the circle x^2 + y^2 + 6x - 8y + c = 0 has radius 6 units, then the value of c is",
+                                options: ["-11", "11", "25", "6"],
+                                correctAnswer: "-11",
+                                explanation: "Step 1: Compare with x^2 + y^2 + 2gx + 2fy + c = 0 to get 2g = 6 => g = 3 and 2f = -8 => f = -4.\nStep 2: Radius r is given by r = √(g^2 + f^2 - c).\nStep 3: Substitute known values: 6 = √(3^2 + (-4)^2 - c) = √(9 + 16 - c) = √(25 - c).\nStep 4: Square both sides: 36 = 25 - c => c = 25 - 36 = -11."
+                            },
+                            {
+                                questionText: "The equation of the parabola whose focus is (8, 0) and the vertex is (0, 0) is",
+                                options: ["y^2 = 12x", "y^2 = x", "y^2 = 32x", "y^2 = 16x"],
+                                correctAnswer: "y^2 = 32x",
+                                explanation: "Step 1: The vertex is at (0, 0) and focus is at (a, 0) = (8, 0), so focal parameter a = 8.\nStep 2: The standard equation for a horizontal rightward parabola is y^2 = 4ax.\nStep 3: Substitute a = 8: y^2 = 4 * 8 * x = 32x."
+                            },
+                            {
+                                questionText: "The eccentricity of the ellipse x^2 + 2y^2 = 3 is",
+                                options: ["e = 3/√2", "e = 1/√3", "e = -1/√2", "e = 1/√2"],
+                                correctAnswer: "e = 1/√2",
+                                explanation: "Step 1: Put the equation in standard form by dividing by 3: x^2/3 + y^2/(3/2) = 1.\nStep 2: Here a^2 = 3 and b^2 = 3/2 where a^2 > b^2.\nStep 3: Use the eccentricity formula e = √(1 - b^2/a^2).\nStep 4: e = √(1 - (3/2)/3) = √(1 - 1/2) = √(1/2) = 1/√2."
+                            },
+                            {
+                                questionText: "In the Ellipse x^2/a^2 + y^2/b^2 = 1, a > b, the length of the latus rectum is",
+                                options: ["2a^2/b", "2b^2/a", "2a^2/b^2", "2ab"],
+                                correctAnswer: "2b^2/a",
+                                explanation: "Step 1: For a standard horizontal ellipse where major axis is 2a and minor axis is 2b (a > b).\nStep 2: The semi-latus rectum length is given by b^2/a.\nStep 3: Hence, the total length of the latus rectum is 2 * (b^2/a) = 2b^2/a."
+                            },
+                            {
+                                questionText: "The equation of the Hyperbola with foci (±2, 0) and eccentricity 3/2 is",
+                                options: ["9x^2/16^2 + 9y^2/10^2 = 1", "x^2/(16/9) - y^2/(20/9) = 1", "x^2/16^2 - y^2/20^2 = 1", "x^2/2^2 - y^2/20^2 = 1"],
+                                correctAnswer: "x^2/(16/9) - y^2/(20/9) = 1",
+                                explanation: "Step 1: Foci are (±ae, 0) = (±2, 0), which gives ae = 2. Given e = 3/2.\nStep 2: Compute a: a * (3/2) = 2 => a = 4/3 => a^2 = 16/9.\nStep 3: Relate b^2 using b^2 = a^2(e^2 - 1); b^2 = (16/9) * ((3/2)^2 - 1) = (16/9) * (9/4 - 1) = (16/9) * (5/4) = 20/9.\nStep 4: Standard hyperbola equation is x^2/a^2 - y^2/b^2 = 1 => x^2/(16/9) - y^2/(20/9) = 1."
+                            },
+                            {
+                                questionText: "If the coordinates at one end of a diameter of the circle x^2 + y^2 - 8x - 4y + c = 0 are (-3, 2) then the coordinates at the other end are",
+                                options: ["(5, 11)", "(6, 2)", "(2, 11)", "(11, 2)"],
+                                correctAnswer: "(11, 2)",
+                                explanation: "Step 1: Identify circle center: 2g = -8 => g = -4, 2f = -4 => f = -2. Center C = (-g, -f) = (4, 2).\nStep 2: Center C is the midpoint of diameter endpoints (-3, 2) and (x2, y2).\nStep 3: (-3 + x2)/2 = 4 => -3 + x2 = 8 => x2 = 11.\nStep 4: (2 + y2)/2 = 2 => 2 + y2 = 4 => y2 = 2.\nStep 5: Other endpoint is (11, 2)."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Analytical Geometry - Set 2",
+                        questions: [
+                            {
+                                questionText: "The centre of the circle: x^2 + y^2 - 2x + 6y - 6 = 0 is",
+                                options: ["(1, 3)", "(2, 3)", "(1, -3)", "(-1, 3)"],
+                                correctAnswer: "(1, -3)",
+                                explanation: "Step 1: Compare with standard circle equation x^2 + y^2 + 2gx + 2fy + c = 0.\nStep 2: 2g = -2 => g = -1, 2f = 6 => f = 3.\nStep 3: The centre is given by (-g, -f).\nStep 4: Centre = (-(-1), -(3)) = (1, -3)."
+                            },
+                            {
+                                questionText: "The radius of the circle: 5x^2 + 5y^2 - 6x + 8y - 75 = 0 is",
+                                options: ["-4", "4", "2", "3"],
+                                correctAnswer: "4",
+                                explanation: "Step 1: Divide the equation by 5 to achieve monic form: x^2 + y^2 - (6/5)x + (8/5)y - 15 = 0.\nStep 2: Identify parameters: 2g = -6/5 => g = -3/5, 2f = 8/5 => f = 4/5, c = -15.\nStep 3: Radius formula r = √(g^2 + f^2 - c).\nStep 4: r = √((-3/5)^2 + (4/5)^2 - (-15)) = √(9/25 + 16/25 + 15) = √(25/25 + 15) = √(1 + 15) = √16 = 4."
+                            },
+                            {
+                                questionText: "The equation of the parabola with vertex (2, -1) and focus (2, -3) is",
+                                options: ["x^2 - 4x + 8y + 12 = 0", "x^2 - 4x - 8y - 12 = 0", "x^2 + 4x - 8y - 12 = 0", "x^2 + 5x - 8y - 11 = 0"],
+                                correctAnswer: "x^2 - 4x + 8y + 12 = 0",
+                                explanation: "Step 1: Vertex (h, k) = (2, -1) and focus = (2, -3). Since the x-coordinates are identical (x = 2), the axis is vertical.\nStep 2: Since focus is below vertex, the parabola opens downwards: (x - h)^2 = -4a(y - k).\nStep 3: Distance a = |k_focus - k_vertex| = |-3 - (-1)| = 2.\nStep 4: Substitute parameters: (x - 2)^2 = -4(2)(y - (-1)) => (x - 2)^2 = -8(y + 1).\nStep 5: Expand: x^2 - 4x + 4 = -8y - 8 => x^2 - 4x + 8y + 12 = 0."
+                            },
+                            {
+                                questionText: "The centre of the ellipse: 9x^2 + 25y^2 - 18x + 100y - 116 = 0 is",
+                                options: ["(2, -1)", "(-1, -2)", "(1, -2)", "(1, 2)"],
+                                correctAnswer: "(1, -2)",
+                                explanation: "Step 1: Group x and y terms to complete squares: 9(x^2 - 2x) + 25(y^2 + 4y) = 116.\nStep 2: Complete squares inside parentheses: 9(x - 1)^2 - 9 + 25(y + 2)^2 - 100 = 116.\nStep 3: Rearrange: 9(x - 1)^2 + 25(y + 2)^2 = 116 + 109 = 225.\nStep 4: Center (h, k) is directly obtained from (x - 1) and (y + 2) => Center = (1, -2)."
+                            },
+                            {
+                                questionText: "The focus of the hyperbola x^2/25 - y^2/144 = 1 is",
+                                options: ["(-13, 0)", "(13, 0)", "(13, -1)", "(13, 1)"],
+                                correctAnswer: "(13, 0)",
+                                explanation: "Step 1: Standard form x^2/a^2 - y^2/b^2 = 1 has a^2 = 25 and b^2 = 144.\nStep 2: Distance from centre to focus is c = √(a^2 + b^2).\nStep 3: c = √(25 + 144) = √169 = 13.\nStep 4: Foci are located at (±c, 0) = (±13, 0). Option (13, 0) is listed."
+                            },
+                            {
+                                questionText: "The length of the major axis of the ellipse: 4x^2 + 3y^2 = 48 is",
+                                options: ["10", "11", "8", "13"],
+                                correctAnswer: "8",
+                                explanation: "Step 1: Divide by 48 to write in standard form: x^2/12 + y^2/16 = 1.\nStep 2: Here the denominator under y^2 (16) is greater than the denominator under x^2 (12), so major axis is along y-axis with b^2 = 16.\nStep 3: Semi-major axis b = √16 = 4.\nStep 4: Total length of major axis = 2b = 2 * 4 = 8."
+                            }
+                        ]
+                    }
+                ]
+            }]
+        };
+
+        const allDatasets = [analyticalGeometryData];
+
+        let totalQuestionsCount = 0;
+        let totalScore = 0;
+
+        function loadQuiz() {
+            const container = document.getElementById("questions-list");
+            let globalQIndex = 0;
+
+            allDatasets.forEach((dataset) => {
+                dataset.units.forEach((unit) => {
+                    unit.topics.forEach((topic) => {
+                        topic.questions.forEach((q) => {
+                            globalQIndex++;
+                            totalQuestionsCount++;
+
+                            const qBox = document.createElement("div");
+                            qBox.className = "q-box";
+                            qBox.id = `q-box-${globalQIndex}`;
+
+                            const header = document.createElement("div");
+                            header.className = "q-header";
+                            header.innerText = `Q${globalQIndex}. ${q.questionText}`;
+                            qBox.appendChild(header);
+
+                            const explDiv = document.createElement("div");
+                            explDiv.className = "explanation";
+                            explDiv.innerText = `Explanation:\n${q.explanation}`;
+
+                            q.options.forEach((opt) => {
+                                const optBtn = document.createElement("div");
+                                optBtn.className = "option";
+                                optBtn.innerText = opt;
+                                optBtn.onclick = function() {
+                                    selectOption(qBox, optBtn, opt, q.correctAnswer, explDiv);
+                                };
+                                qBox.appendChild(optBtn);
+                            });
+
+                            qBox.appendChild(explDiv);
+                            container.appendChild(qBox);
+                        });
+                    });
+                });
+            });
+        }
+
+        function selectOption(qBox, selectedBtn, selectedValue, correctAnswer, explDiv) {
+            qBox.classList.add("disabled-box");
+
+            const options = qBox.getElementsByClassName("option");
+            
+            if (selectedValue === correctAnswer) {
+                selectedBtn.classList.add("correct");
+                totalScore++;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                for (let opt of options) {
+                    if (opt.innerText === correctAnswer) {
+                        opt.classList.add("correct");
+                    }
+                }
+            }
+
+            explDiv.style.display = "block";
+        }
+
+        function checkYourScore() {
+            const scoreDiv = document.getElementById("score-output");
+            scoreDiv.innerText = `Your Final Score: ${totalScore} / ${totalQuestionsCount}`;
+        }
+
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>

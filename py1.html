@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Quiz - All Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .quiz-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .question-card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 25px;
+    }
+    .question-title {
+      font-weight: bold;
+      white-space: pre-wrap;
+      margin-bottom: 15px;
+    }
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    .option-btn:hover:not(:disabled) {
+      background-color: #f0f0f0;
+    }
+    .option-btn.correct {
+      background-color: #d4edda;
+      color: #155724;
+      border-color: #c3e6cb;
+      font-weight: bold;
+    }
+    .option-btn.wrong {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-color: #f5c6cb;
+      font-weight: bold;
+    }
+    .explanation {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e2e3e5;
+      border-left: 4px solid #6c757d;
+      border-radius: 4px;
+      display: none;
+    }
+    .submit-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .submit-btn {
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .score-container {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="quiz-title">Python Quiz</h1>
+
+  <div id="quiz-container"></div>
+
+  <div class="submit-container">
+    <button id="submit-btn" class="submit-btn" onclick="calculateScore()">Submit Quiz</button>
+  </div>
+
+  <div id="score-card" class="score-container"></div>
+
+  <script>
+    const pythonQuestions = [
+      {
+        question: "Which method reads one line at a time?",
+        options: ["read()", "readline()", "line()", "readall()"],
+        correctAnswer: "readline()",
+        explanation: "In Python: read() reads the whole content, readline() reads one line at a time, readlines() returns a list of lines, and line() is not standard."
+      },
+      {
+        question: "Which statement is used to manually raise an exception in Python?",
+        options: ["throw", "error", "except", "raise"],
+        correctAnswer: "raise",
+        explanation: "In Python, the raise statement is used to manually raise an exception."
+      },
+      {
+        question: "What is the output?\n\nL = [1, 2, 3]\nL.insert(1, 9)\nprint(L)",
+        options: ["[1, 2, 3, 9]", "[1, 9, 2, 3]", "[9, 1, 2, 3]", "Error"],
+        correctAnswer: "[1, 9, 2, 3]",
+        explanation: "L.insert(1, 9) inserts 9 at index 1, right before element 2."
+      },
+      {
+        question: "Which statement is used to exit a loop immediately?",
+        options: ["skip", "stop", "break", "continue"],
+        correctAnswer: "break",
+        explanation: "break is used to exit a loop immediately when a specific condition is met."
+      },
+      {
+        question: "How many times will this loop execute?\n\nfor i in range(1, 5):\n    print(i)",
+        options: ["5", "4", "3", "Error"],
+        correctAnswer: "4",
+        explanation: "range(1, 5) generates sequence 1, 2, 3, 4 (end value 5 is excluded). Thus, it runs 4 times."
+      },
+      {
+        question: "Which data structure does not allow duplicate elements?",
+        options: ["List", "Tuple", "Set", "Dictionary"],
+        correctAnswer: "Set",
+        explanation: "A set requires all items to be unique. Lists and tuples allow duplicate elements."
+      },
+      {
+        question: "Which of the following is a valid variable name in Python?",
+        options: ["2value", "value-1", "_value", "value@"],
+        correctAnswer: "_value",
+        explanation: "_value is valid because underscores are allowed. Variables cannot start with digits or contain special chars like '-' or '@'."
+      },
+      {
+        question: "Python is categorized as which type of programming language?",
+        options: ["Compiled only", "Interpreted high-level language", "Assembly language", "Markup language"],
+        correctAnswer: "Interpreted high-level language",
+        explanation: "Python is a high-level interpreted language executed line-by-line via the interpreter."
+      }
+    ];
+
+    let userAnswers = new Array(pythonQuestions.length).fill(null);
+
+    function renderAllQuestions() {
+      const container = document.getElementById("quiz-container");
+      container.innerHTML = "";
+
+      pythonQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.classList.add("question-card");
+
+        const title = document.createElement("div");
+        title.classList.add("question-title");
+        title.innerText = `Q${index + 1}: ${q.question}`;
+        card.appendChild(title);
+
+        const optionsContainer = document.createElement("div");
+        optionsContainer.classList.add("options-container");
+        optionsContainer.id = `options-q${index}`;
+
+        q.options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.innerText = option;
+          btn.classList.add("option-btn");
+          btn.onclick = () => selectOption(index, btn, option, q.correctAnswer);
+          optionsContainer.appendChild(btn);
+        });
+
+        card.appendChild(optionsContainer);
+
+        const expDiv = document.createElement("div");
+        expDiv.classList.add("explanation");
+        expDiv.id = `exp-q${index}`;
+        expDiv.innerText = "Explanation: " + q.explanation;
+        card.appendChild(expDiv);
+
+        container.appendChild(card);
+      });
+    }
+
+    function selectOption(qIndex, selectedBtn, selectedOption, correctAnswer) {
+      userAnswers[qIndex] = selectedOption === correctAnswer;
+
+      const optionsContainer = document.getElementById(`options-q${qIndex}`);
+      const buttons = optionsContainer.querySelectorAll(".option-btn");
+
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedOption === correctAnswer) {
+        selectedBtn.classList.add("correct");
+      } else {
+        selectedBtn.classList.add("wrong");
+        buttons.forEach(btn => {
+          if (btn.innerText === correctAnswer) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+
+      const expDiv = document.getElementById(`exp-q${qIndex}`);
+      expDiv.style.display = "block";
+    }
+
+    function calculateScore() {
+      let score = 0;
+      userAnswers.forEach(isCorrect => {
+        if (isCorrect === true) score++;
+      });
+
+      const scoreCard = document.getElementById("score-card");
+      scoreCard.innerText = `Your Final Score: ${score} / ${pythonQuestions.length}`;
+      scoreCard.style.display = "block";
+
+      document.getElementById("submit-btn").disabled = true;
+    }
+
+    renderAllQuestions();
+  </script>
+</body>
+</html>

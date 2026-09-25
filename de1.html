@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Electronics Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Digital Electronics Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      // 2019
+      {
+        id: 1,
+        question: "Which among the following was the first version in the TTL family?",
+        options: ["Standard", "Low-power", "Schottky", "Fast"],
+        answer: "Standard",
+        explanation: "Standard TTL (74 series) was the initial, basic logic family version introduced by Texas Instruments in the 1960s."
+      },
+      {
+        id: 2,
+        question: "The logical sum of all the minterms of a Boolean function of n variables is",
+        options: ["0", "1", "n", "n(n+1)/2"],
+        answer: "1",
+        explanation: "The sum of all minterms covers all possible input combinations in a truth table, which logically evaluates to 1."
+      },
+      {
+        id: 3,
+        question: "Circuits that generate the parity bit in the receiver and transmitter are called ________ and ________ respectively.",
+        options: [
+          "Parity checker, Parity Generator",
+          "Parity Generator, Parity checker",
+          "Parity Generator, Parity encoder",
+          "Parity encoder, parity decoder"
+        ],
+        answer: "Parity Generator, Parity checker",
+        explanation: "A Parity Generator generates the parity bit at the transmitter end, and a Parity Checker checks parity at the receiver end."
+      },
+      {
+        id: 4,
+        question: "The characteristic equation for the complement output of a JK flip flop is",
+        options: [
+          "Q'(t+1) = J'Q' + KQ",
+          "Q(t+1) = J'Q + KQ'",
+          "Q(t+1) = J'Q + KQ",
+          "Q'(t+1) = J'Q + K'Q'"
+        ],
+        answer: "Q'(t+1) = J'Q' + KQ",
+        explanation: "Since Q(t+1) = J Q' + K' Q, taking the complement gives Q'(t+1) = (J Q' + K' Q)' = (J' + Q)(K + Q') = J'K + J'Q' + KQ + QQ' = J'Q' + KQ."
+      },
+      {
+        id: 5,
+        question: "If the register has both shifts and parallel load capabilities that is referred to as",
+        options: [
+          "Universal shift register",
+          "Unidirectional shift register",
+          "Bidirectional shift register",
+          "Parallel shift register"
+        ],
+        answer: "Universal shift register",
+        explanation: "A universal shift register can perform serial left shift, serial right shift, parallel loading, and holding data."
+      },
+      {
+        id: 6,
+        question: "The capacity of a memory unit is usually stated as the total number of ________ that it can store.",
+        options: ["Words", "Bytes", "Addresses", "Bits"],
+        answer: "Bytes",
+        explanation: "Memory capacity is standardly measured in terms of bytes (e.g., KB, MB, GB) that the memory unit can hold."
+      },
+      {
+        id: 7,
+        question: "Which among the following offers shorter read and write cycles?",
+        options: ["Fast RAM", "Commercial RAM", "Static RAM", "Dynamic RAM"],
+        answer: "Static RAM",
+        explanation: "Static RAM (SRAM) uses flip-flop latching circuitry and does not require periodic refresh cycles, resulting in shorter read and write access times."
+      },
+      {
+        id: 8,
+        question: "4-to-16 line decoder can be constructed with",
+        options: [
+          "4 2-to-4 line decoders with enable.",
+          "2 2-to-4 line decoders with enable.",
+          "5 2-to-4 line decoders with enable.",
+          "8 2-to-4 line decoders with enable."
+        ],
+        answer: "5 2-to-4 line decoders with enable.",
+        explanation: "To build a 4-to-16 line decoder, 4 decoders are used for the output stage and 1 decoder is used at the input stage to enable them, totaling 5 decoders."
+      },
+      {
+        id: 9,
+        question: "Which of the following registers of 8086 can also be used for memory addressing when data is transferred between I/O port and memory using certain I/O instructions.",
+        options: ["AX", "BX", "CX", "DX"],
+        answer: "DX",
+        explanation: "In 8086 microprocessors, DX is specifically used as an I/O address pointer for indirect I/O port operations."
+      },
+
+      // 2018
+      {
+        id: 10,
+        question: "The canonical sum of product form of the function y(A,B) = A + B is",
+        options: [
+          "AB + BB + A'A",
+          "AB + A'B + A'B'",
+          "BA + BA' + A'B",
+          "AB + AB' + A'B"
+        ],
+        answer: "AB + AB' + A'B",
+        explanation: "A + B = A(B + B') + B(A + A') = AB + AB' + AB + A'B = AB + AB' + A'B."
+      },
+      {
+        id: 11,
+        question: "(A+B)(A'+B') = ?",
+        options: ["1", "0", "AB", "A XOR B"],
+        answer: "0",
+        explanation: "Based on boolean expansion: (A+B)A'B' = AA'B' + BA'B' = 0 + 0 = 0."
+      },
+      {
+        id: 12,
+        question: 'Each "1" entry in a K-map square represents:',
+        options: [
+          "A HIGH for each input truth table condition that produces a HIGH output",
+          "A HIGH output on the truth table for all LOW input combinations",
+          "A LOW output for all possible HIGH input conditions",
+          "A DON'T CARE condition for all possible input truth table combinations"
+        ],
+        answer: "A HIGH for each input truth table condition that produces a HIGH output",
+        explanation: "In a Karnaugh map, a 1 represents a minterm where the truth table yields a logic HIGH (1) output."
+      },
+      {
+        id: 13,
+        question: "The Register is a type of",
+        options: ["Combinational circuit", "Sequential circuit", "CPU", "Latches"],
+        answer: "Sequential circuit",
+        explanation: "Registers store data using flip-flops, which are state-dependent sequential logic circuits."
+      },
+      {
+        id: 14,
+        question: "The output sum of two decimal digits can be represented in",
+        options: ["Gray Code", "Excess-3", "BCD", "Hexadecimal"],
+        answer: "BCD",
+        explanation: "Binary Coded Decimal (BCD) is typically used for representing decimal digit additions directly in digital systems."
+      },
+      {
+        id: 15,
+        question: "A basic S-R flip-flop can be constructed by cross-coupling of which basic logic gates?",
+        options: [
+          "AND or OR gates",
+          "XOR or XNOR gates",
+          "NOR or AND gates",
+          "NAND or NOR gates"
+        ],
+        answer: "NAND or NOR gates",
+        explanation: "Basic SR latches/flip-flops are built by cross-coupling either two NAND gates or two NOR gates."
+      },
+      {
+        id: 16,
+        question: "If A and B are the inputs of a half adder, the sum is given by",
+        options: ["A AND B", "A OR B", "A XOR B", "A EXOR B"],
+        answer: "A XOR B",
+        explanation: "In a half adder, the Sum logic output is derived using the XOR operation: S = A ⊕ B."
+      },
+      {
+        id: 17,
+        question: "If one wants to design a binary counter, preferred type of flip-flop is",
+        options: ["D type", "S-R type", "Latch", "J-K type"],
+        answer: "J-K type",
+        explanation: "JK flip-flops (configured in toggle mode J=1, K=1) are preferred for designing counters because of their toggling feature."
+      },
+
+      // 2020
+      {
+        id: 18,
+        question: "Simplest Registers only consists of",
+        options: ["Counter", "EPROM", "latch", "flip-flop"],
+        answer: "flip-flop",
+        explanation: "A basic register consists of a collection of flip-flops, each capable of storing one bit of data."
+      },
+      {
+        id: 19,
+        question: "Which of the following is a Universal Gate?",
+        options: ["AND gate", "OR gate", "NAND gate", "NOR gate"],
+        answer: "NAND gate",
+        explanation: "NAND and NOR gates are universal gates because any Boolean logic circuit can be implemented using only them."
+      },
+      {
+        id: 20,
+        question: "(x')' is a",
+        options: ["complement", "dual complement", "reflection", "duality"],
+        answer: "reflection",
+        explanation: "Double negation restores the original value x, which is also referred to in Boolean logic theory as reflection or involution."
+      },
+      {
+        id: 21,
+        question: "A Multiplexer is also called as a",
+        options: ["Coder", "parallel adder", "Data selector", "NOR gate"],
+        answer: "Data selector",
+        explanation: "A multiplexer selects one of several input signals and forwards the selected input to a single line, acting as a data selector."
+      },
+      {
+        id: 22,
+        question: "A Binary variable can take the values",
+        options: ["0 only", "0 and -1", "0 and 1", "1 and 2"],
+        answer: "0 and 1",
+        explanation: "Binary logic systems operate strictly on two discrete states represented as 0 and 1."
+      },
+      {
+        id: 23,
+        question: "(1010.011)2 =",
+        options: ["(10.365)10", "(10.375)10", "(11.365)10", "(11.375)10"],
+        answer: "(10.375)10",
+        explanation: "(1010)2 = 8 + 2 = 10; (0.011)2 = 0.25 + 0.125 = 0.375. Total = 10.375."
+      },
+      {
+        id: 24,
+        question: "Each square in a Karnaugh map represents a",
+        options: ["Point", "value", "minterm", "maxterm"],
+        answer: "minterm",
+        explanation: "Each cell in an SOP-form Karnaugh map corresponds to a single minterm of the input variables."
+      },
+      {
+        id: 25,
+        question: "Circuit whose output depends on directly present input is called",
+        options: ["combinational circuit", "sequential circuit", "combinational sequence", "series"],
+        answer: "combinational circuit",
+        explanation: "Combinational logic circuits produce outputs based purely on present inputs, without any memory storage."
+      },
+      {
+        id: 26,
+        question: "The purpose of the microprocessor is to control",
+        options: ["Processing", "Memory", "Switches", "Tasks"],
+        answer: "Processing",
+        explanation: "The primary role of a microprocessor is processing data and executing program instructions."
+      },
+
+      // 2021
+      {
+        id: 27,
+        question: "How many flip flops are required for the mod-16 counter?",
+        options: ["5", "4", "6", "3"],
+        answer: "4",
+        explanation: "For MOD-16, 2^n >= 16 gives n = 4 flip-flops."
+      },
+      {
+        id: 28,
+        question: "EPROM contents can be erased by exposing them to",
+        options: ["Burst of microwaves", "Intense heat radiations", "Infrared rays", "Ultraviolet rays"],
+        answer: "Ultraviolet rays",
+        explanation: "EPROM memory is cleared by exposing its quartz window to intense ultraviolet (UV) light."
+      },
+      {
+        id: 29,
+        question: "The digital logic family which has minimum power dissipation is",
+        options: ["TTL", "DTL", "CMOS", "RTL"],
+        answer: "CMOS",
+        explanation: "CMOS logic consumes virtually zero static power, giving it the lowest power dissipation among digital logic families."
+      },
+      {
+        id: 30,
+        question: "If the input to 1-flipflop is 100 Hz signal, the final output of the two 1-flipflops in cascade is",
+        options: ["1000 Hz", "50 Hz", "25 Hz", "200 Hz"],
+        answer: "25 Hz",
+        explanation: "Each flip-flop divides input frequency by 2. Cascading two flip-flops divides by 4: 100 Hz / 4 = 25 Hz."
+      },
+      {
+        id: 31,
+        question: "The device which changes from serial data to parallel data is",
+        options: ["DEMULTIPLEXER", "MULTIPLEXER", "COUNTER", "FLIP-FLOP"],
+        answer: "DEMULTIPLEXER",
+        explanation: "A Demultiplexer receives a single serial line and routes it to multiple parallel output lines."
+      },
+      {
+        id: 32,
+        question: "When simplified with Boolean Algebra, (x+y)(x+z) simplifies to",
+        options: ["x(1+yz)", "x+yz", "x=x+x(y+z)", "X"],
+        answer: "x+yz",
+        explanation: "By distributive law, (x+y)(x+z) = x + yz."
+      },
+      {
+        id: 33,
+        question: "The 2's complement of the number 1101101 is",
+        options: ["0010011", "0110010", "0111110", "0101110"],
+        answer: "0010011",
+        explanation: "1's complement is 0010010. Adding 1 yields the 2's complement: 0010011."
+      },
+      {
+        id: 34,
+        question: "The decimal equivalent of hex number 1A53 is",
+        options: ["6739", "6793", "6973", "6379"],
+        answer: "6739",
+        explanation: "1A53_16 = (1*4096) + (10*256) + (5*16) + (3*1) = 6739."
+      },
+      {
+        id: 35,
+        question: "What is the order decided by a processor or the CPU of a controller to execute an instruction?",
+        options: ["decode, fetch, execute", "execute, fetch, decode", "fetch, decode, execute", "fetch, execute, decode"],
+        answer: "fetch, decode, execute",
+        explanation: "The instruction processing sequence is Fetch, Decode, and then Execute."
+      },
+
+      // 2022
+      {
+        id: 36,
+        question: "(1E.42)16 = (?)8",
+        options: ["36.204", "36.202", "74.204", "74.202"],
+        answer: "36.204",
+        explanation: "1E.42_16 in binary is 0001 1110.0100 0010. Regrouping by 3 bits yields 36.204_8."
+      },
+      {
+        id: 37,
+        question: "Which logic gates among the below options can be used to create any Boolean function economically?",
+        options: ["XOR, NAND, OR", "OR, NOT, XOR", "NOR, NAND, XOR", "NOR, NAND"],
+        answer: "NOR, NAND",
+        explanation: "NOR and NAND are universal logic gates."
+      },
+      {
+        id: 38,
+        question: "101001 - 010110 = ?",
+        options: ["100110", "010011", "010010", "011001"],
+        answer: "010011",
+        explanation: "41 - 22 = 19, which in binary is 010011."
+      },
+      {
+        id: 39,
+        question: "DeMorgan's theorem states that",
+        options: [
+          "(A+B)' = A'.B' and (A.B)' = A'.B'",
+          "(A+B)' = A'+B' and (A.B)' = A'.B'",
+          "(A+B)' = A'.B' and (A.B)' = A'+B'",
+          "(A+B)' = A'+B' and (A.B)' = A'+B'"
+        ],
+        answer: "(A+B)' = A'.B' and (A.B)' = A'+B'",
+        explanation: "The complement of a sum equals product of complements, and complement of a product equals sum of complements."
+      },
+      {
+        id: 40,
+        question: "When will JK flip flop toggle the input?",
+        options: ["J=0, K=0", "J=0, K=1", "J=1, K=0", "J=1, K=1"],
+        answer: "J=1, K=1",
+        explanation: "Setting J=1 and K=1 activates toggle mode on clock edges."
+      },
+      {
+        id: 41,
+        question: "If the total number of transistors fabricated on a single chip is in the range of 300 to 3000, which integrated circuit do you prefer?",
+        options: ["VLSI", "SSI", "LSI", "MSI"],
+        answer: "MSI",
+        explanation: "Medium Scale Integration (MSI) contains approximately 100 to 3,000 transistors per chip."
+      },
+      {
+        id: 42,
+        question: "The binary equivalent of 0.6875 is",
+        options: ["0.1011", "0.0101", "0.1001", "0.0011"],
+        answer: "0.1011",
+        explanation: "0.6875 * 2 = 1.375 (1); 0.375 * 2 = 0.75 (0); 0.75 * 2 = 1.5 (1); 0.5 * 2 = 1.0 (1) -> 0.1011."
+      },
+      {
+        id: 43,
+        question: "Which is the DeMorgan's gate equivalent to OR?",
+        options: ["Negative NOR", "Negative NAND", "Negative AND", "Negative OR"],
+        answer: "Negative NAND",
+        explanation: "A+B = (A'.B')', representing a Negative NAND gate."
+      },
+
+      // 2023
+      {
+        id: 44,
+        question: "Assume that all the numbers are represented in 2's complement, then which of the following is divisible by 11111011?",
+        options: ["11100100", "11100111", "11010111", "11011011"],
+        answer: "11100111",
+        explanation: "11111011 = -5 decimal. 11100111 = -25 decimal, which is divisible by -5."
+      },
+      {
+        id: 45,
+        question: "Number of states ring counter with 5 flipflops will have?",
+        options: ["10", "15", "5", "32"],
+        answer: "5",
+        explanation: "An n-bit ring counter has exactly n unique states."
+      },
+      {
+        id: 46,
+        question: "n-bit 2's complement number system range for integers is",
+        options: [
+          "-2^(n-1) to +(2^(n-1)-1)",
+          "-(2^(n-1)-1) to +(2^(n-1)-1)",
+          "-(2^(n-1)) to +(2^(n-1))",
+          "-(2^(n-1)+1) to +(2^(n-1)-1)"
+        ],
+        answer: "-2^(n-1) to +(2^(n-1)-1)",
+        explanation: "Signed 2's complement represents range from -2^(n-1) to +(2^(n-1)-1)."
+      },
+      {
+        id: 47,
+        question: "Which of the following are Universal Gates",
+        options: ["NAND, NOR", "X-OR, X-NOR", "NAND, X-OR", "AND, OR"],
+        answer: "NAND, NOR",
+        explanation: "NAND and NOR gates are universal."
+      },
+      {
+        id: 48,
+        question: "The Fastest Logic Family Gate is",
+        options: ["ECL", "CMOS", "TTL", "ETL"],
+        answer: "ECL",
+        explanation: "Emitter-Coupled Logic (ECL) is fastest because its transistors avoid saturation delay."
+      },
+      {
+        id: 49,
+        question: "How many 4x1 multiplexers are required to design 8x1 multiplexer?",
+        options: ["2", "5", "8", "3"],
+        answer: "3",
+        explanation: "Requires two 4x1 MUXes in the first stage and one in the second stage, total 3."
+      },
+      {
+        id: 50,
+        question: "Which Flip Flop is free from race around problem",
+        options: [
+          "RS Flip Flop",
+          "SR Flip Flop",
+          "JK Flip Flop",
+          "Master Slave JK Flip Flop"
+        ],
+        answer: "Master Slave JK Flip Flop",
+        explanation: "Master-Slave configuration prevents race-around conditions in JK flip-flops."
+      },
+
+      // 2024
+      {
+        id: 51,
+        question: "The table containing present state of output, next state of the output and the inputs is called",
+        options: ["Truth table", "State table", "Excitation table", "Transition table"],
+        answer: "State table",
+        explanation: "A state table lists inputs, present states, and next states of sequential circuits."
+      },
+      {
+        id: 52,
+        question: "A sequential circuit with 10 states will have",
+        options: ["0 Flip-flops", "10 Flip-flops", "4 Flip-flops", "5 Flip-flops"],
+        answer: "4 Flip-flops",
+        explanation: "2^n >= 10 results in 4 flip-flops (2^4 = 16)."
+      },
+      {
+        id: 53,
+        question: "A binary number can be multiplied by 2 or divided by 2 with help of",
+        options: [
+          "AND gate",
+          "sequential circuit",
+          "shift register",
+          "any combinational circuit"
+        ],
+        answer: "shift register",
+        explanation: "Shifting bits left multiplies by 2, and right-shifting divides by 2."
+      },
+      {
+        id: 54,
+        question: "A five bit binary counter uses flip flops with propagation delay time of 10 ns each. The maximum possible time required for change of state will be",
+        options: ["10 ns", "0.5 ns", "2 ns", "50 ns"],
+        answer: "50 ns",
+        explanation: "Delay accumulates across 5 ripple flip-flops: 5 * 10 ns = 50 ns."
+      },
+      {
+        id: 55,
+        question: "The Boolean expression (A+C) (AB'+AC) (A'C'+B') can be simplified to",
+        options: ["AB", "AB+A'C", "A'B+BC'", "AB+BC'"],
+        answer: "AB",
+        explanation: "Simplifying the term leads to AB."
+      },
+      {
+        id: 56,
+        question: "The 2's complement representation of the decimal value -15 is",
+        options: ["01111", "11111", "11110", "10001"],
+        answer: "10001",
+        explanation: "+15 is 01111. 1's comp = 10000. 2's comp = 10001."
+      },
+      {
+        id: 57,
+        question: "Let * be defined as x*y = x'+y. Let z = x*y. Then the value of z*x is",
+        options: ["1", "x+y", "0", "x"],
+        answer: "x",
+        explanation: "z = x' + y. z*x = z' + x = (x' + y)' + x = xy' + x = x."
+      },
+      {
+        id: 58,
+        question: "SR latch is made by cross coupling two NAND gates. If S=R=0, then it will result in",
+        options: [
+          "Q=1, Q'=0",
+          "Q=0, Q'=1",
+          "Q=1, Q'=1",
+          "indeterminate state"
+        ],
+        answer: "indeterminate state",
+        explanation: "In NAND SR latches, S=R=0 creates an invalid/indeterminate state."
+      },
+
+      // 2025
+      {
+        id: 59,
+        question: "Which of the following is a universal gate?",
+        options: ["AND", "OR", "NAND", "XOR"],
+        answer: "NAND",
+        explanation: "NAND logic gates can implement any Boolean function."
+      },
+      {
+        id: 60,
+        question: "Which of the following is NOT a combinational circuit?",
+        options: ["Flip-Flop", "Decoder", "Multiplexer", "Adder"],
+        answer: "Flip-Flop",
+        explanation: "A Flip-Flop is a sequential memory element."
+      },
+      {
+        id: 61,
+        question: "A demultiplexer is a device that",
+        options: [
+          "Encode multiple inputs into one output",
+          "Decode binary to decimal",
+          "Store binary information",
+          "Route a single input to multiple outputs"
+        ],
+        answer: "Route a single input to multiple outputs",
+        explanation: "A DEMUX routes 1 input signal across multiple output lines."
+      },
+      {
+        id: 62,
+        question: "Convert the binary number 110011 into its decimal equivalent.",
+        options: ["49", "51", "53", "55"],
+        answer: "51",
+        explanation: "32 + 16 + 2 + 1 = 51."
+      },
+      {
+        id: 63,
+        question: "The number of select lines required for an 8-to-1 multiplexer is?",
+        options: ["2", "3", "5", "8"],
+        answer: "3",
+        explanation: "2^3 = 8, so 3 select lines are required."
+      },
+      {
+        id: 64,
+        question: "A Sequential logic circuit that toggles its output state on each clock pulse is",
+        options: ["SR flip-flop", "D flip-flop", "JK flip-flop", "T flip-flop"],
+        answer: "T flip-flop",
+        explanation: "Toggle (T) flip-flop flips output state when triggered."
+      },
+      {
+        id: 65,
+        question: "Convert the decimal number 108 into its octal equivalent.",
+        options: ["124", "134", "144", "154"],
+        answer: "154",
+        explanation: "108 divided by 8 gives remainder pattern 154_8."
+      },
+      {
+        id: 66,
+        question: "What is the simplified form of the Boolean expression (A+B)(A+C)?",
+        options: ["A+B+C", "AB+C", "AC+BC", "A+BC"],
+        answer: "A+BC",
+        explanation: "Distributive property yields A + BC."
+      },
+
+      // 2026
+      {
+        id: 67,
+        question: "Which logic gate produces an output of 0 only when all inputs are 1?",
+        options: ["AND", "OR", "NAND", "NOR"],
+        answer: "NAND",
+        explanation: "NAND outputs 0 (LOW) exclusively when all inputs are 1 (HIGH)."
+      },
+      {
+        id: 68,
+        question: "The Boolean expression A+AB simplifies to",
+        options: ["A", "AB", "B", "1+B"],
+        answer: "A",
+        explanation: "Absorption law: A + AB = A(1+B) = A."
+      },
+      {
+        id: 69,
+        question: "Which flip-flop has an invalid state?",
+        options: ["D", "JK", "T", "SR"],
+        answer: "SR",
+        explanation: "SR flip-flop enters an invalid state when S=1 and R=1."
+      },
+      {
+        id: 70,
+        question: "Convert the binary number 101101 into its decimal equivalent.",
+        options: ["43", "45", "44", "46"],
+        answer: "45",
+        explanation: "32 + 8 + 4 + 1 = 45."
+      },
+      {
+        id: 71,
+        question: "The number of outputs of a 4-bit decoder is",
+        options: ["4", "8", "16", "32"],
+        answer: "16",
+        explanation: "2^4 = 16 outputs."
+      },
+      {
+        id: 72,
+        question: "Which flip-flop toggles its output on every clock pulse when input is HIGH?",
+        options: ["SR flip-flop", "JK flip-flop", "D flip-flop", "T flip-flop"],
+        answer: "T flip-flop",
+        explanation: "T flip-flop toggles output when input state T = HIGH."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Display explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable radio options for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Triggered when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Environmental Chemistry Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Environmental Chemistry Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "Environmental pollution affects",
+        options: [
+          "Humus only",
+          "Plants only",
+          "Biotic components",
+          "Both abiotic and biotic components"
+        ],
+        answer: "Both abiotic and biotic components",
+        explanation: "Environmental pollution impacts non-living physical components like air, water, and soil (abiotic) as well as living organisms like plants, animals, and microorganisms (biotic)."
+      },
+      {
+        id: 2,
+        question: "Layer of atmosphere in which ozone layer lies is",
+        options: [
+          "Troposphere",
+          "Stratosphere",
+          "Exosphere",
+          "Mesosphere"
+        ],
+        answer: "Stratosphere",
+        explanation: "The protective ozone layer is located in the stratosphere, roughly 10 to 50 kilometers above the Earth's surface."
+      },
+      {
+        id: 3,
+        question: "Ozone layer is present at",
+        options: [
+          "Stratosphere",
+          "Ionosphere",
+          "Thermosphere",
+          "Atmosphere"
+        ],
+        answer: "Stratosphere",
+        explanation: "The atmospheric ozone layer resides specifically within the stratospheric region, absorbing harmful ultraviolet radiation."
+      },
+      {
+        id: 4,
+        question: "The amount of DO required to aerobically decompose biodegradable organic matter of a given volume of water is",
+        options: [
+          "Biochemical Oxygen Demand",
+          "Biological Oxygen Demand",
+          "Chemical Oxygen demand",
+          "Biomagnification"
+        ],
+        answer: "Biochemical Oxygen Demand",
+        explanation: "Biochemical Oxygen Demand (BOD) measures the amount of dissolved oxygen needed by aerobic microorganisms to break down organic materials in a water sample."
+      },
+      {
+        id: 5,
+        question: "Acid Rain is caused due to",
+        options: [
+          "Chloro Fluoro Carbons",
+          "Methane",
+          "Oxides of Sulphur and Nitrogen",
+          "Carbon monoxide"
+        ],
+        answer: "Oxides of Sulphur and Nitrogen",
+        explanation: "Sulfur dioxide (SO2) and nitrogen oxides (NOx) react with atmospheric water vapour and oxygen to form sulfuric acid and nitric acid, resulting in acid rain."
+      },
+      {
+        id: 6,
+        question: "The medium which reacts with pollutant is called",
+        options: [
+          "Sink",
+          "Receptacle",
+          "Speciation",
+          "Contaminant"
+        ],
+        answer: "Sink",
+        explanation: "A sink is any medium, process, or reservoir that interacts with, absorbs, converts, or retains a specific pollutant."
+      },
+      {
+        id: 7,
+        question: "Which of the following is used in the estimation of Chemical Oxygen Demand (COD)?",
+        options: [
+          "Methyl orange",
+          "K2Cr2O7 + 50% H2SO4",
+          "CaOCl2 + 50% H2SO4",
+          "Alum + CO2"
+        ],
+        answer: "K2Cr2O7 + 50% H2SO4",
+        explanation: "Acidified potassium dichromate (K2Cr2O7 in 50% H2SO4) serves as a strong chemical oxidizing agent used to measure COD by oxidizing organic compounds in water."
+      },
+      {
+        id: 8,
+        question: "Which gas is primarily responsible for Global Warming?",
+        options: [
+          "CO2",
+          "SO2",
+          "NO2",
+          "O3"
+        ],
+        answer: "CO2",
+        explanation: "Carbon dioxide (CO2) is the major greenhouse gas driving global warming due to its large volume of emissions from fossil fuel combustion."
+      },
+      {
+        id: 9,
+        question: "BOD (Biochemical Oxygen Demand) value of clean drinking water should be less than",
+        options: [
+          "5 ppm",
+          "17 ppm",
+          "50 ppm",
+          "100 ppm"
+        ],
+        answer: "5 ppm",
+        explanation: "Clean, unpolluted water has a low BOD value of less than 5 ppm, whereas highly polluted water can have BOD values of 17 ppm or higher."
+      },
+      {
+        id: 10,
+        question: "Which of the following is NOT a greenhouse gas?",
+        options: [
+          "O₂",
+          "CO₂",
+          "CH₄",
+          "N₂O"
+        ],
+        answer: "O₂",
+        explanation: "Oxygen (O₂) is a homonuclear diatomic molecule that does not absorb infrared radiation effectively and is not a greenhouse gas."
+      },
+      {
+        id: 11,
+        question: "The acid that is believed to be mainly responsible for the damage of Taj Mahal is:",
+        options: [
+          "H₂SO₄",
+          "HF",
+          "H₃PO₄",
+          "HCl"
+        ],
+        answer: "H₂SO₄",
+        explanation: "Sulfuric acid (H₂SO₄) in acid rain reacts with the calcium carbonate (marble) of the Taj Mahal to produce soluble calcium sulfate, causing marble discolouration and erosion."
+      },
+      {
+        id: 12,
+        question: "Major greenhouse gas responsible for global warming is",
+        options: [
+          "CO₂",
+          "SO₂",
+          "NO₂",
+          "O₃"
+        ],
+        answer: "CO₂",
+        explanation: "Carbon dioxide (CO₂) contributes the most significantly to thermal trapping in the lower atmosphere."
+      },
+      {
+        id: 13,
+        question: "Depletion of ozone layer is mainly caused by",
+        options: [
+          "Chlorofluorocarbons (CFCs)",
+          "Methane",
+          "Carbon monoxide",
+          "Sulfur dioxide"
+        ],
+        answer: "Chlorofluorocarbons (CFCs)",
+        explanation: "Chlorofluorocarbons (CFCs) release chlorine free radicals under UV light in the stratosphere, which catalytically break down ozone molecules."
+      },
+      {
+        id: 14,
+        question: "The oxide of nitrogen which causes acid rain is",
+        options: [
+          "NO2",
+          "N2O",
+          "NO",
+          "N2O5"
+        ],
+        answer: "NO2",
+        explanation: "Nitrogen dioxide (NO2) reacts with atmospheric moisture and oxygen to form nitric acid (HNO3), a component of acid rain."
+      },
+      {
+        id: 15,
+        question: "The oxide of sulfur responsible for atmospheric pollution is",
+        options: [
+          "SO2",
+          "SO3",
+          "S2O",
+          "SO"
+        ],
+        answer: "SO2",
+        explanation: "Sulfur dioxide (SO2) is a primary air pollutant released from burning sulfur-containing fossil fuels, causing respiratory distress and acid rain."
+      },
+      {
+        id: 16,
+        question: "The main gas responsible for ozone layer depletion is",
+        options: [
+          "CFC",
+          "CO2",
+          "CH4",
+          "SO2"
+        ],
+        answer: "CFC",
+        explanation: "CFCs (chlorofluorocarbons) are the primary anthropogenic compounds responsible for stratospheric ozone destruction."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

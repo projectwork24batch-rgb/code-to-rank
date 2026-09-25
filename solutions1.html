@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solutions & Concentration Terms Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+
+    .question-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .option-item {
+      margin-bottom: 8px;
+    }
+
+    .option-label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .option-label:hover {
+      background-color: #eef2f5;
+    }
+
+    .option-label.correct {
+      background-color: #d4edda !important;
+      color: #155724 !important;
+      border-color: #c3e6cb !important;
+      font-weight: bold;
+    }
+
+    .option-label.incorrect {
+      background-color: #f8d7da !important;
+      color: #721c24 !important;
+      border-color: #f5c6cb !important;
+      font-weight: bold;
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background-color: #e8f4f8;
+      border-left: 4px solid #2196f3;
+      color: #1a365d;
+      font-size: 0.95em;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Solutions & Concentration Terms Quiz</h1>
+    <div id="score-board"></div>
+    <form id="quiz-form">
+      <div id="quiz-container"></div>
+      <div class="btn-container">
+        <button type="button" id="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "The normality of solution obtained by dissolving 5.3 grams of Na2CO3 in 1 litre solution is",
+        options: ["1 N", "0.1 N", "0.05 N", "0.5 N"],
+        answer: "0.1 N",
+        explanation: "The molar mass of Na2CO3 is 106 g/mol, and its valence factor (n-factor) is 2, giving an equivalent weight of 106/2 = 53 g/eq. Normality = (mass / equivalent weight) / volume in liters = (5.3/53)/1 = 0.1 N."
+      },
+      {
+        id: 2,
+        question: "The following solution has same molarity and normality",
+        options: ["Na2CO3", "NaCl", "H2SO4", "K2CO3"],
+        answer: "NaCl",
+        explanation: "Normality equals Molarity multiplied by the valence factor (n-factor). For NaCl, the n-factor is 1, so its molarity and normality are equal."
+      },
+      {
+        id: 3,
+        question: "5 moles of a solute is dissolved in 10 litres of solution. What is its molarity?",
+        options: ["5 M", "2 M", "0.5 M", "0.2 M"],
+        answer: "0.5 M",
+        explanation: "Molarity is defined as moles of solute per liter of solution. Molarity = 5 moles / 10 liters = 0.5 M."
+      },
+      {
+        id: 4,
+        question: "One mole of any of the particles contains",
+        options: ["6.023 × 10²³", "6.022 × 10²³", "60.23 × 10²³", "6.023 × 10²²"],
+        answer: "6.022 × 10²³",
+        explanation: "By definition, one mole of any substance contains Avogadro's number of particles, which is 6.022 × 10²³."
+      },
+      {
+        id: 5,
+        question: "The normality of the solution obtained by dissolving 4 gm of NaOH in 1 Litre is",
+        options: ["1 N", "0.1 N", "0.5 N", "0.02 N"],
+        answer: "0.1 N",
+        explanation: "The equivalent weight of NaOH is 40 g/eq (molar mass 40 / n-factor 1). Normality = (4 g/40 g/eq) / 1 L = 0.1 N."
+      },
+      {
+        id: 6,
+        question: "Molecular weight of H2SO4 is",
+        options: ["92", "98", "99", "100"],
+        answer: "98",
+        explanation: "The molecular weight of H2SO4 = 2(1) + 32 + 4(16) = 2 + 32 + 64 = 98 g/mol."
+      },
+      {
+        id: 7,
+        question: "Avogadro Number is",
+        options: ["1.6025 × 10¹⁹", "6.023 × 10²⁷", "60.25 × 10²³", "6.023 × 10²³"],
+        answer: "6.023 × 10²³",
+        explanation: "Avogadro's number is conventionally written as 6.023 × 10²³ particles per mole."
+      },
+      {
+        id: 8,
+        question: "The normality of the solution obtained by dissolving 8 gm of NaOH in 1 Litre is",
+        options: ["2 N", "0.2 N", "0.25 N", "0.02 N"],
+        answer: "0.2 N",
+        explanation: "The equivalent weight of NaOH is 40 g/eq. Normality = (8 g / 40 g/eq) / 1 L = 0.2 N."
+      },
+      {
+        id: 9,
+        question: "Molecular weight of MgSO4 is",
+        options: ["120", "121", "119", "122"],
+        answer: "120",
+        explanation: "The molecular weight of MgSO4 = 24(Mg) + 32(S) + 4×16(O) = 24 + 32 + 64 = 120 g/mol."
+      },
+      {
+        id: 10,
+        question: "The normality of 0.1 M H2SO4 solution is",
+        options: ["0.1 N", "0.2 N", "0.05 N", "1 N"],
+        answer: "0.2 N",
+        explanation: "Sulfuric acid (H2SO4) is a dibasic acid with an n-factor of 2. Normality = Molarity × n-factor = 0.1 M × 2 = 0.2 N."
+      },
+      {
+        id: 11,
+        question: "The equivalent weight of Cl2 when it is converted to Cl⁻ (M = Molar mass) is",
+        options: ["M", "M / 2", "2M", "M / 35.5"],
+        answer: "M / 2",
+        explanation: "In the reduction reaction Cl₂ + 2e⁻ → 2Cl⁻, 1 mole of Cl2 accepts 2 moles of electrons (n-factor = 2). Therefore, the equivalent weight = Molar Mass / 2."
+      },
+      {
+        id: 12,
+        question: "The molarity of a solution containing 5.85 g of NaCl in 500 mL solution is",
+        options: ["0.1 M", "0.2 M", "0.5 M", "1.0 M"],
+        answer: "0.2 M",
+        explanation: "Moles of NaCl = 5.85 g / 58.5 g/mol = 0.1 mol. Molarity = 0.1 mol / 0.5 L = 0.2 M."
+      },
+      {
+        id: 13,
+        question: "Which of the following concentration units depends on temperature?",
+        options: ["Molality", "Molarity", "Mole fraction", "Weight percentage"],
+        answer: "Molarity",
+        explanation: "Molarity involves volume of solution, which expands or contracts with temperature changes. Molality, mole fraction, and mass percentage depend only on mass, which is independent of temperature."
+      },
+      {
+        id: 14,
+        question: "The absolute weight of one molecule of water (in g) is (N_A = 6 × 10²³ mol⁻¹):",
+        options: ["1.5 × 10⁻²³", "3.0 × 10⁻²³", "4.5 × 10⁻²³", "2.0 × 10⁻²⁹"],
+        answer: "3.0 × 10⁻²³",
+        explanation: "Mass of 1 molecule of H2O = Molar mass / Avogadro's number = 18 g/mol / (6 × 10²³ mol⁻¹) = 3.0 × 10⁻²³ g."
+      },
+      {
+        id: 15,
+        question: "The weight of sodium sulphate (molar mass = 142 g/mol) needed to prepare 500 mL of 0.03 M solution is:",
+        options: ["2.13 g", "4.26 g", "1.065 g", "3.195 g"],
+        answer: "2.13 g",
+        explanation: "Mass = Molarity × Molar mass × Volume (L) = 0.03 mol/L × 142 g/mol × 0.5 L = 2.13 g."
+      },
+      {
+        id: 16,
+        question: "The number of ions present in 100 mL of 0.1 M H2SO4 is:",
+        options: ["6.0 × 10²⁴", "6.0 × 10²²", "6.0 × 10²¹", "1.8 × 10²²"],
+        answer: "1.8 × 10²²",
+        explanation: "Moles of H2SO4 = 0.1 M × 0.1 L = 0.01 mol. Each H2SO4 dissociates into 3 ions (2H⁺ + 1 SO₄²⁻), giving 0.03 mol of ions. Total ions = 0.03 × 6.0 × 10²³ = 1.8 × 10²² ions."
+      },
+      {
+        id: 17,
+        question: "How many moles of solute are present in 200 ml of 0.1 M solution?",
+        options: ["0.02", "0.2", "2.0", "0.002"],
+        answer: "0.02",
+        explanation: "Moles of solute = Molarity × Volume in liters = 0.1 M × 0.2 L = 0.02 moles."
+      },
+      {
+        id: 18,
+        question: "Normality of 0.1 M H2SO4 solution is",
+        options: ["0.2 N", "0.1 N", "0.05 N", "0.4 N"],
+        answer: "0.2 N",
+        explanation: "H2SO4 has two replaceable hydrogen ions (n-factor = 2). Normality = Molarity × 2 = 0.1 × 2 = 0.2 N."
+      },
+      {
+        id: 19,
+        question: "Which of the following has the highest equivalent weight? (At. wt. C=12, H=1, O=16, Na=23)",
+        options: ["Formic acid", "Acetic acid", "Oxalic acid", "Sodium carbonate"],
+        answer: "Acetic acid",
+        explanation: "Equivalent weights: Formic acid (HCOOH) = 46/1 = 46; Acetic acid (CH3COOH) = 60/1 = 60; Oxalic acid (H2C2O4) = 90/2 = 45; Na2CO3 = 106/2 = 53. Acetic acid has the highest value of 60 g/eq."
+      }
+    ];
+
+    let userScores = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      quizContainer.innerHTML = quizData.map((q, index) => `
+        <div class="question-card" id="q-card-${q.id}">
+          <div class="question-title">${index + 1}. ${q.question}</div>
+          <ul class="options-list">
+            ${q.options.map(option => `
+              <li class="option-item">
+                <label class="option-label" id="label-${q.id}-${option.replace(/[^a-zA-Z0-9]/g, '')}">
+                  <input type="radio" name="question-${q.id}" value="${option}" onchange="onSelectOption(${q.id}, '${option.replace(/'/g, "\\'")}')">
+                  ${option}
+                </input>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Triggered instantly when an option is selected
+    function onSelectOption(questionId, selectedValue) {
+      const q = quizData.find(item => item.id === questionId);
+      const explanationEl = document.getElementById(`exp-${q.id}`);
+
+      // Show explanation immediately
+      explanationEl.style.display = "block";
+
+      // Track score state
+      if (selectedValue === q.answer) {
+        userScores[questionId] = 1;
+      } else {
+        userScores[questionId] = 0;
+      }
+
+      // Update styling instantly & disable choices for this question
+      q.options.forEach(option => {
+        const sanitizedOpt = option.replace(/[^a-zA-Z0-9]/g, '');
+        const label = document.getElementById(`label-${q.id}-${sanitizedOpt}`);
+        const input = label.querySelector('input');
+
+        input.disabled = true;
+
+        if (option === q.answer) {
+          label.classList.add("correct");
+        } else if (option === selectedValue) {
+          label.classList.add("incorrect");
+        }
+      });
+    }
+
+    // Called when clicking the Submit button
+    function submitQuiz() {
+      let finalScore = 0;
+
+      quizData.forEach(q => {
+        if (userScores[q.id] === 1) {
+          finalScore++;
+        }
+      });
+
+      const scoreBoard = document.getElementById("score-board");
+      scoreBoard.textContent = `Your Final Score: ${finalScore} / ${quizData.length}`;
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.cursor = "not-allowed";
+
+      // Smooth scroll back to top to view score
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

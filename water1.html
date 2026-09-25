@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Technology ECET Practice Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .score-badge {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background-color: #f1f5f9;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 0.75rem;
+      accent-color: var(--primary);
+    }
+
+    .option-label.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-label.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background-color: #eff6ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.95rem;
+      color: #1e3a8a;
+    }
+
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-container {
+      text-align: center;
+      margin: 2rem 0 4rem;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .submit-btn:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Water Technology ECET Practice Quiz</h1>
+      <div class="score-badge" id="score-display">Score: 0 / 21</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="quiz-container"></div>
+    <div class="action-container">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Final Quiz</button>
+    </div>
+  </main>
+
+  <script>
+    const waterTechnologyQuestions = [
+      {
+        "id": 1,
+        "question": "Hardness of water is expressed in terms of equivalent of",
+        "options": {
+          "A": "Na₂CO₃",
+          "B": "K₂CO₃",
+          "C": "MgCO₃",
+          "D": "CaCO₃"
+        },
+        "correctAnswer": "D",
+        "explanation": "Hardness is expressed in terms of calcium carbonate equivalent because it has a convenient molecular weight of 100 g/mol and is standard for industrial calculations[cite: 17]."
+      },
+      {
+        "id": 2,
+        "question": "Temporary hardness is caused by",
+        "options": {
+          "A": "Carbonates of calcium and magnesium",
+          "B": "Chlorides of calcium and magnesium",
+          "C": "Sulphates of calcium and magnesium",
+          "D": "Nitrates of calcium"
+        },
+        "correctAnswer": "A",
+        "explanation": "Temporary hardness (carbonate hardness) is caused by the presence of dissolved bicarbonates of calcium and magnesium in water[cite: 17]."
+      },
+      {
+        "id": 3,
+        "question": "The exhausted zeolite bed can be regenerated by washing with",
+        "options": {
+          "A": "NaCl",
+          "B": "dil NaOH",
+          "C": "dil HCl",
+          "D": "Distilled water"
+        },
+        "correctAnswer": "A",
+        "explanation": "An exhausted zeolite (permutit) bed is treated with a concentrated solution of sodium chloride (brine) to replace the accumulated calcium and magnesium ions with sodium ions[cite: 17]."
+      },
+      {
+        "id": 4,
+        "question": "Which chemical is responsible for permanent hardness of water?",
+        "options": {
+          "A": "KCl",
+          "B": "MgCl₂",
+          "C": "NaCl",
+          "D": "AgCl"
+        },
+        "correctAnswer": "B",
+        "explanation": "Magnesium chloride is a soluble salt of magnesium that does not precipitate upon boiling, thus causing permanent hardness[cite: 17]."
+      },
+      {
+        "id": 5,
+        "question": "Permutit is chemically",
+        "options": {
+          "A": "Sodium Silicate",
+          "B": "Aluminium Silicate",
+          "C": "Hydrated Sodium alumino silicate",
+          "D": "Calcium silicate"
+        },
+        "correctAnswer": "C",
+        "explanation": "Permutit or synthetic zeolite is chemically represented as hydrated sodium aluminum silicate[cite: 17]."
+      },
+      {
+        "id": 6,
+        "question": "The cation exchange resin possesses",
+        "options": {
+          "A": "Acidic group",
+          "B": "Basic group",
+          "C": "Amphoteric group",
+          "D": "Benzo group"
+        },
+        "correctAnswer": "A",
+        "explanation": "Cation exchange resins contain acidic functional groups like sulfonic (-SO₃H) or carboxylic (-COOH) groups that exchange hydrogen ions for cations[cite: 17]."
+      },
+      {
+        "id": 7,
+        "question": "Permanent hardness is due to",
+        "options": {
+          "A": "Carbonates and Bicarbonates",
+          "B": "Chlorides and Sulphates",
+          "C": "Chlorides and Carbonates",
+          "D": "Carbonates and Sulphates"
+        },
+        "correctAnswer": "B",
+        "explanation": "Permanent hardness is caused by dissolved chlorides and sulphates of calcium and magnesium which cannot be removed by simple boiling[cite: 17]."
+      },
+      {
+        "id": 8,
+        "question": "Permutit is chemically",
+        "options": {
+          "A": "Sodium Silicate",
+          "B": "Aluminium Silicate",
+          "C": "Hydrated Sodium alumino silicate",
+          "D": "Calcium silicate"
+        },
+        "correctAnswer": "C",
+        "explanation": "Permutit is synthetic zeolite, chemically defined as hydrated sodium aluminum silicate[cite: 17]."
+      },
+      {
+        "id": 9,
+        "question": "The anion exchange resin possesses",
+        "options": {
+          "A": "Acidic group",
+          "B": "Basic group",
+          "C": "Amphoteric group",
+          "D": "Benzo group"
+        },
+        "correctAnswer": "B",
+        "explanation": "Anion exchange resins contain basic functional groups like amine groups that can exchange hydroxyl ions for anions[cite: 17]."
+      },
+      {
+        "id": 10,
+        "question": "Hardness of water is expressed in terms of equivalents of",
+        "options": {
+          "A": "CaCO₃",
+          "B": "MgCO₃",
+          "C": "Na₂CO₃",
+          "D": "K₂CO₃"
+        },
+        "correctAnswer": "A",
+        "explanation": "Calcium carbonate is chosen as the universal standard for expressing water hardness due to its convenient molecular weight and precipitation properties[cite: 17]."
+      },
+      {
+        "id": 11,
+        "question": "Anion exchange resin is regenerated by using",
+        "options": {
+          "A": "dil NaCl",
+          "B": "dil HCl",
+          "C": "dil NaOH",
+          "D": "dil H₂SO₄"
+        },
+        "correctAnswer": "C",
+        "explanation": "An exhausted anion exchange resin is regenerated by passing a dilute solution of sodium hydroxide (NaOH) through it to restore hydroxyl ions[cite: 17]."
+      },
+      {
+        "id": 12,
+        "question": "Which of the following is responsible for temporary hardness?",
+        "options": {
+          "A": "CaCl₂",
+          "B": "CaSO₄",
+          "C": "MgSO₄",
+          "D": "Mg(HCO₃)₂"
+        },
+        "correctAnswer": "D",
+        "explanation": "Magnesium bicarbonate, Mg(HCO₃)₂, decomposes upon heating to form insoluble magnesium hydroxide or carbonate, causing temporary hardness[cite: 17]."
+      },
+      {
+        "id": 13,
+        "question": "Temporary hardness of water can be removed by",
+        "options": {
+          "A": "Boiling",
+          "B": "Filtration",
+          "C": "Adding NaCl",
+          "D": "Decantation"
+        },
+        "correctAnswer": "A",
+        "explanation": "Boiling converts soluble bicarbonates into insoluble carbonates or hydroxides, which precipitate out and can be filtered off[cite: 17]."
+      },
+      {
+        "id": 14,
+        "question": "Exhausted permutit (zeolite) is regenerated by washing with",
+        "options": {
+          "A": "10% NaCl solution",
+          "B": "10% HCl solution",
+          "C": "10% NaOH solution",
+          "D": "Distilled water"
+        },
+        "correctAnswer": "A",
+        "explanation": "A 10% sodium chloride brine solution provides a high concentration of sodium ions to displace the trapped calcium and magnesium ions from the zeolite[cite: 17]."
+      },
+      {
+        "id": 15,
+        "question": "The formula of Zeolite can be represented as Na2Z. The metal atom present in Z is:",
+        "options": {
+          "A": "Zn",
+          "B": "Ca",
+          "C": "Mg",
+          "D": "Al"
+        },
+        "correctAnswer": "D",
+        "explanation": "In the complex framework of zeolite (sodium aluminum silicate), aluminum is the core metal atom alongside silicon and oxygen[cite: 17]."
+      },
+      {
+        "id": 16,
+        "question": "Which of the following salts causes maximum hardness to water sample, when they are in equal amounts?",
+        "options": {
+          "A": "MgSO4 (Molecular Weight = 120 u)",
+          "B": "MgCl2 (Molecular Weight = 95 u)",
+          "C": "CaCl2 (Molecular Weight = 111 u)",
+          "D": "Ca(HCO3)2 (Molecular Weight = 162 u)"
+        },
+        "correctAnswer": "B",
+        "explanation": "Magnesium chloride has the lowest molecular weight among the choices, meaning a fixed mass yields a higher number of moles of hardness-causing ions[cite: 17]."
+      },
+      {
+        "id": 17,
+        "question": "Permanent hardness of water cannot be removed by:",
+        "options": {
+          "A": "Boiling the hard water",
+          "B": "Treatment with washing soda",
+          "C": "Passing through Zeolite",
+          "D": "Passing through ion exchange resins"
+        },
+        "correctAnswer": "A",
+        "explanation": "Chloride and sulfate salts responsible for permanent hardness are stable and do not decompose or precipitate upon thermal heating[cite: 17]."
+      },
+      {
+        "id": 18,
+        "question": "Hardness of water is due to the presence of salts of",
+        "options": {
+          "A": "Calcium and Magnesium",
+          "B": "Sodium and Potassium",
+          "C": "Iron and Manganese",
+          "D": "Copper and Zinc"
+        },
+        "correctAnswer": "A",
+        "explanation": "The primary metallic ions responsible for water hardness and soap-wasting scum formation are calcium (Ca²⁺) and magnesium (Mg²⁺)[cite: 17]."
+      },
+      {
+        "id": 19,
+        "question": "Treatment of water to remove microorganisms is called",
+        "options": {
+          "A": "Disinfection / Sterilization",
+          "B": "Sedimentation",
+          "C": "Filtration",
+          "D": "Coagulation"
+        },
+        "correctAnswer": "A",
+        "explanation": "Disinfection or sterilization destroys pathogenic bacteria, viruses, and other harmful microorganisms to make water safe for drinking[cite: 17]."
+      },
+      {
+        "id": 20,
+        "question": "The type of hardness associated with bicarbonate salts is",
+        "options": {
+          "A": "Temporary hardness",
+          "B": "Permanent hardness",
+          "C": "Alkaline hardness",
+          "D": "Non-carbonate hardness"
+        },
+        "correctAnswer": "A",
+        "explanation": "Bicarbonate salts of calcium and magnesium easily decompose upon heating, which characterizes temporary hardness[cite: 17]."
+      },
+      {
+        "id": 21,
+        "question": "Which ion causes hardness in water?",
+        "options": {
+          "A": "Ca2+",
+          "B": "Na+",
+          "C": "K+",
+          "D": "NH4+"
+        },
+        "correctAnswer": "A",
+        "explanation": "Calcium ions (along with magnesium ions) are the principal polyvalent cations responsible for causing water hardness[cite: 17]."
+      }
+    ];
+
+    const userAnswers = {};
+
+    function renderQuiz() {
+      const quizContainer = document.getElementById("quiz-container");
+      
+      waterTechnologyQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "quiz-card";
+        card.id = `q-card-${q.id}`;
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = `${index + 1}. ${q.question}`;
+        card.appendChild(title);
+
+        const optionsGrid = document.createElement("div");
+        optionsGrid.className = "options-grid";
+
+        Object.entries(q.options).forEach(([key, text]) => {
+          const label = document.createElement("label");
+          label.className = "option-label";
+          label.id = `label-${q.id}-${key}`;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question-${q.id}`;
+          radio.value = key;
+          radio.onclick = () => handleSelectOption(q.id, key);
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(`${key}) ${text}`));
+          optionsGrid.appendChild(label);
+        });
+
+        card.appendChild(optionsGrid);
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.id = `exp-${q.id}`;
+        explanation.innerHTML = `<div class="explanation-title">Explanation:</div>${q.explanation}`;
+        card.appendChild(explanation);
+
+        quizContainer.appendChild(card);
+      });
+
+      updateScoreDisplay();
+    }
+
+    function handleSelectOption(questionId, selectedKey) {
+      if (userAnswers[questionId] !== undefined) return;
+
+      const question = waterTechnologyQuestions.find(q => q.id === questionId);
+      userAnswers[questionId] = selectedKey;
+
+      Object.keys(question.options).forEach(key => {
+        const label = document.getElementById(`label-${questionId}-${key}`);
+        const radio = label.querySelector("input");
+        radio.disabled = true;
+
+        if (key === question.correctAnswer) {
+          label.classList.add("correct");
+        } else if (key === selectedKey) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      const exp = document.getElementById(`exp-${questionId}`);
+      exp.style.display = "block";
+
+      updateScoreDisplay();
+    }
+
+    function calculateScore() {
+      let score = 0;
+      waterTechnologyQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.correctAnswer) {
+          score++;
+        }
+      });
+      return score;
+    }
+
+    function updateScoreDisplay() {
+      const score = calculateScore();
+      document.getElementById("score-display").textContent = `Score: ${score} / ${waterTechnologyQuestions.length}`;
+    }
+
+    function submitQuiz() {
+      const score = calculateScore();
+      const total = waterTechnologyQuestions.length;
+      
+      alert(`Quiz Submitted!\nYour Final Score is: ${score} out of ${total}`);
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Quiz Completed";
+    }
+
+    window.onload = renderQuiz;
+  </script>
+
+</body>
+</html>

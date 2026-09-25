@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation & Applications Practice Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .q-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .q-header {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .disabled-box {
+            pointer-events: none;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 2px;
+            font-size: 0.95em;
+            white-space: pre-wrap;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        #score-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Differentiation & Applications Practice Quiz</h1>
+
+    <div id="questions-list"></div>
+
+    <button class="btn-submit" onclick="checkYourScore()">Check Final Score</button>
+    <div id="score-output"></div>
+
+    <script>
+        const set1Data = {
+            units: [{
+                unitNo: "III",
+                title: "Differentiation and its applications",
+                topics: [{
+                    name: "Differentiation and its applications",
+                    questions: [
+                        {
+                            questionText: "If a > 0 then lim (x -> 0) (a^x - 1) / x =",
+                            options: ["log x", "1", "log a", "0"],
+                            correctAnswer: "log a",
+                            explanation: "Step 1: The limit takes the indeterminate form 0/0 as x -> 0.\nStep 2: Apply L'Hôpital's Rule: differentiate numerator d/dx(a^x - 1) = a^x * ln(a) and denominator d/dx(x) = 1.\nStep 3: Evaluate: lim (x -> 0) [a^x * ln(a)] / 1 = a^0 * ln(a) = log a."
+                        },
+                        {
+                            questionText: "Differentiation of sin(x^n) with respect to x.",
+                            options: ["n * x^(n-1) * cos(x^n)", "x^(n-1) * cos(x^n)", "cos(x^n)", "n * cos(x^n)"],
+                            correctAnswer: "n * x^(n-1) * cos(x^n)",
+                            explanation: "Step 1: Apply the chain rule: d/dx[sin(u)] = cos(u) * (du/dx), where u = x^n.\nStep 2: Differentiate inside function: du/dx = n * x^(n-1).\nStep 3: Multiply: cos(x^n) * n * x^(n-1) = n * x^(n-1) * cos(x^n)."
+                        },
+                        {
+                            questionText: "d/dx (sin^(-1)(x/a)) =",
+                            options: ["1 / √(a^2 - x^2)", "1 / (a^2 + x^2)", "1 / √(x^2 - a^2)", "-1 / (a^2 - x^2)"],
+                            correctAnswer: "1 / √(a^2 - x^2)",
+                            explanation: "Step 1: By chain rule: d/dx[sin^(-1)(u)] = (1 / √(1 - u^2)) * (du/dx) with u = x/a.\nStep 2: du/dx = 1/a.\nStep 3: Substitute: (1 / √(1 - x^2/a^2)) * (1/a) = (1 / (√(a^2 - x^2)/a)) * (1/a) = 1 / √(a^2 - x^2)."
+                        },
+                        {
+                            questionText: "d/dx (e^(3 log x)) =",
+                            options: ["3x", "3 log x", "3 log 3", "3x^2"],
+                            correctAnswer: "3x^2",
+                            explanation: "Step 1: Rewrite exponent using logarithm laws: 3 log x = log(x^3).\nStep 2: Apply the exponential-log identity e^(log(u)) = u: e^(log(x^3)) = x^3.\nStep 3: Differentiate x^3 with respect to x: d/dx(x^3) = 3x^2."
+                        },
+                        {
+                            questionText: "d/dx [log|x|] =",
+                            options: ["1 / |x|", "1 / x", "-1 / x", "x"],
+                            correctAnswer: "1 / x",
+                            explanation: "Step 1: When x > 0, |x| = x, giving d/dx[log x] = 1/x.\nStep 2: When x < 0, |x| = -x, giving d/dx[log(-x)] = (1/(-x)) * (-1) = 1/x.\nStep 3: Thus, for any non-zero real number x, d/dx[log|x|] = 1/x."
+                        },
+                        {
+                            questionText: "y = cos x then d^2y/dx^2 is",
+                            options: ["cos x", "sin x", "-cos x", "-sin x"],
+                            correctAnswer: "-cos x",
+                            explanation: "Step 1: First derivative: dy/dx = d/dx(cos x) = -sin x.\nStep 2: Second derivative: d^2y/dx^2 = d/dx(-sin x) = -cos x."
+                        },
+                        {
+                            questionText: "The angle between the curves x^2 + 4y = 0 and xy = 2 is",
+                            options: ["tan^(-1)(3)", "cot^(-1)(1)", "tan^(-1)(4)", "cot^(-1)(3)"],
+                            correctAnswer: "cot^(-1)(3)",
+                            explanation: "Step 1: Find the intersection point. From x^2 + 4y = 0 => y = -x^2/4. Substitute into xy = 2 => x(-x^2/4) = 2 => x^3 = -8 => x = -2.\nStep 2: For x = -2, y = -(-2)^2/4 = -1. Intersection point is (-2, -1).\nStep 3: Differentiate x^2 + 4y = 0: 2x + 4(dy/dx) = 0 => m1 = -x/2. At (-2, -1), m1 = -(-2)/2 = 1.\nStep 4: Differentiate xy = 2: y + x(dy/dx) = 0 => m2 = -y/x. At (-2, -1), m2 = -(-1)/(-2) = -1/2.\nStep 5: Compute angle tan θ = |(m1 - m2) / (1 + m1 * m2)| = |(1 - (-1/2)) / (1 + 1*(-1/2))| = |(3/2) / (1/2)| = 3.\nStep 6: Since tan θ = 3, cot θ = 1/3, meaning θ = tan^(-1)(3) = cot^(-1)(3)."
+                        },
+                        {
+                            questionText: "The slope of the tangent to the curve y = (x - 1) / (x + 1) at (0, -1) is",
+                            options: ["4", "-2", "5", "2"],
+                            correctAnswer: "2",
+                            explanation: "Step 1: Differentiate using quotient rule: dy/dx = [(1)(x + 1) - (x - 1)(1)] / (x + 1)^2.\nStep 2: Simplify numerator: x + 1 - x + 1 = 2, so dy/dx = 2 / (x + 1)^2.\nStep 3: Evaluate slope at x = 0: dy/dx = 2 / (0 + 1)^2 = 2."
+                        },
+                        {
+                            questionText: "If z = x^2 + y^2 then x * (∂z/∂y) - y * (∂z/∂x) =",
+                            options: ["2y - 2x", "2x + 2y", "0", "4xy"],
+                            correctAnswer: "0",
+                            explanation: "Step 1: Compute partial derivatives: ∂z/∂x = 2x and ∂z/∂y = 2y.\nStep 2: Substitute into expression: x*(2y) - y*(2x) = 2xy - 2xy = 0."
+                        },
+                        {
+                            questionText: "z = (x^3 + y^3) / (x + y) is a homogeneous function of degree",
+                            options: ["2", "3", "0", "1"],
+                            correctAnswer: "2",
+                            explanation: "Step 1: Substitute x = tx and y = ty: z(tx, ty) = ((tx)^3 + (ty)^3) / (tx + ty).\nStep 2: Factor out powers of t: [t^3 * (x^3 + y^3)] / [t * (x + y)] = t^2 * [(x^3 + y^3) / (x + y)] = t^2 * z(x, y).\nStep 3: Since z(tx, ty) = t^2 * z(x, y), the degree of homogeneity is 2."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const set2Data = {
+            units: [{
+                unitNo: "III",
+                title: "Differentiation and its applications",
+                topics: [{
+                    name: "Differentiation (Set 2)",
+                    questions: [
+                        {
+                            questionText: "The value of lim (x -> 1) (x^3 - 1) / (x - 1) is",
+                            options: ["3", "-3", "2", "1"],
+                            correctAnswer: "3",
+                            explanation: "Step 1: Factor numerator: x^3 - 1 = (x - 1)(x^2 + x + 1).\nStep 2: Cancel common non-zero factor (x - 1): lim (x -> 1) (x^2 + x + 1).\nStep 3: Direct substitution of x = 1: 1^2 + 1 + 1 = 3."
+                        },
+                        {
+                            questionText: "If y = (a + bx) / (b - ax) then the derivative of y with respect to x is",
+                            options: ["(a^2 + b^2) / (b - ax)^2", "(a^2 + b^2) / (b + ax)^2", "(a^2 - b^2) / (b - ax)^2", "(a + b) / (b - ax)^2"],
+                            correctAnswer: "(a^2 + b^2) / (b - ax)^2",
+                            explanation: "Step 1: Apply quotient rule dy/dx = (u'v - uv') / v^2 with u = a + bx and v = b - ax.\nStep 2: u' = b and v' = -a.\nStep 3: dy/dx = [b(b - ax) - (a + bx)(-a)] / (b - ax)^2.\nStep 4: Expand numerator: b^2 - abx + a^2 + abx = a^2 + b^2.\nStep 5: Result: (a^2 + b^2) / (b - ax)^2."
+                        },
+                        {
+                            questionText: "If y = x^3 * e^x then dy/dx is",
+                            options: ["(x - 3) * x^2 * e^x", "(x - 2) * x^3 * e^x", "(x + 3) * x^2 * e^x", "(x - 1) * x^3 * e^x"],
+                            correctAnswer: "(x + 3) * x^2 * e^x",
+                            explanation: "Step 1: Use product rule d/dx(uv) = u'v + uv' with u = x^3 and v = e^x.\nStep 2: dy/dx = (3x^2) * e^x + (x^3) * e^x.\nStep 3: Factor out x^2 * e^x: dy/dx = x^2 * e^x * (3 + x) = (x + 3) * x^2 * e^x."
+                        },
+                        {
+                            questionText: "If y = sec x + tan x then dy/dx is",
+                            options: ["y cos x", "y sec x", "-y sin x", "y tan x"],
+                            correctAnswer: "y sec x",
+                            explanation: "Step 1: Differentiate y = sec x + tan x: dy/dx = sec x * tan x + sec^2 x.\nStep 2: Factor out sec x: dy/dx = sec x * (tan x + sec x).\nStep 3: Since y = sec x + tan x, substitute y back: dy/dx = y * sec x."
+                        },
+                        {
+                            questionText: "If y = (2 + 3 sinh x) / (3 + 2 sinh x), then derivative of y with respect to x is",
+                            options: ["(5 cosh x) / (3 + 2 sinh x)^2", "(5 sinh x) / (3 + 2 sinh x)^2", "(5 sin x) / (3 - 2 cosh x)^2", "(sinh^2 x) / (2 - 3 sinh x)^2"],
+                            correctAnswer: "(5 cosh x) / (3 + 2 sinh x)^2",
+                            explanation: "Step 1: Use quotient rule with u = 2 + 3 sinh x and v = 3 + 2 sinh x.\nStep 2: u' = 3 cosh x and v' = 2 cosh x.\nStep 3: dy/dx = [(3 cosh x)(3 + 2 sinh x) - (2 + 3 sinh x)(2 cosh x)] / (3 + 2 sinh x)^2.\nStep 4: Expand numerator: cosh x * [3(3 + 2 sinh x) - 2(2 + 3 sinh x)] = cosh x * [9 + 6 sinh x - 4 - 6 sinh x] = 5 cosh x.\nStep 5: Result: (5 cosh x) / (3 + 2 sinh x)^2."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const allDatasets = [
+            set1Data, 
+            set2Data
+        ];
+
+        let totalQuestionsCount = 0;
+        let totalScore = 0;
+
+        function loadQuiz() {
+            const container = document.getElementById("questions-list");
+            let globalQIndex = 0;
+
+            allDatasets.forEach((dataset) => {
+                dataset.units.forEach((unit) => {
+                    unit.topics.forEach((topic) => {
+                        topic.questions.forEach((q) => {
+                            globalQIndex++;
+                            totalQuestionsCount++;
+
+                            const qBox = document.createElement("div");
+                            qBox.className = "q-box";
+                            qBox.id = `q-box-${globalQIndex}`;
+
+                            const header = document.createElement("div");
+                            header.className = "q-header";
+                            header.innerText = `Q${globalQIndex}. ${q.questionText}`;
+                            qBox.appendChild(header);
+
+                            const explDiv = document.createElement("div");
+                            explDiv.className = "explanation";
+                            explDiv.innerText = `Explanation:\n${q.explanation}`;
+
+                            q.options.forEach((opt) => {
+                                const optBtn = document.createElement("div");
+                                optBtn.className = "option";
+                                optBtn.innerText = opt;
+                                optBtn.onclick = function() {
+                                    selectOption(qBox, optBtn, opt, q.correctAnswer, explDiv);
+                                };
+                                qBox.appendChild(optBtn);
+                            });
+
+                            qBox.appendChild(explDiv);
+                            container.appendChild(qBox);
+                        });
+                    });
+                });
+            });
+        }
+
+        function selectOption(qBox, selectedBtn, selectedValue, correctAnswer, explDiv) {
+            qBox.classList.add("disabled-box");
+
+            const options = qBox.getElementsByClassName("option");
+            
+            if (selectedValue === correctAnswer) {
+                selectedBtn.classList.add("correct");
+                totalScore++;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                for (let opt of options) {
+                    if (opt.innerText === correctAnswer) {
+                        opt.classList.add("correct");
+                    }
+                }
+            }
+
+            explDiv.style.display = "block";
+        }
+
+        function checkYourScore() {
+            const scoreDiv = document.getElementById("score-output");
+            scoreDiv.innerText = `Your Final Score: ${totalScore} / ${totalQuestionsCount}`;
+        }
+
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>

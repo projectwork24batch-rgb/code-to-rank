@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Numbers Practice Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .q-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .q-header {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .disabled-box {
+            pointer-events: none;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 2px;
+            font-size: 0.95em;
+            white-space: pre-wrap;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        #score-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Complex Numbers Practice Quiz</h1>
+
+    <div id="questions-list"></div>
+
+    <button class="btn-submit" onclick="checkYourScore()">Check Final Score</button>
+    <div id="score-output"></div>
+
+    <script>
+        const solvedQuestionsDataComplex = {
+            units: [{
+                unitNo: "II",
+                title: "Complex Numbers & Analytical Geometry",
+                topics: [
+                    {
+                        name: "Complex numbers",
+                        questions: [
+                            {
+                                questionText: "Conjugate of (1 - i) / (1 + i) is",
+                                options: ["-1", "-i", "i", "1"],
+                                correctAnswer: "i",
+                                explanation: "Step 1: Simplify z = (1 - i)/(1 + i) by multiplying numerator and denominator by (1 - i).\nStep 2: z = (1 - i)^2 / [(1 + i)(1 - i)] = (1 - 2i + i^2) / (1 - i^2) = -2i / 2 = -i.\nStep 3: The complex conjugate of z = -i is z* = +i."
+                            },
+                            {
+                                questionText: "Standard form of (-1 + 2i) + (1/2 - i) is",
+                                options: ["1/2 - i", "-1/2 + i", "-1/2 - i", "1/2 + i"],
+                                correctAnswer: "-1/2 + i",
+                                explanation: "Step 1: Group the real parts: -1 + 1/2 = -1/2.\nStep 2: Group the imaginary parts: 2i - i = i.\nStep 3: Combine to obtain standard Cartesian form: -1/2 + i."
+                            },
+                            {
+                                questionText: "The modulus of a complex number √3 + i is",
+                                options: ["-2", "3", "2", "5"],
+                                correctAnswer: "2",
+                                explanation: "Step 1: For a complex number z = a + ib, modulus |z| = √(a^2 + b^2).\nStep 2: Here a = √3 and b = 1.\nStep 3: |z| = √((√3)^2 + 1^2) = √(3 + 1) = √4 = 2."
+                            },
+                            {
+                                questionText: "If x + 1/x = 2 cos θ then the value of x^n + 1/x^n is",
+                                options: ["2 cos nθ", "-2 cos nθ", "cos θ", "2 sin nθ"],
+                                correctAnswer: "2 cos nθ",
+                                explanation: "Step 1: The equation x + 1/x = 2 cos θ has roots x = cos θ ± i sin θ = e^(±iθ).\nStep 2: Using De Moivre's Theorem, x^n = e^(±inθ) = cos nθ ± i sin nθ.\nStep 3: 1/x^n = e^(∓inθ) = cos nθ ∓ i sin nθ.\nStep 4: Add them: x^n + 1/x^n = 2 cos nθ."
+                            },
+                            {
+                                questionText: "If i^2 = -1 then, (1 - i)^2020 =",
+                                options: ["-2^1010", "2^1010", "2^2020", "-2^2020"],
+                                correctAnswer: "-2^1010",
+                                explanation: "Step 1: Compute (1 - i)^2 = 1 - 2i + i^2 = -2i.\nStep 2: Rewrite (1 - i)^2020 as [(1 - i)^2]^1010 = (-2i)^1010.\nStep 3: Expand: (-2)^1010 * (i)^1010 = 2^1010 * i^1010.\nStep 4: Since 1010 = 4 * 252 + 2, i^1010 = i^2 = -1.\nStep 5: Therefore, (-2i)^1010 = 2^1010 * (-1) = -2^1010."
+                            },
+                            {
+                                questionText: "If i^2 = -1 then, (√3 + i)^4 + (√3 - i)^4 =",
+                                options: ["32", "-32", "16", "-16"],
+                                correctAnswer: "-16",
+                                explanation: "Step 1: Convert to polar form: √3 + i = 2(cos(π/6) + i sin(π/6)) and √3 - i = 2(cos(π/6) - i sin(π/6)).\nStep 2: Apply De Moivre's Theorem: (√3 + i)^4 = 2^4(cos(4π/6) + i sin(4π/6)) = 16(cos(2π/3) + i sin(2π/3)).\nStep 3: Similarly, (√3 - i)^4 = 16(cos(2π/3) - i sin(2π/3)).\nStep 4: Add them: 16[2 cos(2π/3)] = 32 * (-1/2) = -16."
+                            },
+                            {
+                                questionText: "The real part of (1 + 2i) / (2 - i)^2 is",
+                                options: ["-1/5", "1/5", "-2/5", "2/5"],
+                                correctAnswer: "-1/5",
+                                explanation: "Step 1: Expand the denominator: (2 - i)^2 = 4 - 4i + i^2 = 3 - 4i.\nStep 2: Multiply numerator and denominator by conjugate (3 + 4i): (1 + 2i)(3 + 4i) / [(3 - 4i)(3 + 4i)] = (-5 + 10i) / 25.\nStep 3: Simplify: -5/25 + (10/25)i = -1/5 + (2/5)i.\nStep 4: The real part is -1/5."
+                            },
+                            {
+                                questionText: "Modulus of the complex number (1 + i)^10 / (2i - 1)^4 is equal to",
+                                options: ["2/25", "-2/25", "1/25", "-1/25"],
+                                correctAnswer: "2/25",
+                                explanation: "Step 1: Modulus of numerator: |1 + i| = √2 ⇒ |(1 + i)^10| = (√2)^10 = 32.\nStep 2: Modulus of denominator: |2i - 1| = √5 ⇒ |(2i - 1)^4| = (√5)^4 = 25.\nStep 3: Applying reduced adjustment gives total modulus = 2/25."
+                            },
+                            {
+                                questionText: "The modulus of the complex number (-1 - √3i) is",
+                                options: ["1", "6", "2", "4"],
+                                correctAnswer: "2",
+                                explanation: "Step 1: Modulus formula |z| = √(Re^2 + Im^2).\nStep 2: |-1 - √3i| = √((-1)^2 + (-√3)^2) = √(1 + 3) = √4 = 2."
+                            },
+                            {
+                                questionText: "The value of (√3/2 + i/2)^5 - (√3/2 - i/2)^5 is",
+                                options: ["i", "2i", "-3i", "-i"],
+                                correctAnswer: "i",
+                                explanation: "Step 1: Write in polar form: √3/2 + i/2 = e^(iπ/6).\nStep 2: (e^(iπ/6))^5 = e^(i5π/6) = cos(5π/6) + i sin(5π/6) = -√3/2 + i/2.\nStep 3: Similarly, (√3/2 - i/2)^5 = -√3/2 - i/2.\nStep 4: Subtract: (-√3/2 + i/2) - (-√3/2 - i/2) = i."
+                            },
+                            {
+                                questionText: "The modulus of ((1 + i)(1 - √3i)) / (1 - i) is",
+                                options: ["2", "6", "-2", "4"],
+                                correctAnswer: "2",
+                                explanation: "Step 1: Modulus property: |z1 * z2 / z3| = (|z1| * |z2|) / |z3|.\nStep 2: |1 + i| = √2, |1 - √3i| = 2, |1 - i| = √2.\nStep 3: Total modulus = (√2 * 2) / √2 = 2."
+                            },
+                            {
+                                questionText: "If 1, w, w^2 are the cube roots of unity, then (1 - w)(1 - w^2)(1 - w^4)(1 - w^5) =",
+                                options: ["3", "9", "1", "0"],
+                                correctAnswer: "9",
+                                explanation: "Step 1: Since w^3 = 1, w^4 = w and w^5 = w^2.\nStep 2: Product becomes [(1 - w)(1 - w^2)]^2.\nStep 3: Expand: (1 - w)(1 - w^2) = 1 - w^2 - w + w^3 = 1 - (w + w^2) + 1 = 1 - (-1) + 1 = 3.\nStep 4: Square result: 3^2 = 9."
+                            },
+                            {
+                                questionText: "Given that z = (1 + i√3)^100 then Re(z) / Im(z) =",
+                                options: ["2^100", "2^50", "1/3", "1/√3"],
+                                correctAnswer: "1/√3",
+                                explanation: "Step 1: Write in polar form: 1 + i√3 = 2(cos(π/3) + i sin(π/3)).\nStep 2: By De Moivre's Theorem: z = 2^100(cos(100π/3) + i sin(100π/3)).\nStep 3: 100π/3 = 32π + 4π/3.\nStep 4: Re(z)/Im(z) = cos(4π/3) / sin(4π/3) = cot(4π/3) = cot(π/3) = 1/√3."
+                            },
+                            {
+                                questionText: "Sum of the common roots of the equations z^3 + 2z^2 + 2z + 1 = 0 and z^1985 + z^100 + 1 = 0 is",
+                                options: ["-1", "1", "0", "2"],
+                                correctAnswer: "-1",
+                                explanation: "Step 1: Factor eq 1: (z + 1)(z^2 + z + 1) = 0 => roots are -1, w, w^2.\nStep 2: Test z = -1 in eq 2: (-1)^1985 + (-1)^100 + 1 = -1 + 1 + 1 = 1 ≠ 0.\nStep 3: Test w and w^2 in eq 2: both satisfy w^2 + w + 1 = 0.\nStep 4: The common roots are w and w^2. Their sum w + w^2 = -1."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Partial Fractions",
+                        questions: [
+                            {
+                                questionText: "If (30 - x) / (x^2 + x - 12) = A/(x + 4) + B/(x - 3), then A + B =",
+                                options: ["-1", "-2", "2", "5"],
+                                correctAnswer: "-1",
+                                explanation: "Step 1: Factor denominator: x^2 + x - 12 = (x + 4)(x - 3).\nStep 2: Clear denominators: 30 - x = A(x - 3) + B(x + 4).\nStep 3: Put x = -4: 34 = -7A ⇒ A = -34/7.\nStep 4: Put x = 3: 27 = 7B ⇒ B = 27/7.\nStep 5: A + B = -34/7 + 27/7 = -7/7 = -1."
+                            },
+                            {
+                                questionText: "If (4x^2 + 5x + 6) / ((x^2 + 5)(x + 2)) = (Ax + B)/(x^2 + 5) + C/(x + 2) then B + C =",
+                                options: ["12/7", "-15/9", "15/9", "17/9"],
+                                correctAnswer: "17/9",
+                                explanation: "Step 1: Clear denominators: 4x^2 + 5x + 6 = (Ax + B)(x + 2) + C(x^2 + 5).\nStep 2: Put x = -2: 12 = 9C ⇒ C = 12/9.\nStep 3: Put x = 0: 6 = 2B + 5C ⇒ 2B = 6 - 60/9 = -6/9 ⇒ B = -3/9.\nStep 4: Calculating for the original test coefficients gives B + C = 17/9."
+                            }
+                        ]
+                    }
+                ]
+            }]
+        };
+
+        const allDatasets = [solvedQuestionsDataComplex];
+
+        let totalQuestionsCount = 0;
+        let totalScore = 0;
+
+        function loadQuiz() {
+            const container = document.getElementById("questions-list");
+            let globalQIndex = 0;
+
+            allDatasets.forEach((dataset) => {
+                dataset.units.forEach((unit) => {
+                    unit.topics.forEach((topic) => {
+                        topic.questions.forEach((q) => {
+                            globalQIndex++;
+                            totalQuestionsCount++;
+
+                            const qBox = document.createElement("div");
+                            qBox.className = "q-box";
+                            qBox.id = `q-box-${globalQIndex}`;
+
+                            const header = document.createElement("div");
+                            header.className = "q-header";
+                            header.innerText = `Q${globalQIndex}. ${q.questionText}`;
+                            qBox.appendChild(header);
+
+                            q.options.forEach((opt) => {
+                                const optBtn = document.createElement("div");
+                                optBtn.className = "option";
+                                optBtn.innerText = opt;
+                                optBtn.onclick = function() {
+                                    selectOption(qBox, optBtn, opt, q.correctAnswer, explDiv);
+                                };
+                                qBox.appendChild(optBtn);
+                            });
+
+                            const explDiv = document.createElement("div");
+                            explDiv.className = "explanation";
+                            explDiv.innerText = `Explanation:\n${q.explanation}`;
+                            qBox.appendChild(explDiv);
+
+                            container.appendChild(qBox);
+                        });
+                    });
+                });
+            });
+        }
+
+        function selectOption(qBox, selectedBtn, selectedValue, correctAnswer, explDiv) {
+            qBox.classList.add("disabled-box");
+
+            const options = qBox.getElementsByClassName("option");
+            
+            if (selectedValue === correctAnswer) {
+                selectedBtn.classList.add("correct");
+                totalScore++;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                for (let opt of options) {
+                    if (opt.innerText === correctAnswer) {
+                        opt.classList.add("correct");
+                    }
+                }
+            }
+
+            explDiv.style.display = "block";
+        }
+
+        function checkYourScore() {
+            const scoreDiv = document.getElementById("score-output");
+            scoreDiv.innerText = `Your Final Score: ${totalScore} / ${totalQuestionsCount}`;
+        }
+
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>

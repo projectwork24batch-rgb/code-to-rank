@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mining, Warehousing, Big Data & Cloud Computing Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; color: #333; }
+        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .q-box { background: #fafafa; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 6px; }
+        
+        .option { display: block; margin: 10px 0; font-size: 16px; cursor: pointer; padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; transition: background 0.2s; }
+        .option:hover { background: #f0f0f0; }
+        .option input { margin-right: 12px; transform: scale(1.1); }
+
+        .option.correct { background-color: #d4edda !important; border-color: #c3e6cb !important; color: #155724; font-weight: bold; }
+        .option.incorrect { background-color: #f8d7da !important; border-color: #f5c6cb !important; color: #721c24; }
+        
+        .disabled-box { pointer-events: none; }
+        .explanation { display: none; margin-top: 15px; padding: 12px; background-color: #e9ecef; border-left: 4px solid #007BFF; font-size: 14px; color: #495057; border-radius: 0 4px 4px 0; }
+
+        .btn { display: block; width: 100%; background: #007BFF; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #0056b3; }
+        #score-output { font-size: 22px; font-weight: bold; margin-top: 25px; color: #28a745; text-align: center; }
+        .back-nav { display: inline-block; margin-bottom: 20px; color: #007BFF; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <a href="core.html" class="back-nav">← Back to Menu</a>
+    <h1>Big Data & Cloud Computing Quiz</h1>
+    
+    <div id="questions-list"></div>
+    
+    <button class="btn" onclick="checkYourScore()">Finish & Calculate Score</button>
+    <div id="score-output"></div>
+</div>
+
+<script>
+    const coreQuestions = [
+      {
+        id: 1,
+        question: "What is the main objective of Data Mining?",
+        options: ["A) Storing data", "B) Finding useful patterns from data", "C) Deleting data", "D) Encrypting data"],
+        correctIndex: 1,
+        explanation: "Data mining is the process of discovering useful patterns, relationships, and knowledge from large amounts of data."
+      },
+      {
+        id: 2,
+        question: "Which of the following is a Data Mining technique?",
+        options: ["A) Classification", "B) Compilation", "C) Formatting", "D) Debugging"],
+        correctIndex: 0,
+        explanation: "Classification is a data mining technique used to place data into predefined categories or classes."
+      },
+      {
+        id: 3,
+        question: "Which technique groups similar data items together?",
+        options: ["A) Classification", "B) Clustering", "C) Regression", "D) Encryption"],
+        correctIndex: 1,
+        explanation: "Clustering divides data into groups based on similarity, without requiring predefined classes."
+      },
+      {
+        id: 4,
+        question: "Classification is generally an example of:",
+        options: ["A) Unsupervised learning", "B) Supervised learning", "C) Reinforcement only", "D) Data storage"],
+        correctIndex: 1,
+        explanation: "Classification uses previously labeled data to predict the class of new data."
+      },
+      {
+        id: 5,
+        question: "Which technique finds relationships between items in a dataset?",
+        options: ["A) Association rule mining", "B) Sorting", "C) Paging", "D) Indexing"],
+        correctIndex: 0,
+        explanation: "Association rule mining discovers relationships such as 'customers who buy bread also buy butter.'"
+      },
+      {
+        id: 6,
+        question: "What is a Data Warehouse?",
+        options: ["A) A temporary memory", "B) A collection of data used mainly for analysis", "C) An operating system", "D) A programming language"],
+        correctIndex: 1,
+        explanation: "A data warehouse stores integrated and historical data for reporting and decision-making."
+      },
+      {
+        id: 7,
+        question: "What does ETL stand for?",
+        options: ["A) Extract, Transform, Load", "B) Execute, Transfer, Load", "C) Extract, Test, Link", "D) Enter, Transform, Load"],
+        correctIndex: 0,
+        explanation: "Extract → collect data, Transform → clean/convert data, Load → put data into the warehouse."
+      },
+      {
+        id: 8,
+        question: "Which step of ETL collects data from different sources?",
+        options: ["A) Extract", "B) Transform", "C) Load", "D) Analyze"],
+        correctIndex: 0,
+        explanation: "The Extract step obtains data from databases, files, applications, etc."
+      },
+      {
+        id: 9,
+        question: "A Data Warehouse mainly stores:",
+        options: ["A) Only current data", "B) Historical data", "C) Only program files", "D) Only images"],
+        correctIndex: 1,
+        explanation: "Data warehouses maintain historical information so organizations can analyze trends over time."
+      },
+      {
+        id: 10,
+        question: "OLAP is mainly used for:",
+        options: ["A) Transaction processing", "B) Data analysis", "C) Virus detection", "D) File compression"],
+        correctIndex: 1,
+        explanation: "OLAP (Online Analytical Processing) is used to analyze data from multiple dimensions and support decision-making."
+      },
+      {
+        id: 11,
+        question: "Which of the following is a characteristic of Big Data?",
+        options: ["A) Volume", "B) Velocity", "C) Variety", "D) All of the above"],
+        correctIndex: 3,
+        explanation: "The common characteristics of Big Data include Volume, Velocity, and Variety, along with other Vs such as Veracity and Value."
+      },
+      {
+        id: 12,
+        question: "What does \"Volume\" in Big Data refer to?",
+        options: ["A) Speed of data", "B) Amount of data", "C) Type of data", "D) Accuracy of data"],
+        correctIndex: 1,
+        explanation: "Volume represents the huge quantity of data generated and stored."
+      },
+      {
+        id: 13,
+        question: "What does \"Velocity\" refer to in Big Data?",
+        options: ["A) Amount of data", "B) Speed of data generation and processing", "C) Data accuracy", "D) Data type"],
+        correctIndex: 1,
+        explanation: "Velocity describes how quickly data is generated, transmitted, and processed."
+      },
+      {
+        id: 14,
+        question: "What does \"Variety\" refer to?",
+        options: ["A) Amount of data", "B) Speed of data", "C) Different types of data", "D) Data security"],
+        correctIndex: 2,
+        explanation: "Big Data can contain structured, semi-structured, and unstructured data such as tables, JSON, images, videos, and text."
+      },
+      {
+        id: 15,
+        question: "Which is an example of unstructured data?",
+        options: ["A) Database table", "B) Spreadsheet", "C) Video", "D) Relational record"],
+        correctIndex: 2,
+        explanation: "Videos do not follow a fixed tabular structure, so they are considered unstructured data."
+      },
+      {
+        id: 16,
+        question: "Which of the following can generate Big Data?",
+        options: ["A) Social media", "B) IoT sensors", "C) Online transactions", "D) All of the above"],
+        correctIndex: 3,
+        explanation: "Social media, sensors, websites, transactions, and many other systems continuously generate huge amounts of data."
+      },
+      {
+        id: 17,
+        question: "What is Big Data Analytics?",
+        options: ["A) Deleting large datasets", "B) Analyzing large and complex datasets", "C) Creating computer hardware", "D) Formatting disks"],
+        correctIndex: 1,
+        explanation: "Big Data Analytics uses techniques and technologies to discover useful information from large datasets."
+      },
+      {
+        id: 18,
+        question: "Which analytics answers the question \"What happened?\"",
+        options: ["A) Predictive analytics", "B) Prescriptive analytics", "C) Descriptive analytics", "D) Preventive analytics"],
+        correctIndex: 2,
+        explanation: "Descriptive analytics examines historical data to understand what has already happened."
+      },
+      {
+        id: 19,
+        question: "Which analytics answers \"What will happen?\"",
+        options: ["A) Descriptive", "B) Predictive", "C) Prescriptive", "D) Diagnostic"],
+        correctIndex: 1,
+        explanation: "Predictive analytics uses historical data, statistics, and models to predict future outcomes."
+      },
+      {
+        id: 20,
+        question: "Which analytics answers \"What should we do?\"",
+        options: ["A) Descriptive", "B) Predictive", "C) Prescriptive", "D) Historical"],
+        correctIndex: 2,
+        explanation: "Prescriptive analytics recommends possible actions based on data and predictions."
+      },
+      {
+        id: 21,
+        question: "A company analyzes previous sales to predict next month's sales. This is:",
+        options: ["A) Descriptive analytics", "B) Predictive analytics", "C) Prescriptive analytics", "D) Data storage"],
+        correctIndex: 1,
+        explanation: "The company is using past information to predict a future result."
+      },
+      {
+        id: 22,
+        question: "Which of the following is an important purpose of Big Data Analytics?",
+        options: ["A) Decision making", "B) Finding patterns", "C) Predicting trends", "D) All of the above"],
+        correctIndex: 3,
+        explanation: "Big Data Analytics helps organizations find patterns, make decisions, and identify future trends."
+      },
+      {
+        id: 23,
+        question: "What is Cloud Computing?",
+        options: ["A) Computing without computers", "B) Providing computing resources over the Internet", "C) Only storing files on a hard disk", "D) A programming language"],
+        correctIndex: 1,
+        explanation: "Cloud computing provides resources such as servers, storage, databases, and software through the Internet."
+      },
+      {
+        id: 24,
+        question: "Which of the following is a Cloud service model?",
+        options: ["A) IaaS", "B) CPU", "C) RAM", "D) BIOS"],
+        correctIndex: 0,
+        explanation: "The major cloud service models include IaaS, PaaS, and SaaS."
+      },
+      {
+        id: 25,
+        question: "What does IaaS stand for?",
+        options: ["A) Internet as a Service", "B) Infrastructure as a Service", "C) Information as a Service", "D) Infrastructure and Software"],
+        correctIndex: 1,
+        explanation: "IaaS provides infrastructure such as virtual machines, storage, and networking."
+      },
+      {
+        id: 26,
+        question: "What does PaaS stand for?",
+        options: ["A) Platform as a Service", "B) Program as a Service", "C) Processing as a System", "D) Platform and Software"],
+        correctIndex: 0,
+        explanation: "PaaS provides a platform and development environment for creating and deploying applications."
+      },
+      {
+        id: 27,
+        question: "What does SaaS stand for?",
+        options: ["A) Software as a Service", "B) Storage as a Service", "C) System as a Service", "D) Software and Security"],
+        correctIndex: 0,
+        explanation: "SaaS provides ready-to-use software through the Internet. Example: Online email and web-based office applications."
+      },
+      {
+        id: 28,
+        question: "Which cloud deployment model is generally available to the general public?",
+        options: ["A) Private Cloud", "B) Public Cloud", "C) Hybrid Cloud", "D) Local Cloud"],
+        correctIndex: 1,
+        explanation: "A public cloud provides cloud resources to multiple customers over the Internet."
+      },
+      {
+        id: 29,
+        question: "A cloud used exclusively by one organization is called:",
+        options: ["A) Public Cloud", "B) Private Cloud", "C) Hybrid Cloud", "D) Community Internet"],
+        correctIndex: 1,
+        explanation: "A private cloud is dedicated to a single organization and provides greater control over its resources."
+      },
+      {
+        id: 30,
+        question: "Which cloud deployment model combines public and private clouds?",
+        options: ["A) Public Cloud", "B) Private Cloud", "C) Hybrid Cloud", "D) Local Cloud"],
+        correctIndex: 2,
+        explanation: "A Hybrid Cloud combines private and public cloud environments, allowing data and applications to use both."
+      }
+    ];
+
+    const listContainer = document.getElementById('questions-list');
+    let fullContent = '';
+    
+    coreQuestions.forEach((q, qIndex) => {
+        let block = `<div class="q-box" id="qbox_${qIndex}" role="radiogroup">
+            <p><strong>Q${qIndex + 1}: ${q.question}</strong></p>`;
+        
+        q.options.forEach((opt, optIndex) => {
+            block += `
+                <label class="option" id="label_${qIndex}_${optIndex}">
+                    <input type="radio" name="q_number_${qIndex}" value="${optIndex}" onclick="revealAnswer(${qIndex}, ${optIndex}, ${q.correctIndex})"> ${opt}
+                </label>
+            `;
+        });
+        
+        if (q.explanation) {
+            block += `<div class="explanation" id="exp_${qIndex}"><strong>Explanation:</strong> ${q.explanation}</div>`;
+        }
+
+        block += `</div>`;
+        fullContent += block;
+    });
+
+    listContainer.innerHTML = fullContent;
+
+    function revealAnswer(qIndex, selectedIndex, correctIndex) {
+        const questionBox = document.getElementById(`qbox_${qIndex}`);
+        const expBox = document.getElementById(`exp_${qIndex}`);
+        
+        coreQuestions[qIndex].options.forEach((_, optIndex) => {
+            const label = document.getElementById(`label_${qIndex}_${optIndex}`);
+            if (optIndex === correctIndex) {
+                label.classList.add('correct');
+            } else if (optIndex === selectedIndex) {
+                label.classList.add('incorrect');
+            }
+        });
+
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+
+        questionBox.classList.add('disabled-box');
+    }
+
+    function checkYourScore() {
+        let rightAnswersCount = 0;
+        coreQuestions.forEach((q, index) => {
+            const chosen = document.querySelector(`input[name="q_number_${index}"]:checked`);
+            if (chosen && parseInt(chosen.value, 10) === q.correctIndex) {
+                rightAnswersCount++;
+            }
+        });
+        
+        document.getElementById('score-output').innerText = `Final Result: You scored ${rightAnswersCount} out of ${coreQuestions.length}!`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

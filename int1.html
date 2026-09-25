@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrices Practice Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .q-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .q-header {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .option {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .disabled-box {
+            pointer-events: none;
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 2px;
+            font-size: 0.95em;
+            white-space: pre-wrap;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        #score-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Matrices Practice Quiz</h1>
+
+    <div id="questions-list"></div>
+
+    <button class="btn-submit" onclick="checkYourScore()">Check Final Score</button>
+    <div id="score-output"></div>
+
+    <script>
+        const solvedQuestionsData = {
+            units: [{
+                unitNo: "I",
+                title: "Matrices, Partial Fractions & Trigonometry",
+                topics: [{
+                    name: "Matrices",
+                    questions: [
+                        {
+                            questionText: "If each element of a row or column of a determinant is multiplied by a constant K then the value of the determinant is",
+                            options: ["Added by k", "Multiplied by k", "Subtracted by k", "Divided by k."],
+                            correctAnswer: "Multiplied by k",
+                            explanation: "Step 1: Recall the standard determinant property of scalar multiplication.\nStep 2: When all entries of any single row or column in matrix A are scaled by factor K, that constant K can be factored outside the determinant.\nStep 3: Thus, det(new matrix) = K * det(original matrix)."
+                        },
+                        {
+                            questionText: "If A = [[1, 2, 3], [-2, 1, 4]] and B = [[2, 3, 1], [5, 4, 2], [1, 5, 3]], then AB =",
+                            options: ["[[15, 26, 4], [15, 18, 12]]", "[[15, 26, 14], [15, 18, 12]]", "[[15, 5], [26, 18], [14, 12]]", "BA"],
+                            correctAnswer: "[[15, 26, 14], [15, 18, 12]]",
+                            explanation: "Step 1: Matrix A has size 2x3 and matrix B has size 3x3, yielding a product AB of dimension 2x3.\nStep 2: Calculate Row 1 entries:\n - c11 = (1)(2) + (2)(5) + (3)(1) = 2 + 10 + 3 = 15\n - c12 = (1)(3) + (2)(4) + (3)(5) = 3 + 8 + 15 = 26\n - c13 = (1)(1) + (2)(2) + (3)(3) = 1 + 4 + 9 = 14\nStep 3: Calculate Row 2 entries:\n - c21 = (-2)(2) + (1)(5) + (4)(1) = -4 + 5 + 4 = 5\n - c22 = (-2)(3) + (1)(4) + (4)(5) = -6 + 4 + 20 = 18\n - c23 = (-2)(1) + (1)(2) + (4)(3) = -2 + 2 + 12 = 12\nStep 4: Combining gives matrix option [[15, 26, 14], [15, 18, 12]]."
+                        },
+                        {
+                            questionText: "The elements on the main diagonal of a skew symmetric matrix are all",
+                            options: ["zeros", "One's", "Unequal", ">1"],
+                            correctAnswer: "zeros",
+                            explanation: "Step 1: By definition, a square matrix A is skew-symmetric when A^T = -A.\nStep 2: In element notation, a_ij = -a_ji for all i and j.\nStep 3: For elements along the primary diagonal, i = j, giving a_ii = -a_ii.\nStep 4: 2 * a_ii = 0 implies a_ii = 0 for every diagonal element."
+                        },
+                        {
+                            questionText: "If w is one of the imaginary cube roots of unity, find the value of the determinant |[1, ω, ω^2], [ω, ω^2, 1], [ω^2, 1, ω]| =",
+                            options: ["zero", "one", "3", "w^2"],
+                            correctAnswer: "zero",
+                            explanation: "Step 1: Cube roots of unity satisfy the identity 1 + ω + ω^2 = 0.\nStep 2: Perform the column operation C1 -> C1 + C2 + C3 on the determinant.\nStep 3: The entries in the first column each evaluate to (1 + ω + ω^2) = 0.\nStep 4: Any determinant containing an entire column of zeros equals 0."
+                        },
+                        {
+                            questionText: "Every square matrix can be written as the sum of",
+                            options: ["Diagonal matrix & square matrix", "Two rectangular matrices", "Square and non-square matrices", "Symmetric and skew symmetric matrix"],
+                            correctAnswer: "Symmetric and skew symmetric matrix",
+                            explanation: "Step 1: Let A be an arbitrary square matrix.\nStep 2: Express A as A = (1/2)(A + A^T) + (1/2)(A - A^T).\nStep 3: The term (A + A^T) is symmetric since (A + A^T)^T = A^T + A = A + A^T.\nStep 4: The term (A - A^T) is skew-symmetric since (A - A^T)^T = A^T - A = -(A - A^T).\nStep 5: Thus, A is uniquely represented as the sum of a symmetric and a skew-symmetric matrix."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        const solvedQuestionsData2018 = {
+            units: [{
+                unitNo: "I",
+                title: "Matrices, Partial Fractions & Trigonometry",
+                topics: [{
+                    name: "Matrices (2018)",
+                    questions: [
+                        {
+                            questionText: "If A = [[2, -1, 0], [3, 4, 7]] and B = [[5, 2, -3], [1, 0, -2]], then 2A + 3B =",
+                            options: ["[[19, 4, -9], [9, 8, 8]]", "[[-19, -4, 9], [9, 8, -8]]", "[[18, 4, -9], [9, 8, 8]]", "[[17, 5, -9], [0, 0, 9]]"],
+                            correctAnswer: "[[19, 4, -9], [9, 8, 8]]",
+                            explanation: "Step 1: Compute 2A by multiplying each element of matrix A by 2:\n 2A = [[4, -2, 0], [6, 8, 14]].\nStep 2: Compute 3B by multiplying each element of matrix B by 3:\n 3B = [[15, 6, -9], [3, 0, -6]].\nStep 3: Add corresponding entries of 2A and 3B:\n - Row 1: [4+15, -2+6, 0+(-9)] = [19, 4, -9]\n - Row 2: [6+3, 8+0, 14+(-6)] = [9, 8, 8]\nStep 4: Combining yields [[19, 4, -9], [9, 8, 8]]."
+                        },
+                        {
+                            questionText: "If A = [[2, -3, 0], [1, 4, -1]] and B = [[6, 1], [3, 0], [5, 2]], then (AB)^T =",
+                            options: ["A^T B^T", "B^T A^T", "(BA)^T", "A B^T"],
+                            correctAnswer: "B^T A^T",
+                            explanation: "Step 1: Recall the standard reversal law of matrix transposition.\nStep 2: For any two conformable matrices A and B, the transpose of their product satisfies (AB)^T = B^T A^T."
+                        }
+                    ]
+                }]
+            }]
+        };
+
+        // Combining all dataset sources into one list for rendering
+        const allDatasets = [
+            solvedQuestionsData, 
+            solvedQuestionsData2018
+        ];
+
+        let totalQuestionsCount = 0;
+        let totalScore = 0;
+
+        function loadQuiz() {
+            const container = document.getElementById("questions-list");
+            let globalQIndex = 0;
+
+            allDatasets.forEach((dataset) => {
+                dataset.units.forEach((unit) => {
+                    unit.topics.forEach((topic) => {
+                        topic.questions.forEach((q) => {
+                            globalQIndex++;
+                            totalQuestionsCount++;
+
+                            const qBox = document.createElement("div");
+                            qBox.className = "q-box";
+                            qBox.id = `q-box-${globalQIndex}`;
+
+                            const header = document.createElement("div");
+                            header.className = "q-header";
+                            header.innerText = `Q${globalQIndex}. ${q.questionText}`;
+                            qBox.appendChild(header);
+
+                            q.options.forEach((opt) => {
+                                const optBtn = document.createElement("div");
+                                optBtn.className = "option";
+                                optBtn.innerText = opt;
+                                optBtn.onclick = function() {
+                                    selectOption(qBox, optBtn, opt, q.correctAnswer, explDiv);
+                                };
+                                qBox.appendChild(optBtn);
+                            });
+
+                            const explDiv = document.createElement("div");
+                            explDiv.className = "explanation";
+                            explDiv.innerText = `Explanation:\n${q.explanation}`;
+                            qBox.appendChild(explDiv);
+
+                            container.appendChild(qBox);
+                        });
+                    });
+                });
+            });
+        }
+
+        function selectOption(qBox, selectedBtn, selectedValue, correctAnswer, explDiv) {
+            // Disable further selection for this question box
+            qBox.classList.add("disabled-box");
+
+            const options = qBox.getElementsByClassName("option");
+            
+            if (selectedValue === correctAnswer) {
+                selectedBtn.classList.add("correct");
+                totalScore++;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                // Highlight the correct answer
+                for (let opt of options) {
+                    if (opt.innerText === correctAnswer) {
+                        opt.classList.add("correct");
+                    }
+                }
+            }
+
+            // Display explanation step-by-step
+            explDiv.style.display = "block";
+        }
+
+        function checkYourScore() {
+            const scoreDiv = document.getElementById("score-output");
+            scoreDiv.innerText = `Your Final Score: ${totalScore} / ${totalQuestionsCount}`;
+        }
+
+        // Initialize quiz on page load
+        window.onload = loadQuiz;
+    </script>
+</body>
+</html>

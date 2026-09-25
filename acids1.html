@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Solutions & Concentration Terms Quiz</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+#score {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* QUESTION */
+
+.question {
+    margin-bottom: 25px;
+    padding: 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.question h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+/* OPTIONS */
+
+.option {
+    display: block;
+    padding: 14px;
+    margin: 10px 0;
+    border: 2px solid #d0d0d0;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #222;
+    transition: 0.2s;
+}
+
+.option:hover {
+    background-color: #f0f7ff;
+}
+
+.option input {
+    margin-right: 10px;
+}
+
+/* CORRECT */
+
+.option.correct {
+    background-color: #b7e4c7 !important;
+    color: #155724 !important;
+    border: 2px solid #7bc99a !important;
+    font-weight: bold;
+}
+
+/* WRONG */
+
+.option.wrong {
+    background-color: #f5b7b1 !important;
+    color: #721c24 !important;
+    border: 2px solid #e8908a !important;
+    font-weight: bold;
+}
+
+/* EXPLANATION */
+
+.explanation {
+    display: none;
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #e8f4f8;
+    border-left: 4px solid #2196f3;
+    border-radius: 5px;
+}
+
+/* BUTTON */
+
+button {
+    display: block;
+    margin: 25px auto;
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* RESTART BUTTON */
+
+#restartBtn {
+    display: none;
+    background-color: #28a745;
+}
+
+#restartBtn:hover {
+    background-color: #218838;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Solutions & Concentration Terms Quiz</h1>
+
+    <div id="score">
+        Score: 0 / 0
+    </div>
+
+    <div id="quiz"></div>
+
+    <button id="submitBtn" onclick="showScore()">
+        Submit Quiz
+    </button>
+
+    <button id="restartBtn" onclick="restartQuiz()">
+        Restart Quiz
+    </button>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   QUESTION BANK
+===================================================== */
+
+const questions = [
+
+{
+    question: "The normality of solution obtained by dissolving 5.3 grams of Na₂CO₃ in 1 litre solution is",
+
+    options: [
+        "1 N",
+        "0.1 N",
+        "0.05 N",
+        "0.5 N"
+    ],
+
+    answer: "0.1 N",
+
+    explanation:
+    "The molar mass of Na₂CO₃ is 106 g/mol and its n-factor is 2. Equivalent weight = 106/2 = 53 g/eq. Normality = (5.3/53)/1 = 0.1 N."
+},
+
+{
+    question: "The following solution has same molarity and normality",
+
+    options: [
+        "Na₂CO₃",
+        "NaCl",
+        "H₂SO₄",
+        "K₂CO₃"
+    ],
+
+    answer: "NaCl",
+
+    explanation:
+    "Normality = Molarity × n-factor. NaCl has an n-factor of 1, so its molarity and normality are equal."
+},
+
+{
+    question: "5 moles of a solute is dissolved in 10 litres of solution. What is its molarity?",
+
+    options: [
+        "5 M",
+        "2 M",
+        "0.5 M",
+        "0.2 M"
+    ],
+
+    answer: "0.5 M",
+
+    explanation:
+    "Molarity = moles of solute / volume of solution in litres = 5/10 = 0.5 M."
+},
+
+{
+    question: "One mole of any of the particles contains",
+
+    options: [
+        "6.023 × 10²³",
+        "6.022 × 10²³",
+        "60.23 × 10²³",
+        "6.023 × 10²²"
+    ],
+
+    answer: "6.022 × 10²³",
+
+    explanation:
+    "One mole contains Avogadro's number of particles, approximately 6.022 × 10²³."
+},
+
+{
+    question: "The normality of 0.1 M H₂SO₄ solution is",
+
+    options: [
+        "0.1 N",
+        "0.2 N",
+        "0.05 N",
+        "1 N"
+    ],
+
+    answer: "0.2 N",
+
+    explanation:
+    "H₂SO₄ has an n-factor of 2. Normality = Molarity × n-factor = 0.1 × 2 = 0.2 N."
+},
+
+{
+    question: "The equivalent weight of Cl₂ when it is converted to Cl⁻ is",
+
+    options: [
+        "M",
+        "M / 2",
+        "2M",
+        "M / 35.5"
+    ],
+
+    answer: "M / 2",
+
+    explanation:
+    "Cl₂ + 2e⁻ → 2Cl⁻. The n-factor is 2, so equivalent weight = M/2."
+},
+
+{
+    question: "The molarity of a solution containing 5.85 g of NaCl in 500 mL solution is",
+
+    options: [
+        "0.1 M",
+        "0.2 M",
+        "0.5 M",
+        "1.0 M"
+    ],
+
+    answer: "0.2 M",
+
+    explanation:
+    "Moles of NaCl = 5.85/58.5 = 0.1 mol. Volume = 0.5 L. Molarity = 0.1/0.5 = 0.2 M."
+},
+
+{
+    question: "Which of the following concentration units depends on temperature?",
+
+    options: [
+        "Molality",
+        "Molarity",
+        "Mole fraction",
+        "Weight percentage"
+    ],
+
+    answer: "Molarity",
+
+    explanation:
+    "Molarity depends on volume, and volume changes with temperature."
+},
+
+{
+    question: "The absolute weight of one molecule of water is (Nₐ = 6 × 10²³ mol⁻¹)",
+
+    options: [
+        "1.5 × 10⁻²³",
+        "3.0 × 10⁻²³",
+        "4.5 × 10⁻²³",
+        "2.0 × 10⁻²⁹"
+    ],
+
+    answer: "3.0 × 10⁻²³",
+
+    explanation:
+    "Mass of one molecule = 18/(6 × 10²³) = 3.0 × 10⁻²³ g."
+},
+
+{
+    question: "The weight of sodium sulphate (molar mass = 142 g/mol) needed to prepare 500 mL of 0.03 M solution is",
+
+    options: [
+        "2.13 g",
+        "4.26 g",
+        "1.065 g",
+        "3.195 g"
+    ],
+
+    answer: "2.13 g",
+
+    explanation:
+    "Mass = Molarity × Molar mass × Volume = 0.03 × 142 × 0.5 = 2.13 g."
+},
+
+{
+    question: "The number of ions present in 100 mL of 0.1 M H₂SO₄ is",
+
+    options: [
+        "6.0 × 10²⁴",
+        "6.0 × 10²²",
+        "6.0 × 10²¹",
+        "1.8 × 10²²"
+    ],
+
+    answer: "1.8 × 10²²",
+
+    explanation:
+    "0.1 M × 0.1 L = 0.01 mol H₂SO₄. Each molecule produces 3 ions, giving 0.03 mol ions = 1.8 × 10²² ions."
+},
+
+{
+    question: "How many moles of solute are present in 200 mL of 0.1 M solution?",
+
+    options: [
+        "0.02",
+        "0.2",
+        "2.0",
+        "0.002"
+    ],
+
+    answer: "0.02",
+
+    explanation:
+    "Moles = Molarity × Volume = 0.1 × 0.2 = 0.02 mol."
+},
+
+{
+    question: "Which concentration term is independent of temperature?",
+
+    options: [
+        "Molarity",
+        "Normality",
+        "Molality",
+        "Volume percentage"
+    ],
+
+    answer: "Molality",
+
+    explanation:
+    "Molality depends on mass of solvent rather than volume, so it is independent of temperature."
+},
+
+{
+    question: "The unit of molarity is",
+
+    options: [
+        "mol kg⁻¹",
+        "mol L⁻¹",
+        "g L⁻¹",
+        "eq L⁻¹"
+    ],
+
+    answer: "mol L⁻¹",
+
+    explanation:
+    "Molarity is the number of moles of solute present in one litre of solution."
+},
+
+{
+    question: "The unit of molality is",
+
+    options: [
+        "mol L⁻¹",
+        "mol kg⁻¹",
+        "g L⁻¹",
+        "eq L⁻¹"
+    ],
+
+    answer: "mol kg⁻¹",
+
+    explanation:
+    "Molality is the number of moles of solute present in one kilogram of solvent."
+},
+
+{
+    question: "Normality is defined as",
+
+    options: [
+        "Moles of solute per litre of solution",
+        "Equivalents of solute per litre of solution",
+        "Moles of solute per kilogram of solvent",
+        "Mass of solute per litre of solvent"
+    ],
+
+    answer: "Equivalents of solute per litre of solution",
+
+    explanation:
+    "Normality is the number of gram equivalents of solute present in one litre of solution."
+},
+
+{
+    question: "Molarity of a solution containing 1 mole of solute in 2 litres of solution is",
+
+    options: [
+        "0.5 M",
+        "1 M",
+        "2 M",
+        "0.25 M"
+    ],
+
+    answer: "0.5 M",
+
+    explanation:
+    "Molarity = moles of solute / volume of solution = 1/2 = 0.5 M."
+},
+
+{
+    question: "If 2 moles of solute are present in 4 kg of solvent, the molality is",
+
+    options: [
+        "0.5 m",
+        "2 m",
+        "4 m",
+        "8 m"
+    ],
+
+    answer: "0.5 m",
+
+    explanation:
+    "Molality = moles of solute / mass of solvent in kg = 2/4 = 0.5 m."
+},
+
+{
+    question: "The concentration of a solution can be expressed in",
+
+    options: [
+        "Molarity",
+        "Molality",
+        "Normality",
+        "All of the above"
+    ],
+
+    answer: "All of the above",
+
+    explanation:
+    "Molarity, molality and normality are commonly used methods of expressing concentration."
+}
+
+];
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let userAnswers = {};
+
+let score = 0;
+
+
+/* =====================================================
+   RENDER QUIZ
+===================================================== */
+
+function renderQuiz() {
+
+    const quiz = document.getElementById("quiz");
+
+    quiz.innerHTML = "";
+
+    questions.forEach((q, index) => {
+
+        const questionDiv = document.createElement("div");
+
+        questionDiv.className = "question";
+
+
+        /* QUESTION */
+
+        const title = document.createElement("h3");
+
+        title.textContent =
+            (index + 1) + ". " + q.question;
+
+        questionDiv.appendChild(title);
+
+
+        /* OPTIONS */
+
+        q.options.forEach(option => {
+
+            const label = document.createElement("label");
+
+            label.className = "option";
+
+
+            const input = document.createElement("input");
+
+            input.type = "radio";
+
+            input.name = "question" + index;
+
+            input.value = option;
+
+
+            label.appendChild(input);
+
+            label.appendChild(
+                document.createTextNode(" " + option)
+            );
+
+
+            /* OPTION CLICK */
+
+            input.addEventListener("change", function() {
+
+                handleAnswer(
+                    questionDiv,
+                    q,
+                    option,
+                    index
+                );
+
+            });
+
+
+            questionDiv.appendChild(label);
+
+        });
+
+
+        /* ONE EXPLANATION ONLY */
+
+        const explanation =
+            document.createElement("div");
+
+        explanation.className = "explanation";
+
+        explanation.innerHTML =
+            "<strong>Explanation:</strong> " +
+            q.explanation;
+
+        questionDiv.appendChild(explanation);
+
+
+        quiz.appendChild(questionDiv);
+
+    });
+
+
+    updateScore();
+
+}
+
+
+/* =====================================================
+   HANDLE ANSWER
+===================================================== */
+
+function handleAnswer(
+    questionDiv,
+    question,
+    selectedOption,
+    index
+) {
+
+    /* Prevent answering same question again */
+
+    if (userAnswers[index] !== undefined) {
+        return;
+    }
+
+
+    /* Save answer */
+
+    userAnswers[index] = selectedOption;
+
+
+    /* Check answer */
+
+    if (selectedOption === question.answer) {
+
+        score++;
+
+    }
+
+
+    /* Get all options */
+
+    const optionLabels =
+        questionDiv.querySelectorAll(".option");
+
+
+    optionLabels.forEach(label => {
+
+        const input =
+            label.querySelector("input");
+
+
+        /* Disable option */
+
+        input.disabled = true;
+
+
+        /* Correct answer */
+
+        if (input.value === question.answer) {
+
+            label.classList.add("correct");
+
+        }
+
+
+        /* Wrong selected answer */
+
+        if (
+            input.value === selectedOption &&
+            selectedOption !== question.answer
+        ) {
+
+            label.classList.add("wrong");
+
+        }
+
+    });
+
+
+    /* Show explanation */
+
+    const explanation =
+        questionDiv.querySelector(".explanation");
+
+    explanation.style.display = "block";
+
+
+    /* Update score */
+
+    updateScore();
+
+}
+
+
+/* =====================================================
+   UPDATE SCORE
+===================================================== */
+
+function updateScore() {
+
+    document.getElementById("score").textContent =
+        "Score: " +
+        score +
+        " / " +
+        Object.keys(userAnswers).length;
+
+}
+
+
+/* =====================================================
+   SUBMIT QUIZ
+===================================================== */
+
+function showScore() {
+
+    const answered =
+        Object.keys(userAnswers).length;
+
+
+    if (answered === 0) {
+
+        alert("Please answer at least one question.");
+
+        return;
+
+    }
+
+
+    const percentage =
+        (score / questions.length) * 100;
+
+
+    document.getElementById("score").innerHTML =
+        "Final Score: " +
+        score +
+        " / " +
+        questions.length +
+        "<br>" +
+        "Percentage: " +
+        percentage.toFixed(1) +
+        "%";
+
+
+    document.getElementById("submitBtn").disabled = true;
+
+    document.getElementById("restartBtn").style.display =
+        "block";
+
+}
+
+
+/* =====================================================
+   RESTART QUIZ
+===================================================== */
+
+function restartQuiz() {
+
+    score = 0;
+
+    userAnswers = {};
+
+
+    document.getElementById("submitBtn").disabled =
+        false;
+
+
+    document.getElementById("restartBtn").style.display =
+        "none";
+
+
+    renderQuiz();
+
+}
+
+
+/* =====================================================
+   START QUIZ
+===================================================== */
+
+renderQuiz();
+
+</script>
+
+</body>
+</html>
