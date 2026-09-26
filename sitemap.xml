@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <!-- Homepage -->
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/</loc>
+    </url>
+
+    <!-- Main Sections -->
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/core.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/mpc.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/maths.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/physice.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/chemistry.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/web.html</loc>
+    </url>
+
+    <!-- Core CSE -->
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/de1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/se1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/comp1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/ds1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/cncs1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/os1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/dbms1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/java1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/web1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/bdcc1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/ap1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/iot1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/py1.html</loc>
+    </url>
+
+    <!-- Mathematics -->
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/mat1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/pf1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/trig1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/ana1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/com1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/diff1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/int1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/deq1.html</loc>
+    </url>
+
+    <!-- Physics -->
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p2.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p3.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p4.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p5.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p6.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/p7.html</loc>
+    </url>
+
+    <!-- Chemistry -->
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/atomic1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/chemical1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/solutions1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/acids1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/electrochemistry1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/water1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/corrosion1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/polymers1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/fuels1.html</loc>
+    </url>
+    <url>
+        <loc>https://projectwork24batch-rgb.github.io/AP-CSE-ECET-Preparation/environmental1.html</loc>
+    </url>
+
+</urlset>
